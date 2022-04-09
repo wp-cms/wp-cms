@@ -1,0 +1,7 @@
+# IDE config files
+.idea
+.vscode
+
+# WP private files
+wp-config.php
+wp-content/uploads
