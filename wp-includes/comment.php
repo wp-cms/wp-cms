@@ -32,8 +32,7 @@
  * @param string $comment      Content of the comment.
  * @param string $user_ip      Comment author IP address.
  * @param string $user_agent   Comment author User-Agent.
- * @param string $comment_type Comment type, either user-submitted comment,
- *		                       trackback, or pingback.
+ * @param string $comment_type Comment type, user-submitted comment or custom type.
  * @return bool If all checks pass, true, otherwise false.
  */
 function check_comment($author, $email, $url, $comment, $user_ip, $user_agent, $comment_type) {
@@ -111,7 +110,7 @@ function check_comment($author, $email, $url, $comment, $user_ip, $user_agent, $
 	 * email address. If both checks pass, return true. Otherwise, return false.
 	 */
 	if ( 1 == get_option('comment_whitelist')) {
-		if ( 'trackback' != $comment_type && 'pingback' != $comment_type && $author != '' && $email != '' ) {
+		if ( $author != '' && $email != '' ) {
 			$comment_user = get_user_by( 'email', wp_unslash( $email ) );
 			if ( ! empty( $comment_user->ID ) ) {
 				$ok_to_comment = $wpdb->get_var( $wpdb->prepare( "SELECT comment_approved FROM $wpdb->comments WHERE user_id = %d AND comment_approved = '1' LIMIT 1", $comment_user->ID ) );
@@ -257,16 +256,9 @@ function get_comment_statuses() {
  * @return string Expected return value is 'open' or 'closed'.
  */
 function get_default_comment_status( $post_type = 'post', $comment_type = 'comment' ) {
-	switch ( $comment_type ) {
-		case 'pingback' :
-		case 'trackback' :
-			$supports = 'trackbacks';
-			$option = 'ping';
-			break;
-		default :
-			$supports = 'comments';
-			$option = 'comment';
-	}
+
+    $supports = 'comments';
+    $option = 'comment';
 
 	// Set the status.
 	if ( 'page' === $post_type ) {
@@ -903,15 +895,13 @@ function wp_check_comment_flood( $is_flood, $ip, $email, $date, $avoid_die = fal
  * @return array Array of comments keyed by comment_type.
  */
 function separate_comments(&$comments) {
-	$comments_by_type = array('comment' => array(), 'trackback' => array(), 'pingback' => array(), 'pings' => array());
+	$comments_by_type = array('comment' => array());
 	$count = count($comments);
 	for ( $i = 0; $i < $count; $i++ ) {
 		$type = $comments[$i]->comment_type;
 		if ( empty($type) )
 			$type = 'comment';
 		$comments_by_type[$type][] = &$comments[$i];
-		if ( 'trackback' == $type || 'pingback' == $type )
-			$comments_by_type['pings'][] = &$comments[$i];
 	}
 
 	return $comments_by_type;
@@ -978,8 +968,7 @@ function get_comment_pages_count( $comments = null, $per_page = null, $threaded 
  * @param array $args {
  *      Array of optional arguments.
  *      @type string     $type      Limit paginated comments to those matching a given type.
- *                                  Accepts 'comment', 'trackback', 'pingback', 'pings'
- *                                  (trackbacks and pingbacks), or 'all'. Default 'all'.
+ *                                  Accepts 'comment' or 'all'. Default 'all'.
  *      @type int        $per_page  Per-page count to use when calculating pagination.
  *                                  Defaults to the value of the 'comments_per_page' option.
  *      @type int|string $max_depth If greater than 1, comment page will be determined
@@ -1068,8 +1057,7 @@ function get_page_of_comment( $comment_ID, $args = array() ) {
 		 *     Array of WP_Comment_Query arguments.
 		 *
 		 *     @type string $type               Limit paginated comments to those matching a given type.
-		 *                                      Accepts 'comment', 'trackback', 'pingback', 'pings'
-		 *                                      (trackbacks and pingbacks), or 'all'. Default 'all'.
+		 *                                      Accepts 'comment' or 'all'. Default 'all'.
 		 *     @type int    $post_id            ID of the post.
 		 *     @type string $fields             Comment fields to return.
 		 *     @type bool   $count              Whether to return a comment count (true) or array
@@ -1680,8 +1668,7 @@ function wp_transition_comment_status($new_status, $old_status, $comment) {
 	 * The dynamic portions of the hook name, `$new_status`, and `$comment->comment_type`,
 	 * refer to the new comment status, and the type of comment, respectively.
 	 *
-	 * Typical comment types include an empty string (standard comment), 'pingback',
-	 * or 'trackback'.
+	 * Typical comment types include an empty string (standard comment)
 	 *
 	 * @since WP-2.7.0
 	 *
@@ -2447,423 +2434,6 @@ function wp_update_comment_count_now($post_id) {
 }
 
 //
-// Ping and trackback functions.
-//
-
-/**
- * Finds a pingback server URI based on the given URL.
- *
- * Checks the HTML for the rel="pingback" link and x-pingback headers. It does
- * a check for the x-pingback headers first and returns that, if available. The
- * check for the rel="pingback" has more overhead than just the header.
- *
- * @since WP-1.5.0
- *
- * @param string $url URL to ping.
- * @param int $deprecated Not Used.
- * @return false|string False on failure, string containing URI on success.
- */
-function discover_pingback_server_uri( $url, $deprecated = '' ) {
-	if ( !empty( $deprecated ) )
-		_deprecated_argument( __FUNCTION__, 'WP-2.7.0' );
-
-	$pingback_str_dquote = 'rel="pingback"';
-	$pingback_str_squote = 'rel=\'pingback\'';
-
-	/** @todo Should use Filter Extension or custom preg_match instead. */
-	$parsed_url = parse_url($url);
-
-	if ( ! isset( $parsed_url['host'] ) ) // Not a URL. This should never happen.
-		return false;
-
-	//Do not search for a pingback server on our own uploads
-	$uploads_dir = wp_get_upload_dir();
-	if ( 0 === strpos($url, $uploads_dir['baseurl']) )
-		return false;
-
-	$response = wp_safe_remote_head( $url, array( 'timeout' => 2, 'httpversion' => '1.0' ) );
-
-	if ( is_wp_error( $response ) )
-		return false;
-
-	if ( wp_remote_retrieve_header( $response, 'x-pingback' ) )
-		return wp_remote_retrieve_header( $response, 'x-pingback' );
-
-	// Not an (x)html, sgml, or xml page, no use going further.
-	if ( preg_match('#(image|audio|video|model)/#is', wp_remote_retrieve_header( $response, 'content-type' )) )
-		return false;
-
-	// Now do a GET since we're going to look in the html headers (and we're sure it's not a binary file)
-	$response = wp_safe_remote_get( $url, array( 'timeout' => 2, 'httpversion' => '1.0' ) );
-
-	if ( is_wp_error( $response ) )
-		return false;
-
-	$contents = wp_remote_retrieve_body( $response );
-
-	$pingback_link_offset_dquote = strpos($contents, $pingback_str_dquote);
-	$pingback_link_offset_squote = strpos($contents, $pingback_str_squote);
-	if ( $pingback_link_offset_dquote || $pingback_link_offset_squote ) {
-		$quote = ($pingback_link_offset_dquote) ? '"' : '\'';
-		$pingback_link_offset = ($quote=='"') ? $pingback_link_offset_dquote : $pingback_link_offset_squote;
-		$pingback_href_pos = @strpos($contents, 'href=', $pingback_link_offset);
-		$pingback_href_start = $pingback_href_pos+6;
-		$pingback_href_end = @strpos($contents, $quote, $pingback_href_start);
-		$pingback_server_url_len = $pingback_href_end - $pingback_href_start;
-		$pingback_server_url = substr($contents, $pingback_href_start, $pingback_server_url_len);
-
-		// We may find rel="pingback" but an incomplete pingback URL
-		if ( $pingback_server_url_len > 0 ) { // We got it!
-			return $pingback_server_url;
-		}
-	}
-
-	return false;
-}
-
-/**
- * Perform all pingbacks, enclosures, trackbacks, and send to pingback services.
- *
- * @since WP-2.1.0
- *
- * @global wpdb $wpdb ClassicPress database abstraction object.
- */
-function do_all_pings() {
-	global $wpdb;
-
-	// Do pingbacks.
-	$pings = get_posts(
-		array(
-			'post_type'        => get_post_types(),
-			'suppress_filters' => false,
-			'nopaging'         => true,
-			'meta_key'         => '_pingme',
-			'fields'           => 'ids',
-		)
-	);
-
-	foreach ( $pings as $ping ) {
-		delete_post_meta( $ping, '_pingme' );
-		pingback( null, $ping );
-	}
-
-	// Do enclosures.
-	$enclosures = get_posts(
-		array(
-			'post_type'        => get_post_types(),
-			'suppress_filters' => false,
-			'nopaging'         => true,
-			'meta_key'         => '_encloseme',
-			'fields'           => 'ids',
-		)
-	);
-
-	foreach ( $enclosures as $enclosure ) {
-		delete_post_meta( $enclosure, '_encloseme' );
-		do_enclose( null, $enclosure );
-	}
-
-	// Do trackbacks.
-	$trackbacks = get_posts(
-		array(
-			'post_type'        => get_post_types(),
-			'suppress_filters' => false,
-			'nopaging'         => true,
-			'meta_key'         => '_trackbackme',
-			'fields'           => 'ids',
-		)
-	);
-
-	foreach ( $trackbacks as $trackback ) {
-		delete_post_meta( $trackback, '_trackbackme' );
-		do_trackbacks( $trackback );
-	}
-
-	// Do Update Services/Generic Pings.
-	generic_ping();
-}
-
-/**
- * Perform trackbacks.
- *
- * @since WP-1.5.0
- * @since WP-4.7.0 $post_id can be a WP_Post object.
- *
- * @global wpdb $wpdb ClassicPress database abstraction object.
- *
- * @param int|WP_Post $post_id Post object or ID to do trackbacks on.
- */
-function do_trackbacks( $post_id ) {
-	global $wpdb;
-	$post = get_post( $post_id );
-	if ( ! $post ) {
-		return false;
-	}
-
-	$to_ping = get_to_ping( $post );
-	$pinged  = get_pung( $post );
-	if ( empty( $to_ping ) ) {
-		$wpdb->update($wpdb->posts, array( 'to_ping' => '' ), array( 'ID' => $post->ID ) );
-		return;
-	}
-
-	if ( empty($post->post_excerpt) ) {
-		/** This filter is documented in wp-includes/post-template.php */
-		$excerpt = apply_filters( 'the_content', $post->post_content, $post->ID );
-	} else {
-		/** This filter is documented in wp-includes/post-template.php */
-		$excerpt = apply_filters( 'the_excerpt', $post->post_excerpt );
-	}
-
-	$excerpt = str_replace(']]>', ']]&gt;', $excerpt);
-	$excerpt = wp_html_excerpt($excerpt, 252, '&#8230;');
-
-	/** This filter is documented in wp-includes/post-template.php */
-	$post_title = apply_filters( 'the_title', $post->post_title, $post->ID );
-	$post_title = strip_tags($post_title);
-
-	if ( $to_ping ) {
-		foreach ( (array) $to_ping as $tb_ping ) {
-			$tb_ping = trim($tb_ping);
-			if ( !in_array($tb_ping, $pinged) ) {
-				trackback( $tb_ping, $post_title, $excerpt, $post->ID );
-				$pinged[] = $tb_ping;
-			} else {
-				$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->posts SET to_ping = TRIM(REPLACE(to_ping, %s,
-					'')) WHERE ID = %d", $tb_ping, $post->ID ) );
-			}
-		}
-	}
-}
-
-/**
- * Sends pings to all of the ping site services.
- *
- * @since WP-1.2.0
- *
- * @param int $post_id Post ID.
- * @return int Same as Post ID from parameter
- */
-function generic_ping( $post_id = 0 ) {
-	$services = get_option('ping_sites');
-
-	$services = explode("\n", $services);
-	foreach ( (array) $services as $service ) {
-		$service = trim($service);
-		if ( '' != $service )
-			weblog_ping($service);
-	}
-
-	return $post_id;
-}
-
-/**
- * Pings back the links found in a post.
- *
- * @since WP-0.71
- * @since WP-4.7.0 $post_id can be a WP_Post object.
- *
- * @param string $content Post content to check for links. If empty will retrieve from post.
- * @param int|WP_Post $post_id Post Object or ID.
- */
-function pingback( $content, $post_id ) {
-	include_once( ABSPATH . WPINC . '/class-IXR.php' );
-	include_once( ABSPATH . WPINC . '/class-wp-http-ixr-client.php' );
-
-	// original code by Mort (http://mort.mine.nu:8080)
-	$post_links = array();
-
-	$post = get_post( $post_id );
-	if ( ! $post ) {
-		return;
-	}
-
-	$pung = get_pung( $post );
-
-	if ( empty( $content ) ) {
-		$content = $post->post_content;
-	}
-
-	// Step 1
-	// Parsing the post, external links (if any) are stored in the $post_links array
-	$post_links_temp = wp_extract_urls( $content );
-
-	// Step 2.
-	// Walking thru the links array
-	// first we get rid of links pointing to sites, not to specific files
-	// Example:
-	// http://dummy-weblog.org
-	// http://dummy-weblog.org/
-	// http://dummy-weblog.org/post.php
-	// We don't wanna ping first and second types, even if they have a valid <link/>
-
-	foreach ( (array) $post_links_temp as $link_test ) :
-		if ( ! in_array( $link_test, $pung ) && ( url_to_postid( $link_test ) != $post->ID ) // If we haven't pung it already and it isn't a link to itself
-				&& !is_local_attachment($link_test) ) : // Also, let's never ping local attachments.
-			if ( $test = @parse_url($link_test) ) {
-				if ( isset($test['query']) )
-					$post_links[] = $link_test;
-				elseif ( isset( $test['path'] ) && ( $test['path'] != '/' ) && ( $test['path'] != '' ) )
-					$post_links[] = $link_test;
-			}
-		endif;
-	endforeach;
-
-	$post_links = array_unique( $post_links );
-	/**
-	 * Fires just before pinging back links found in a post.
-	 *
-	 * @since WP-2.0.0
-	 *
-	 * @param array $post_links An array of post links to be checked (passed by reference).
-	 * @param array $pung       Whether a link has already been pinged (passed by reference).
-	 * @param int   $post_ID    The post ID.
-	 */
-	do_action_ref_array( 'pre_ping', array( &$post_links, &$pung, $post->ID ) );
-
-	foreach ( (array) $post_links as $pagelinkedto ) {
-		$pingback_server_url = discover_pingback_server_uri( $pagelinkedto );
-
-		if ( $pingback_server_url ) {
-			@ set_time_limit( 60 );
-			// Now, the RPC call
-			$pagelinkedfrom = get_permalink( $post );
-
-			// using a timeout of 3 seconds should be enough to cover slow servers
-			$client = new WP_HTTP_IXR_Client($pingback_server_url);
-			$client->timeout = 3;
-			/**
-			 * Filters the user agent sent when pinging-back a URL.
-			 *
-			 * @since WP-2.9.0
-			 *
-			 * @param string $concat_useragent    The user agent concatenated with ' -- WordPress/'
-			 *                                    and the equivalent WordPress version.
-			 * @param string $useragent           The useragent.
-			 * @param string $pingback_server_url The server URL being linked to.
-			 * @param string $pagelinkedto        URL of page linked to.
-			 * @param string $pagelinkedfrom      URL of page linked from.
-			 */
-			$client->useragent = apply_filters( 'pingback_useragent', $client->useragent . ' -- ' . classicpress_user_agent(), $client->useragent, $pingback_server_url, $pagelinkedto, $pagelinkedfrom );
-			// when set to true, this outputs debug messages by itself
-			$client->debug = false;
-
-			if ( $client->query('pingback.ping', $pagelinkedfrom, $pagelinkedto) || ( isset($client->error->code) && 48 == $client->error->code ) ) // Already registered
-				add_ping( $post, $pagelinkedto );
-		}
-	}
-}
-
-/**
- * Check whether blog is public before returning sites.
- *
- * @since WP-2.1.0
- *
- * @param mixed $sites Will return if blog is public, will not return if not public.
- * @return mixed Empty string if blog is not public, returns $sites, if site is public.
- */
-function privacy_ping_filter($sites) {
-	if ( '0' != get_option('blog_public') )
-		return $sites;
-	else
-		return '';
-}
-
-/**
- * Send a Trackback.
- *
- * Updates database when sending trackback to prevent duplicates.
- *
- * @since WP-0.71
- *
- * @global wpdb $wpdb ClassicPress database abstraction object.
- *
- * @param string $trackback_url URL to send trackbacks.
- * @param string $title Title of post.
- * @param string $excerpt Excerpt of post.
- * @param int $ID Post ID.
- * @return int|false|void Database query from update.
- */
-function trackback($trackback_url, $title, $excerpt, $ID) {
-	global $wpdb;
-
-	if ( empty($trackback_url) )
-		return;
-
-	$options = array();
-	$options['timeout'] = 10;
-	$options['body'] = array(
-		'title' => $title,
-		'url' => get_permalink($ID),
-		'blog_name' => get_option('blogname'),
-		'excerpt' => $excerpt
-	);
-
-	$response = wp_safe_remote_post( $trackback_url, $options );
-
-	if ( is_wp_error( $response ) )
-		return;
-
-	$wpdb->query( $wpdb->prepare("UPDATE $wpdb->posts SET pinged = CONCAT(pinged, '\n', %s) WHERE ID = %d", $trackback_url, $ID) );
-	return $wpdb->query( $wpdb->prepare("UPDATE $wpdb->posts SET to_ping = TRIM(REPLACE(to_ping, %s, '')) WHERE ID = %d", $trackback_url, $ID) );
-}
-
-/**
- * Send a pingback.
- *
- * @since WP-1.2.0
- *
- * @param string $server Host of blog to connect to.
- * @param string $path Path to send the ping.
- */
-function weblog_ping($server = '', $path = '') {
-	include_once( ABSPATH . WPINC . '/class-IXR.php' );
-	include_once( ABSPATH . WPINC . '/class-wp-http-ixr-client.php' );
-
-	// using a timeout of 3 seconds should be enough to cover slow servers
-	$client = new WP_HTTP_IXR_Client($server, ((!strlen(trim($path)) || ('/' == $path)) ? false : $path));
-	$client->timeout = 3;
-	$client->useragent .= ' -- ' . classicpress_user_agent();
-
-	// when set to true, this outputs debug messages by itself
-	$client->debug = false;
-	$home = trailingslashit( home_url() );
-	if ( !$client->query('weblogUpdates.extendedPing', get_option('blogname'), $home, get_bloginfo('rss2_url') ) ) // then try a normal ping
-		$client->query('weblogUpdates.ping', get_option('blogname'), $home);
-}
-
-/**
- * Default filter attached to pingback_ping_source_uri to validate the pingback's Source URI
- *
- * @since WP-3.5.1
- * @see wp_http_validate_url()
- *
- * @param string $source_uri
- * @return string
- */
-function pingback_ping_source_uri( $source_uri ) {
-	return (string) wp_http_validate_url( $source_uri );
-}
-
-/**
- * Default filter attached to xmlrpc_pingback_error.
- *
- * Returns a generic pingback error code unless the error code is 48,
- * which reports that the pingback is already registered.
- *
- * @since WP-3.5.1
- * @link https://www.hixie.ch/specs/pingback/pingback#TOC3
- *
- * @param IXR_Error $ixr_error
- * @return IXR_Error
- */
-function xmlrpc_pingback_error( $ixr_error ) {
-	if ( $ixr_error->code === 48 )
-		return $ixr_error;
-	return new IXR_Error( 0, '' );
-}
-
-//
 // Cache
 //
 
@@ -2976,14 +2546,13 @@ function _close_comments_for_old_posts( $posts, $query ) {
 
 	if ( time() - strtotime( $posts[0]->post_date_gmt ) > ( $days_old * DAY_IN_SECONDS ) ) {
 		$posts[0]->comment_status = 'closed';
-		$posts[0]->ping_status = 'closed';
 	}
 
 	return $posts;
 }
 
 /**
- * Close comments on an old post. Hooked to comments_open and pings_open.
+ * Close comments on an old post. Hooked to comments_open.
  *
  * @access private
  * @since WP-2.7.0

@@ -643,25 +643,6 @@ function is_time() {
 	return $wp_query->is_time();
 }
 
-/**
- * Is the query for a trackback endpoint call?
- *
- * @since WP-1.5.0
- *
- * @global WP_Query $wp_query Global WP_Query instance.
- *
- * @return bool
- */
-function is_trackback() {
-	global $wp_query;
-
-	if ( ! isset( $wp_query ) ) {
-		_doing_it_wrong( __FUNCTION__, __( 'Conditional query tags do not work before the query is run. Before then, they always return false.' ), 'WP-3.1.0' );
-		return false;
-	}
-
-	return $wp_query->is_trackback();
-}
 
 /**
  * Is the query for an existing year archive?

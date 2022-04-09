@@ -87,10 +87,6 @@ window.autosave = function() {
 				data.comment_status = 'open';
 			}
 
-			if ( $( '#ping_status' ).prop( 'checked' ) ) {
-				data.ping_status = 'open';
-			}
-
 			if ( $( '#auto_draft' ).val() === '1' ) {
 				data.auto_draft = '1';
 			}

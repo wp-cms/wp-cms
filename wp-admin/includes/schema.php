@@ -164,11 +164,8 @@ CREATE TABLE $wpdb->posts (
   post_excerpt text NOT NULL,
   post_status varchar(20) NOT NULL default 'publish',
   comment_status varchar(20) NOT NULL default 'open',
-  ping_status varchar(20) NOT NULL default 'open',
   post_password varchar(255) NOT NULL default '',
   post_name varchar(200) NOT NULL default '',
-  to_ping text NOT NULL,
-  pinged text NOT NULL,
   post_modified datetime NOT NULL default '0000-00-00 00:00:00',
   post_modified_gmt datetime NOT NULL default '0000-00-00 00:00:00',
   post_content_filtered longtext NOT NULL,
@@ -414,8 +411,6 @@ function populate_options() {
 	'mailserver_port' => 110,
 	'default_category' => 1,
 	'default_comment_status' => 'open',
-	'default_ping_status' => 'open',
-	'default_pingback_flag' => 1,
 	'posts_per_page' => 10,
 	/* translators: default date format, see https://secure.php.net/date */
 	'date_format' => __('F j, Y'),
@@ -432,7 +427,6 @@ function populate_options() {
 	'moderation_keys' => '',
 	'active_plugins' => array(),
 	'category_base' => '',
-	'ping_sites' => 'http://rpc.pingomatic.com/',
 	'comment_max_links' => 2,
 	'gmt_offset' => $gmt_offset,
 
@@ -445,9 +439,6 @@ function populate_options() {
 	'blacklist_keys' => '',
 	'comment_registration' => 0,
 	'html_type' => 'text/html',
-
-	// 1.5.1
-	'use_trackback' => 0,
 
 	// 2.0
 	'default_role' => 'subscriber',
@@ -566,31 +557,6 @@ function populate_options() {
 
 	// In case it is set, but blank, update "home".
 	if ( !__get_option('home') ) update_option('home', $guessurl);
-
-	// Delete unused options.
-	$unusedoptions = array(
-		'blodotgsping_url', 'bodyterminator', 'emailtestonly', 'phoneemail_separator', 'smilies_directory',
-		'subjectprefix', 'use_bbcode', 'use_blodotgsping', 'use_phoneemail', 'use_quicktags', 'use_weblogsping',
-		'weblogs_cache_file', 'use_preview', 'use_htmltrans', 'smilies_directory', 'fileupload_allowedusers',
-		'use_phoneemail', 'default_post_status', 'default_post_category', 'archive_mode', 'time_difference',
-		'links_minadminlevel', 'links_use_adminlevels', 'links_rating_type', 'links_rating_char',
-		'links_rating_ignore_zero', 'links_rating_single_image', 'links_rating_image0', 'links_rating_image1',
-		'links_rating_image2', 'links_rating_image3', 'links_rating_image4', 'links_rating_image5',
-		'links_rating_image6', 'links_rating_image7', 'links_rating_image8', 'links_rating_image9',
-		'links_recently_updated_time', 'links_recently_updated_prepend', 'links_recently_updated_append',
-		'weblogs_cacheminutes', 'comment_allowed_tags', 'search_engine_friendly_urls', 'default_geourl_lat',
-		'default_geourl_lon', 'use_default_geourl', 'weblogs_xml_url', 'new_users_can_blog', '_wpnonce',
-		'_wp_http_referer', 'Update', 'action', 'rich_editing', 'autosave_interval', 'deactivated_plugins',
-		'can_compress_scripts', 'page_uris', 'update_core', 'update_plugins', 'update_themes', 'doing_cron',
-		'random_seed', 'rss_excerpt_length', 'secret', 'use_linksupdate', 'default_comment_status_page',
-		'wporg_popular_tags', 'what_to_show', 'rss_language', 'language', 'enable_xmlrpc', 'enable_app',
-		'embed_autourls', 'default_post_edit_rows', 'gzipcompression', 'advanced_edit'
-	);
-	foreach ( $unusedoptions as $option )
-		delete_option($option);
-
-	// Delete obsolete magpie stuff.
-	$wpdb->query("DELETE FROM $wpdb->options WHERE option_name REGEXP '^rss_[0-9a-f]{32}(_ts)?$'");
 
 	// Clear expired transients
 	delete_expired_transients( true );

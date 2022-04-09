@@ -43,7 +43,7 @@ if ( !function_exists('get_currentuserinfo') ) :
  * @deprecated WP-4.5.0 Use wp_get_current_user()
  * @see wp_get_current_user()
  *
- * @return bool|WP_User False on XMLRPC Request and invalid auth cookie, WP_User instance otherwise.
+ * @return bool|WP_User Invalid auth cookie, WP_User instance otherwise.
  */
 function get_currentuserinfo() {
 	_deprecated_function( __FUNCTION__, 'WP-4.5.0', 'wp_get_current_user()' );

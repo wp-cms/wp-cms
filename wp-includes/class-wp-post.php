@@ -96,14 +96,6 @@ final class WP_Post {
 	public $comment_status = 'open';
 
 	/**
-	 * Whether pings are allowed.
-	 *
-	 * @since WP-3.5.0
-	 * @var string
-	 */
-	public $ping_status = 'open';
-
-	/**
 	 * The post's password in plain text.
 	 *
 	 * @since WP-3.5.0
@@ -119,21 +111,6 @@ final class WP_Post {
 	 */
 	public $post_name = '';
 
-	/**
-	 * URLs queued to be pinged.
-	 *
-	 * @since WP-3.5.0
-	 * @var string
-	 */
-	public $to_ping = '';
-
-	/**
-	 * URLs that have been pinged.
-	 *
-	 * @since WP-3.5.0
-	 * @var string
-	 */
-	public $pinged = '';
 
 	/**
 	 * The post's local modified time.

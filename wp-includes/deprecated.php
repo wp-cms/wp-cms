@@ -37,10 +37,7 @@ function get_postdata($postid) {
 		'Category' => $post->post_category,
 		'post_status' => $post->post_status,
 		'comment_status' => $post->comment_status,
-		'ping_status' => $post->ping_status,
 		'post_password' => $post->post_password,
-		'to_ping' => $post->to_ping,
-		'pinged' => $post->pinged,
 		'post_type' => $post->post_type,
 		'post_name' => $post->post_name
 	);
