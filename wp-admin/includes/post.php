@@ -48,9 +48,6 @@ function _wp_translate_postdata( $update = false, $post_data = null ) {
 	if ( isset( $post_data['parent_id'] ) )
 		$post_data['post_parent'] = (int) $post_data['parent_id'];
 
-	if ( isset($post_data['trackback_url']) )
-		$post_data['to_ping'] = $post_data['trackback_url'];
-
 	$post_data['user_ID'] = get_current_user_id();
 
 	if (!empty ( $post_data['post_author_override'] ) ) {
@@ -131,9 +128,6 @@ function _wp_translate_postdata( $update = false, $post_data = null ) {
 
 	if (!isset( $post_data['comment_status'] ))
 		$post_data['comment_status'] = 'closed';
-
-	if (!isset( $post_data['ping_status'] ))
-		$post_data['ping_status'] = 'closed';
 
 	foreach ( array('aa', 'mm', 'jj', 'hh', 'mn') as $timeunit ) {
 		if ( !empty( $post_data['hidden_' . $timeunit] ) && $post_data['hidden_' . $timeunit] != $post_data[$timeunit] ) {
@@ -477,7 +471,7 @@ function bulk_edit_posts( $post_data = null ) {
 	$reset = array(
 		'post_author', 'post_status', 'post_password',
 		'post_parent', 'page_template', 'comment_status',
-		'ping_status', 'keep_private', 'tax_input',
+		'keep_private', 'tax_input',
 		'post_category', 'sticky', 'post_format',
 	);
 
@@ -571,7 +565,7 @@ function bulk_edit_posts( $post_data = null ) {
 		$post_data['post_type'] = $post->post_type;
 		$post_data['post_mime_type'] = $post->post_mime_type;
 
-		foreach ( array( 'comment_status', 'ping_status', 'post_author' ) as $field ) {
+		foreach ( array( 'comment_status', 'post_author' ) as $field ) {
 			if ( ! isset( $post_data[ $field ] ) ) {
 				$post_data[ $field ] = $post->$field;
 			}
@@ -639,11 +633,7 @@ function get_default_post_to_edit( $post_type = 'post', $create_in_db = false ) 
 		$post->post_name = '';
 		$post->post_type = $post_type;
 		$post->post_status = 'draft';
-		$post->to_ping = '';
-		$post->pinged = '';
 		$post->comment_status = get_default_comment_status( $post_type );
-		$post->ping_status = get_default_comment_status( $post_type, 'pingback' );
-		$post->post_pingback = get_option( 'default_pingback_flag' );
 		$post->post_category = get_option( 'default_category' );
 		$post->page_template = 'default';
 		$post->post_parent = 0;

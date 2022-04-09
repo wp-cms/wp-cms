@@ -310,14 +310,6 @@ class WP_Query {
 	public $is_comment_feed = false;
 
 	/**
-	 * Signifies whether the current query is for trackback endpoint call.
-	 *
-	 * @since WP-1.5.0
-	 * @var bool
-	 */
-	public $is_trackback = false;
-
-	/**
 	 * Signifies whether the current query is for the site homepage.
 	 *
 	 * @since WP-1.5.0
@@ -461,7 +453,6 @@ class WP_Query {
 		$this->is_search = false;
 		$this->is_feed = false;
 		$this->is_comment_feed = false;
-		$this->is_trackback = false;
 		$this->is_home = false;
 		$this->is_404 = false;
 		$this->is_paged = false;
@@ -545,7 +536,6 @@ class WP_Query {
 			, 'author'
 			, 'author_name'
 			, 'feed'
-			, 'tb'
 			, 'paged'
 			, 'meta_key'
 			, 'meta_value'
@@ -583,7 +573,7 @@ class WP_Query {
 	 * @since WP-4.4.0 Introduced `$post_name__in` and `$title` parameters. `$s` was updated to support excluded
 	 *              search terms, by prepending a hyphen.
 	 * @since WP-4.5.0 Removed the `$comments_popup` parameter.
-	 *              Introduced the `$comment_status` and `$ping_status` parameters.
+	 *              Introduced the `$comment_status` parameter.
 	 *              Introduced `RAND(x)` syntax for `$orderby`, which allows an integer seed value to random sorts.
 	 * @since WP-4.6.0 Added 'post_name__in' support for `$orderby`. Introduced the `$lazy_load_term_meta` argument.
 	 * @since WP-4.9.0 Introduced the `$comment_count` parameter.
@@ -655,7 +645,6 @@ class WP_Query {
 	 *     @type int          $page_id                 Page ID.
 	 *     @type string       $pagename                Page slug.
 	 *     @type string       $perm                    Show posts if user has the appropriate capability.
-	 *     @type string       $ping_status             Ping status.
 	 *     @type array        $post__in                An array of post IDs to retrieve, sticky posts will be included
 	 *     @type string       $post_mime_type          The mime type of the post. Used for 'attachment' post_type.
 	 *     @type array        $post__not_in            An array of post IDs not to retrieve. Note: a string of comma-
@@ -880,9 +869,6 @@ class WP_Query {
 			$this->is_embed = true;
 		}
 
-		if ( '' != $qv['tb'] )
-			$this->is_trackback = true;
-
 		if ( '' != $qv['paged'] && ( intval($qv['paged']) > 1 ) )
 			$this->is_paged = true;
 
@@ -903,7 +889,7 @@ class WP_Query {
 		if ( $this->is_feed && ( !empty($qv['withcomments']) || ( empty($qv['withoutcomments']) && $this->is_singular ) ) )
 			$this->is_comment_feed = true;
 
-		if ( !( $this->is_singular || $this->is_archive || $this->is_search || $this->is_feed || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || $this->is_trackback || $this->is_404 || $this->is_admin || $this->is_robots ) )
+		if ( !( $this->is_singular || $this->is_archive || $this->is_search || $this->is_feed || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || $this->is_404 || $this->is_admin || $this->is_robots ) )
 			$this->is_home = true;
 
 		// Correct is_* for page_on_front and page_for_posts
@@ -2224,10 +2210,6 @@ class WP_Query {
 
 		if ( ! empty( $q['comment_status'] ) ) {
 			$where .= $wpdb->prepare( " AND {$wpdb->posts}.comment_status = %s ", $q['comment_status'] );
-		}
-
-		if ( ! empty( $q['ping_status'] ) )  {
-			$where .= $wpdb->prepare( " AND {$wpdb->posts}.ping_status = %s ", $q['ping_status'] );
 		}
 
 		if ( 'any' == $post_type ) {
@@ -3877,17 +3859,6 @@ class WP_Query {
 	 */
 	public function is_time() {
 		return (bool) $this->is_time;
-	}
-
-	/**
-	 * Is the query for a trackback endpoint call?
-	 *
-	 * @since WP-3.1.0
-	 *
-	 * @return bool
-	 */
-	public function is_trackback() {
-		return (bool) $this->is_trackback;
 	}
 
 	/**

@@ -477,7 +477,6 @@ function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0, $menu_item
 	// Populate the menu item object
 	$post = array(
 		'menu_order' => $args['menu-item-position'],
-		'ping_status' => 0,
 		'post_content' => $args['menu-item-description'],
 		'post_excerpt' => $args['menu-item-attr-title'],
 		'post_parent' => $original_parent,

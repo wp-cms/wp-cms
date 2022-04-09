@@ -4145,7 +4145,6 @@ function sanitize_option( $option, $value ) {
 				$value = abs($value);
 			break;
 
-		case 'default_ping_status':
 		case 'default_comment_status':
 			// Options that if not there have 0 value but need to be something like "closed"
 			if ( $value == '0' || $value == '')
@@ -4862,36 +4861,6 @@ function sanitize_mime_type( $mime_type ) {
 	 * @param string $mime_type      The mime type prior to sanitization.
 	 */
 	return apply_filters( 'sanitize_mime_type', $sani_mime_type, $mime_type );
-}
-
-/**
- * Sanitize space or carriage return separated URLs that are used to send trackbacks.
- *
- * @since WP-3.4.0
- *
- * @param string $to_ping Space or carriage return separated URLs
- * @return string URLs starting with the http or https protocol, separated by a carriage return.
- */
-function sanitize_trackback_urls( $to_ping ) {
-	$urls_to_ping = preg_split( '/[\r\n\t ]/', trim( $to_ping ), -1, PREG_SPLIT_NO_EMPTY );
-	foreach ( $urls_to_ping as $k => $url ) {
-		if ( !preg_match( '#^https?://.#i', $url ) )
-			unset( $urls_to_ping[$k] );
-	}
-	$urls_to_ping = array_map( 'esc_url_raw', $urls_to_ping );
-	$urls_to_ping = implode( "\n", $urls_to_ping );
-	/**
-	 * Filters a list of trackback URLs following sanitization.
-	 *
-	 * The string returned here consists of a space or carriage return-delimited list
-	 * of trackback URLs.
-	 *
-	 * @since WP-3.4.0
-	 *
-	 * @param string $urls_to_ping Sanitized space or carriage return separated URLs.
-	 * @param string $to_ping      Space or carriage return separated URLs before sanitization.
-	 */
-	return apply_filters( 'sanitize_trackback_urls', $urls_to_ping, $to_ping );
 }
 
 /**

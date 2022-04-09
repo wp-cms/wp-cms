@@ -43,7 +43,7 @@ class WP_Ajax_Response {
 	 * @param string|array $args {
 	 *     Optional. An array or string of XML response arguments.
 	 *
-	 *     @type string          $what         XML-RPC response type. Used as a child element of `<response>`.
+	 *     @type string          $what         XML response type. Used as a child element of `<response>`.
 	 *                                         Default 'object' (`<object>`).
 	 *     @type string|false    $action       Value to use for the `action` attribute in `<response>`. Will be
 	 *                                         appended with `_$id` on output. If false, `$action` will default to

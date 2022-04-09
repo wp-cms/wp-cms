@@ -78,7 +78,7 @@ add_filter( 'pre_term_slug', 'sanitize_title' );
 add_filter( 'wp_insert_post_data', '_wp_customize_changeset_filter_insert_post_data', 10, 2 );
 
 // Keys
-foreach ( array( 'pre_post_type', 'pre_post_status', 'pre_post_comment_status', 'pre_post_ping_status' ) as $filter ) {
+foreach ( array( 'pre_post_type', 'pre_post_status', 'pre_post_comment_status' ) as $filter ) {
 	add_filter( $filter, 'sanitize_key' );
 }
 
@@ -200,7 +200,6 @@ foreach ( array( 'publish_post', 'publish_page', 'wp_ajax_save-widget', 'wp_ajax
 }
 
 // Misc filters
-add_filter( 'option_ping_sites',        'privacy_ping_filter'                 );
 add_filter( 'option_blog_charset',      '_wp_specialchars'                    ); // IMPORTANT: This must not be wp_specialchars() or esc_html() or it'll cause an infinite loop
 add_filter( 'option_blog_charset',      '_canonical_charset'                  );
 add_filter( 'option_home',              '_config_wp_home'                     );
@@ -217,12 +216,9 @@ add_filter( 'option_tag_base',          '_wp_filter_taxonomy_base'            );
 add_filter( 'option_category_base',     '_wp_filter_taxonomy_base'            );
 add_filter( 'the_posts',                '_close_comments_for_old_posts', 10, 2);
 add_filter( 'comments_open',            '_close_comments_for_old_post', 10, 2 );
-add_filter( 'pings_open',               '_close_comments_for_old_post', 10, 2 );
 add_filter( 'editable_slug',            'urldecode'                           );
 add_filter( 'editable_slug',            'esc_textarea'                        );
 add_filter( 'nav_menu_meta_box_object', '_wp_nav_menu_meta_box_object'        );
-add_filter( 'pingback_ping_source_uri', 'pingback_ping_source_uri'            );
-add_filter( 'xmlrpc_pingback_error',    'xmlrpc_pingback_error'               );
 add_filter( 'title_save_pre',           'trim'                                );
 
 add_action( 'transition_comment_status', '_clear_modified_cache_on_transition_comment_status', 10, 2 );
@@ -230,7 +226,6 @@ add_action( 'transition_comment_status', '_clear_modified_cache_on_transition_co
 add_filter( 'http_request_host_is_external',    'allowed_http_request_hosts', 10, 2 );
 
 // REST API filters.
-add_action( 'xmlrpc_rsd_apis',            'rest_output_rsd' );
 add_action( 'wp_head',                    'rest_output_link_wp_head', 10, 0 );
 add_action( 'template_redirect',          'rest_output_link_header', 11, 0 );
 add_action( 'auth_cookie_malformed',      'rest_cookie_collect_status' );
@@ -246,7 +241,6 @@ add_action( 'wp_head',             'wp_enqueue_scripts',              1     );
 add_action( 'wp_head',             'wp_resource_hints',               2     );
 add_action( 'wp_head',             'feed_links',                      2     );
 add_action( 'wp_head',             'feed_links_extra',                3     );
-add_action( 'wp_head',             'rsd_link'                               );
 add_action( 'wp_head',             'wlwmanifest_link'                       );
 add_action( 'wp_head',             'adjacent_posts_rel_link_wp_head', 10, 0 );
 add_action( 'wp_head',             'locale_stylesheet'                      );
@@ -298,7 +292,6 @@ add_action( 'do_feed_rdf',                'do_feed_rdf',                        
 add_action( 'do_feed_rss',                'do_feed_rss',                             10, 1 );
 add_action( 'do_feed_rss2',               'do_feed_rss2',                            10, 1 );
 add_action( 'do_feed_atom',               'do_feed_atom',                            10, 1 );
-add_action( 'do_pings',                   'do_all_pings',                            10, 1 );
 add_action( 'do_robots',                  'do_robots'                                      );
 add_action( 'set_comment_cookies',        'wp_set_comment_cookies',                  10, 3 );
 add_action( 'sanitize_comment_cookies',   'sanitize_comment_cookies'                       );

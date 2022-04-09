@@ -397,8 +397,6 @@ class WP_Customize_Nav_Menu_Item_Setting extends WP_Customize_Setting {
 			'db_id',
 			'filter',
 			'guid',
-			'ping_status',
-			'pinged',
 			'post_author',
 			'post_content',
 			'post_content_filtered',
@@ -413,7 +411,6 @@ class WP_Customize_Nav_Menu_Item_Setting extends WP_Customize_Setting {
 			'post_password',
 			'post_title',
 			'post_type',
-			'to_ping',
 		);
 		foreach ( $irrelevant_properties as $property ) {
 			unset( $this->value[ $property ] );

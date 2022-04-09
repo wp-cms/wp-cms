@@ -32,7 +32,7 @@ function create_initial_post_types() {
 		'rewrite' => false,
 		'query_var' => false,
 		'delete_with_user' => true,
-		'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields', 'comments', 'revisions', 'post-formats' ),
+		'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments', 'revisions', 'post-formats' ),
 		'show_in_rest' => true,
 		'rest_base' => 'posts',
 		'rest_controller_class' => 'WP_REST_Posts_Controller',
@@ -1127,7 +1127,7 @@ function get_post_types( $args = array(), $output = 'names', $operator = 'and' )
  *                                              Default false.
  *     @type array       $supports              Core feature(s) the post type supports. Serves as an alias for calling
  *                                              add_post_type_support() directly. Core features include 'title',
- *                                              'editor', 'comments', 'revisions', 'trackbacks', 'author', 'excerpt',
+ *                                              'editor', 'comments', 'revisions', 'author', 'excerpt',
  *                                              'page-attributes', 'thumbnail', 'custom-fields', and 'post-formats'.
  *                                              Additionally, the 'revisions' feature dictates whether the post type
  *                                              will store revisions, and the 'comments' feature dictates whether the
@@ -1558,7 +1558,7 @@ function _add_post_type_submenus() {
  *
  * All core features are directly associated with a functional area of the edit
  * screen, such as the editor or a meta box. Features include: 'title', 'editor',
- * 'comments', 'revisions', 'trackbacks', 'author', 'excerpt', 'page-attributes',
+ * 'comments', 'revisions', 'author', 'excerpt', 'page-attributes',
  * 'thumbnail', 'custom-fields', and 'post-formats'.
  *
  * Additionally, the 'revisions' feature dictates whether the post type will
@@ -3107,15 +3107,9 @@ function wp_get_recent_posts( $args = array(), $output = ARRAY_A ) {
  *     @type string $post_type             The post type. Default 'post'.
  *     @type string $comment_status        Whether the post can accept comments. Accepts 'open' or 'closed'.
  *                                         Default is the value of 'default_comment_status' option.
- *     @type string $ping_status           Whether the post can accept pings. Accepts 'open' or 'closed'.
- *                                         Default is the value of 'default_ping_status' option.
  *     @type string $post_password         The password to access the post. Default empty.
  *     @type string $post_name             The post name. Default is the sanitized post title
  *                                         when creating a new post.
- *     @type string $to_ping               Space or carriage return-separated list of URLs to ping.
- *                                         Default empty.
- *     @type string $pinged                Space or carriage return-separated list of URLs that have
- *                                         been pinged. Default empty.
  *     @type string $post_modified         The date when the post was last modified. Default is
  *                                         the current time.
  *     @type string $post_modified_gmt     The date when the post was last modified in the GMT
@@ -3150,10 +3144,7 @@ function wp_insert_post( $postarr, $wp_error = false ) {
 		'post_status' => 'draft',
 		'post_type' => 'post',
 		'comment_status' => '',
-		'ping_status' => '',
 		'post_password' => '',
-		'to_ping' =>  '',
-		'pinged' => '',
 		'post_parent' => 0,
 		'menu_order' => 0,
 		'guid' => '',
@@ -3351,9 +3342,6 @@ function wp_insert_post( $postarr, $wp_error = false ) {
 	// These variables are needed by compact() later.
 	$post_content_filtered = $postarr['post_content_filtered'];
 	$post_author = isset( $postarr['post_author'] ) ? $postarr['post_author'] : $user_id;
-	$ping_status = empty( $postarr['ping_status'] ) ? get_default_comment_status( $post_type, 'pingback' ) : $postarr['ping_status'];
-	$to_ping = isset( $postarr['to_ping'] ) ? sanitize_trackback_urls( $postarr['to_ping'] ) : '';
-	$pinged = isset( $postarr['pinged'] ) ? $postarr['pinged'] : '';
 	$import_id = isset( $postarr['import_id'] ) ? $postarr['import_id'] : 0;
 
 	/*
@@ -3424,7 +3412,7 @@ function wp_insert_post( $postarr, $wp_error = false ) {
 	$post_mime_type = isset( $postarr['post_mime_type'] ) ? $postarr['post_mime_type'] : '';
 
 	// Expected_slashed (everything!).
-	$data = compact( 'post_author', 'post_date', 'post_date_gmt', 'post_content', 'post_content_filtered', 'post_title', 'post_excerpt', 'post_status', 'post_type', 'comment_status', 'ping_status', 'post_password', 'post_name', 'to_ping', 'pinged', 'post_modified', 'post_modified_gmt', 'post_parent', 'menu_order', 'post_mime_type', 'guid' );
+	$data = compact( 'post_author', 'post_date', 'post_date_gmt', 'post_content', 'post_content_filtered', 'post_title', 'post_excerpt', 'post_status', 'post_type', 'comment_status', 'post_password', 'post_name', 'post_modified', 'post_modified_gmt', 'post_parent', 'menu_order', 'post_mime_type', 'guid' );
 
 	$emoji_fields = array( 'post_title', 'post_content', 'post_excerpt' );
 
@@ -4175,176 +4163,6 @@ function wp_transition_post_status( $new_status, $old_status, $post ) {
 	 * @param WP_Post $post    Post object.
 	 */
 	do_action( "{$new_status}_{$post->post_type}", $post->ID, $post );
-}
-
-//
-// Comment, trackback, and pingback functions.
-//
-
-/**
- * Add a URL to those already pinged.
- *
- * @since WP-1.5.0
- * @since WP-4.7.0 $post_id can be a WP_Post object.
- * @since WP-4.7.0 $uri can be an array of URIs.
- *
- * @global wpdb $wpdb ClassicPress database abstraction object.
- *
- * @param int|WP_Post  $post_id Post object or ID.
- * @param string|array $uri     Ping URI or array of URIs.
- * @return int|false How many rows were updated.
- */
-function add_ping( $post_id, $uri ) {
-	global $wpdb;
-
-	$post = get_post( $post_id );
-	if ( ! $post ) {
-		return false;
-	}
-
-	$pung = trim( $post->pinged );
-	$pung = preg_split( '/\s/', $pung );
-
-	if ( is_array( $uri ) ) {
-		$pung = array_merge( $pung, $uri );
-	}
-	else {
-		$pung[] = $uri;
-	}
-	$new = implode("\n", $pung);
-
-	/**
-	 * Filters the new ping URL to add for the given post.
-	 *
-	 * @since WP-2.0.0
-	 *
-	 * @param string $new New ping URL to add.
-	 */
-	$new = apply_filters( 'add_ping', $new );
-
-	$return = $wpdb->update( $wpdb->posts, array( 'pinged' => $new ), array( 'ID' => $post->ID ) );
-	clean_post_cache( $post->ID );
-	return $return;
-}
-
-/**
- * Retrieve enclosures already enclosed for a post.
- *
- * @since WP-1.5.0
- *
- * @param int $post_id Post ID.
- * @return array List of enclosures.
- */
-function get_enclosed( $post_id ) {
-	$custom_fields = get_post_custom( $post_id );
-	$pung = array();
-	if ( !is_array( $custom_fields ) )
-		return $pung;
-
-	foreach ( $custom_fields as $key => $val ) {
-		if ( 'enclosure' != $key || !is_array( $val ) )
-			continue;
-		foreach ( $val as $enc ) {
-			$enclosure = explode( "\n", $enc );
-			$pung[] = trim( $enclosure[ 0 ] );
-		}
-	}
-
-	/**
-	 * Filters the list of enclosures already enclosed for the given post.
-	 *
-	 * @since WP-2.0.0
-	 *
-	 * @param array $pung    Array of enclosures for the given post.
-	 * @param int   $post_id Post ID.
-	 */
-	return apply_filters( 'get_enclosed', $pung, $post_id );
-}
-
-/**
- * Retrieve URLs already pinged for a post.
- *
- * @since WP-1.5.0
- *
- * @since WP-4.7.0 $post_id can be a WP_Post object.
- *
- * @param int|WP_Post $post_id Post ID or object.
- * @return array
- */
-function get_pung( $post_id ) {
-	$post = get_post( $post_id );
-	if ( ! $post ) {
-		return false;
-	}
-
-	$pung = trim( $post->pinged );
-	$pung = preg_split( '/\s/', $pung );
-
-	/**
-	 * Filters the list of already-pinged URLs for the given post.
-	 *
-	 * @since WP-2.0.0
-	 *
-	 * @param array $pung Array of URLs already pinged for the given post.
-	 */
-	return apply_filters( 'get_pung', $pung );
-}
-
-/**
- * Retrieve URLs that need to be pinged.
- *
- * @since WP-1.5.0
- * @since WP-4.7.0 $post_id can be a WP_Post object.
- *
- * @param int|WP_Post $post_id Post Object or ID
- * @return array
- */
-function get_to_ping( $post_id ) {
-	$post = get_post( $post_id );
-
-	if ( ! $post ) {
-		return false;
-	}
-
-	$to_ping = sanitize_trackback_urls( $post->to_ping );
-	$to_ping = preg_split('/\s/', $to_ping, -1, PREG_SPLIT_NO_EMPTY);
-
-	/**
-	 * Filters the list of URLs yet to ping for the given post.
-	 *
-	 * @since WP-2.0.0
-	 *
-	 * @param array $to_ping List of URLs yet to ping.
-	 */
-	return apply_filters( 'get_to_ping', $to_ping );
-}
-
-/**
- * Do trackbacks for a list of URLs.
- *
- * @since WP-1.0.0
- *
- * @param string $tb_list Comma separated list of URLs.
- * @param int    $post_id Post ID.
- */
-function trackback_url_list( $tb_list, $post_id ) {
-	if ( ! empty( $tb_list ) ) {
-		// Get post data.
-		$postdata = get_post( $post_id, ARRAY_A );
-
-		// Form an excerpt.
-		$excerpt = strip_tags( $postdata['post_excerpt'] ? $postdata['post_excerpt'] : $postdata['post_content'] );
-
-		if ( strlen( $excerpt ) > 255 ) {
-			$excerpt = substr( $excerpt, 0, 252 ) . '&hellip;';
-		}
-
-		$trackback_urls = explode( ',', $tb_list );
-		foreach ( (array) $trackback_urls as $tb_url ) {
-			$tb_url = trim( $tb_url );
-			trackback( $tb_url, wp_unslash( $postdata['post_title'] ), $excerpt, $post_id );
-		}
-	}
 }
 
 //
@@ -6176,9 +5994,9 @@ function _future_post_hook( $deprecated, $post ) {
 }
 
 /**
- * Hook to schedule pings and enclosures when a post is published.
+ * Hook to schedule enclosures when a post is published.
  *
- * Uses XMLRPC_REQUEST and WP_IMPORTING constants.
+ * Uses WP_IMPORTING constant.
  *
  * @since WP-2.3.0
  * @access private
@@ -6186,32 +6004,12 @@ function _future_post_hook( $deprecated, $post ) {
  * @param int $post_id The ID in the database table of the post being published.
  */
 function _publish_post_hook( $post_id ) {
-	if ( defined( 'XMLRPC_REQUEST' ) ) {
-		/**
-		 * Fires when _publish_post_hook() is called during an XML-RPC request.
-		 *
-		 * @since WP-2.1.0
-		 *
-		 * @param int $post_id Post ID.
-		 */
-		do_action( 'xmlrpc_publish_post', $post_id );
-	}
 
 	if ( defined('WP_IMPORTING') )
 		return;
 
-	if ( get_option('default_pingback_flag') )
-		add_post_meta( $post_id, '_pingme', '1' );
 	add_post_meta( $post_id, '_encloseme', '1' );
 
-	$to_ping = get_to_ping( $post_id );
-	if ( ! empty( $to_ping ) ) {
-		add_post_meta( $post_id, '_trackbackme', '1' );
-	}
-
-	if ( ! wp_next_scheduled( 'do_pings' ) ) {
-		wp_schedule_single_event( time(), 'do_pings' );
-	}
 }
 
 /**

@@ -1112,11 +1112,6 @@ class WP_REST_Posts_Controller extends WP_REST_Controller {
 			$prepared_post->comment_status = $request['comment_status'];
 		}
 
-		// Ping status.
-		if ( ! empty( $schema['properties']['ping_status'] ) && ! empty( $request['ping_status'] ) ) {
-			$prepared_post->ping_status = $request['ping_status'];
-		}
-
 		if ( ! empty( $schema['properties']['template'] ) ) {
 			// Force template to null so that it can be handled exclusively by the REST controller.
 			$prepared_post->page_template = null;
@@ -1580,10 +1575,6 @@ class WP_REST_Posts_Controller extends WP_REST_Controller {
 
 		if ( in_array( 'comment_status', $fields, true ) ) {
 			$data['comment_status'] = $post->comment_status;
-		}
-
-		if ( in_array( 'ping_status', $fields, true ) ) {
-			$data['ping_status'] = $post->ping_status;
 		}
 
 		if ( in_array( 'sticky', $fields, true ) ) {
@@ -2117,12 +2108,6 @@ class WP_REST_Posts_Controller extends WP_REST_Controller {
 				case 'comments':
 					$schema['properties']['comment_status'] = array(
 						'description' => __( 'Whether or not comments are open on the object.' ),
-						'type'        => 'string',
-						'enum'        => array( 'open', 'closed' ),
-						'context'     => array( 'view', 'edit' ),
-					);
-					$schema['properties']['ping_status'] = array(
-						'description' => __( 'Whether or not the object can be pinged.' ),
 						'type'        => 'string',
 						'enum'        => array( 'open', 'closed' ),
 						'context'     => array( 'view', 'edit' ),

@@ -519,69 +519,6 @@ function maybe_serialize( $data ) {
 }
 
 /**
- * Retrieve post title from XMLRPC XML.
- *
- * If the title element is not part of the XML, then the default post title from
- * the $post_default_title will be used instead.
- *
- * @since WP-0.71
- *
- * @global string $post_default_title Default XML-RPC post title.
- *
- * @param string $content XMLRPC XML Request content
- * @return string Post title
- */
-function xmlrpc_getposttitle( $content ) {
-	global $post_default_title;
-	if ( preg_match( '/<title>(.+?)<\/title>/is', $content, $matchtitle ) ) {
-		$post_title = $matchtitle[1];
-	} else {
-		$post_title = $post_default_title;
-	}
-	return $post_title;
-}
-
-/**
- * Retrieve the post category or categories from XMLRPC XML.
- *
- * If the category element is not found, then the default post category will be
- * used. The return type then would be what $post_default_category. If the
- * category is found, then it will always be an array.
- *
- * @since WP-0.71
- *
- * @global string $post_default_category Default XML-RPC post category.
- *
- * @param string $content XMLRPC XML Request content
- * @return string|array List of categories or category name.
- */
-function xmlrpc_getpostcategory( $content ) {
-	global $post_default_category;
-	if ( preg_match( '/<category>(.+?)<\/category>/is', $content, $matchcat ) ) {
-		$post_category = trim( $matchcat[1], ',' );
-		$post_category = explode( ',', $post_category );
-	} else {
-		$post_category = $post_default_category;
-	}
-	return $post_category;
-}
-
-/**
- * XMLRPC XML content without title and category elements.
- *
- * @since WP-0.71
- *
- * @param string $content XML-RPC XML Request content.
- * @return string XMLRPC XML Request content without title and category elements.
- */
-function xmlrpc_removepostdata( $content ) {
-	$content = preg_replace( '/<title>(.+?)<\/title>/si', '', $content );
-	$content = preg_replace( '/<category>(.+?)<\/category>/si', '', $content );
-	$content = trim( $content );
-	return $content;
-}
-
-/**
  * Use RegEx to extract URLs from arbitrary content.
  *
  * @since WP-3.7.0
@@ -610,114 +547,6 @@ function wp_extract_urls( $content ) {
 	$post_links = array_unique( array_map( 'html_entity_decode', $post_links[2] ) );
 
 	return array_values( $post_links );
-}
-
-/**
- * Check content for video and audio links to add as enclosures.
- *
- * Will not add enclosures that have already been added and will
- * remove enclosures that are no longer in the post. This is called as
- * pingbacks and trackbacks.
- *
- * @since WP-1.5.0
- * @since WP-5.3.0 The `$content` parameter was made optional, and the `$post` parameter was
- *                 updated to accept a post ID or a WP_Post object.
- * @since WP-5.6.0 The `$content` parameter is no longer optional, but passing `null` to skip it
- *                 is still supported.
- *
- * @global wpdb $wpdb ClassicPress database abstraction object.
- *
- * @param string|null $content Post content. If `null`, the `post_content` field from `$post` is used.
- * @param int|WP_Post    $post    Post ID or post object.
- * @return null|bool Returns false if post is not found.
- */
-function do_enclose( $content, $post ) {
-	global $wpdb;
-
-	// @todo Tidy this code and make the debug code optional.
-	include_once( ABSPATH . WPINC . '/class-IXR.php' );
-
-	$post = get_post( $post );
-	if ( ! $post ) {
-		return false;
-	}
-
-	if ( null === $content ) {
-		$content = $post->post_content;
-	}
-
-	$post_links = array();
-
-	$pung = get_enclosed( $post->ID );
-
-	$post_links_temp = wp_extract_urls( $content );
-
-	foreach ( $pung as $link_test ) {
-		// Link is no longer in post.
-		if ( ! in_array( $link_test, $post_links_temp, true ) ) {
-			$mids = $wpdb->get_col( $wpdb->prepare( "SELECT meta_id FROM $wpdb->postmeta WHERE post_id = %d AND meta_key = 'enclosure' AND meta_value LIKE %s", $post->ID, $wpdb->esc_like( $link_test ) . '%' ) );
-			foreach ( $mids as $mid ) {
-				delete_metadata_by_mid( 'post', $mid );
-			}
-		}
-	}
-
-	foreach ( (array) $post_links_temp as $link_test ) {
-		// If we haven't pung it already.
-		if ( ! in_array( $link_test, $pung, true ) ) {
-			$test = @parse_url( $link_test );
-			if ( false === $test )
-				continue;
-			if ( isset( $test['query'] ) ) {
-				$post_links[] = $link_test;
-			} elseif ( isset( $test['path'] ) && ( '/' !== $test['path'] ) && ( '' !== $test['path'] ) ) {
-				$post_links[] = $link_test;
-			}
-		}
-	}
-
-	/**
-	 * Filters the list of enclosure links before querying the database.
-	 *
-	 * Allows for the addition and/or removal of potential enclosures to save
-	 * to postmeta before checking the database for existing enclosures.
-	 *
-	 * @since WP-4.4.0
-	 *
-	 * @param array $post_links An array of enclosure links.
-	 * @param int   $post_ID    Post ID.
-	 */
-	$post_links = apply_filters( 'enclosure_links', $post_links, $post->ID );
-
-	foreach ( (array) $post_links as $url ) {
-		if ( '' !== $url && ! $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE post_id = %d AND meta_key = 'enclosure' AND meta_value LIKE %s", $post->ID, $wpdb->esc_like( $url ) . '%' ) ) ) {
-
-			if ( $headers = wp_get_http_headers( $url) ) {
-				$len = isset( $headers['content-length'] ) ? (int) $headers['content-length'] : 0;
-				$type = isset( $headers['content-type'] ) ? $headers['content-type'] : '';
-				$allowed_types = array( 'video', 'audio' );
-
-				// Check to see if we can figure out the mime type from
-				// the extension
-				$url_parts = @parse_url( $url );
-				if ( false !== $url_parts ) {
-					$extension = pathinfo( $url_parts['path'], PATHINFO_EXTENSION );
-					if ( !empty( $extension ) ) {
-						foreach ( wp_get_mime_types() as $exts => $mime ) {
-							if ( preg_match( '!^(' . $exts . ')$!i', $extension ) ) {
-								$type = $mime;
-								break;
-							}
-						}
-					}
-				}
-
-				if ( in_array( substr( $type, 0, strpos( $type, '/' ) ), $allowed_types, true ) ) {
-					add_post_meta( $post->ID, 'enclosure', "$url\n$len\n$mime\n" );
-				}
-			}
-		}
-	}
 }
 
 /**
@@ -2806,7 +2635,7 @@ function wp_nonce_ays( $action ) {
  *              an integer to be used as the response code.
  *
  * @param string|WP_Error  $message Optional. Error message. If this is a WP_Error object,
- *                                  and not an Ajax or XML-RPC request, the error's messages are used.
+ *                                  and not an Ajax request, the error's messages are used.
  *                                  Default empty.
  * @param string|int       $title   Optional. Error title. If `$message` is a `WP_Error` object,
  *                                  error data with the key 'title' may be used to specify the title.
@@ -2841,18 +2670,9 @@ function wp_die( $message = '', $title = '', $args = array() ) {
 		 * @param callable $function Callback function name.
 		 */
 		$function = apply_filters( 'wp_die_ajax_handler', '_ajax_wp_die_handler' );
-	} elseif ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
-		/**
-		 * Filters the callback for killing ClassicPress execution for XML-RPC requests.
-		 *
-		 * @since WP-3.4.0
-		 *
-		 * @param callable $function Callback function name.
-		 */
-		$function = apply_filters( 'wp_die_xmlrpc_handler', '_xmlrpc_wp_die_handler' );
 	} else {
 		/**
-		 * Filters the callback for killing ClassicPress execution for all non-Ajax, non-XML-RPC requests.
+		 * Filters the callback for killing ClassicPress execution for all non-Ajax requests.
 		 *
 		 * @since WP-3.0.0
 		 *
@@ -3060,33 +2880,6 @@ function _default_wp_die_handler( $message, $title = '', $args = array() ) {
 </body>
 </html>
 <?php
-	die();
-}
-
-/**
- * Kill ClassicPress execution and display XML message with error message.
- *
- * This is the handler for wp_die when processing XMLRPC requests.
- *
- * @since WP-3.2.0
- * @access private
- *
- * @global wp_xmlrpc_server $wp_xmlrpc_server
- *
- * @param string       $message Error message.
- * @param string       $title   Optional. Error title. Default empty.
- * @param string|array $args    Optional. Arguments to control behavior. Default empty array.
- */
-function _xmlrpc_wp_die_handler( $message, $title = '', $args = array() ) {
-	global $wp_xmlrpc_server;
-	$defaults = array( 'response' => 500 );
-
-	$r = wp_parse_args($args, $defaults);
-
-	if ( $wp_xmlrpc_server ) {
-		$error = new IXR_Error( $r['response'] , $message);
-		$wp_xmlrpc_server->output( $error->getXml() );
-	}
 	die();
 }
 

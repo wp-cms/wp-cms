@@ -379,16 +379,6 @@ function twentyseventeen_javascript_detection() {
 add_action( 'wp_head', 'twentyseventeen_javascript_detection', 0 );
 
 /**
- * Add a pingback url auto-discovery header for singularly identifiable articles.
- */
-function twentyseventeen_pingback_header() {
-	if ( is_singular() && pings_open() ) {
-		printf( '<link rel="pingback" href="%s">' . "\n", get_bloginfo( 'pingback_url' ) );
-	}
-}
-add_action( 'wp_head', 'twentyseventeen_pingback_header' );
-
-/**
  * Display custom color CSS.
  */
 function twentyseventeen_colors_css_wrap() {

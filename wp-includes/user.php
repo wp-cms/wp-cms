@@ -2647,11 +2647,6 @@ function _wp_get_current_user() {
 		return $current_user;
 	}
 
-	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) {
-		wp_set_current_user( 0 );
-		return $current_user;
-	}
-
 	/**
 	 * Filters the current user.
 	 *
