@@ -199,8 +199,7 @@ function wp_install_defaults( $user_id ) {
 	$first_comment_email = ! empty( $first_comment_email ) ? $first_comment_email : 'social@classicpress.net';
 	$first_comment_url = ! empty( $first_comment_url ) ? $first_comment_url : 'https://www.classicpress.net/';
 	$first_comment = ! empty( $first_comment ) ? $first_comment :  __( 'Hi, this is a comment.
-To get started with moderating, editing, and deleting comments, please visit the Comments screen in the dashboard.
-Commenter avatars come from <a href="https://gravatar.com">Gravatar</a>.' );
+To get started with moderating, editing, and deleting comments, please visit the Comments screen in the dashboard.' );
 	$wpdb->insert( $wpdb->comments, array(
 		'comment_post_ID' => 1,
 		'comment_author' => $first_comment_author,

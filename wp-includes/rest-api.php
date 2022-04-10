@@ -1043,27 +1043,6 @@ function rest_is_boolean( $maybe_bool ) {
 }
 
 /**
- * Retrieves the avatar urls in various sizes based on a given email address.
- *
- * @since WP-4.7.0
- *
- * @see get_avatar_url()
- *
- * @param string $email Email address.
- * @return array $urls Gravatar url for each size.
- */
-function rest_get_avatar_urls( $email ) {
-	$avatar_sizes = rest_get_avatar_sizes();
-
-	$urls = array();
-	foreach ( $avatar_sizes as $size ) {
-		$urls[ $size ] = get_avatar_url( $email, array( 'size' => $size ) );
-	}
-
-	return $urls;
-}
-
-/**
  * Retrieves the pixel sizes for avatars.
  *
  * @since WP-4.7.0

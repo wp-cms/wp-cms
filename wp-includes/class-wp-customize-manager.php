@@ -3192,7 +3192,7 @@ final class WP_Customize_Manager {
 		return array(
 			'id' => $lock_user->ID,
 			'name' => $lock_user->display_name,
-			'avatar' => get_avatar_url( $lock_user->ID, array( 'size' => 128 ) ),
+			'avatar' => '',
 		);
 	}
 
