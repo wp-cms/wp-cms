@@ -16,6 +16,7 @@ Remove irrelevant stuff:
 * Deprecated stuff: yeah, remove deprecated stuff from core
 * Themes directory: WordPress themes are incompatible with WP CMS
 * Plugins directory: WordPress plugins are incompatible with WP CMS
+* Customizer: WP is not a page builder or a theme editor, it's a CMS
 
 Note that removing the theme and plugin directories is just for the sake of cutting bonds with WordPress. It wouldn't make sense in any other way. You can find thousands of plugins out there and adapt them easily to the WP CMS, because the fundamental core will remain the same. Just run it, read the errors, and see what you can do about it. It's really that plain simple.
 

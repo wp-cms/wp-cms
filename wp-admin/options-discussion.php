@@ -179,8 +179,6 @@ printf( __('Comments should be displayed with the %s comments at the top of each
 <p><?php _e('An avatar is an image that follows you from weblog to weblog appearing beside your name when you comment on avatar enabled sites. Here you can enable the display of avatars for people who comment on your site.'); ?></p>
 
 <?php
-// the above would be a good place to link to codex documentation on the gravatar functions, for putting it in themes. anything like that?
-
 $show_avatars = get_option( 'show_avatars' );
 ?>
 
@@ -227,7 +225,6 @@ endforeach;
 $avatar_defaults = array(
 	'mystery' => __('Mystery Person'),
 	'blank' => __('Blank'),
-	'gravatar_default' => __('Gravatar Logo'),
 	'identicon' => __('Identicon (Generated)'),
 	'wavatar' => __('Wavatar (Generated)'),
 	'monsterid' => __('MonsterID (Generated)'),

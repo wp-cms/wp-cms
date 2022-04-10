@@ -905,10 +905,6 @@ class WP_REST_Users_Controller extends WP_REST_Controller {
 			$data['extra_capabilities'] = (object) $user->caps;
 		}
 
-		if ( in_array( 'avatar_urls', $fields, true ) ) {
-			$data['avatar_urls'] = rest_get_avatar_urls( $user->user_email );
-		}
-
 		if ( in_array( 'meta', $fields, true ) ) {
 			$data['meta'] = $this->meta->get_value( $user->ID, $request );
 		}

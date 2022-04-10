@@ -1829,7 +1829,6 @@ final class WP_Privacy_Policy_Content {
 			'<p class="privacy-policy-tutorial">' . __( 'In this subsection you should note what information is captured through comments. We have noted the data which ClassicPress collects by default.' ) . '</p>';
 		$content .=
 			'<p>' . $suggested_text . __( 'When visitors leave comments on the site we collect the data shown in the comments form, and also the visitor&#8217;s IP address and browser user agent string to help spam detection.' ) . '</p>' .
-			'<p>' . __( 'An anonymized string created from your email address (also called a hash) may be provided to the Gravatar service to see if you are using it. The Gravatar service privacy policy is available here: https://automattic.com/privacy/. After approval of your comment, your profile picture is visible to the public in the context of your comment.' ) . '</p>' .
 
 			'<h3>' . __( 'Media' ) . '</h3>';
 		$descr && $content .=
