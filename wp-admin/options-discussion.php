@@ -219,43 +219,8 @@ endforeach;
 <th scope="row"><?php _e('Default Avatar'); ?></th>
 <td class="defaultavatarpicker"><fieldset><legend class="screen-reader-text"><span><?php _e('Default Avatar'); ?></span></legend>
 
-<?php _e('For users without a custom avatar of their own, you can either display a generic logo or a generated one based on their email address.'); ?><br />
-
 <?php
-$avatar_defaults = array(
-	'mystery' => __('Mystery Person'),
-	'blank' => __('Blank'),
-	'identicon' => __('Identicon (Generated)'),
-	'wavatar' => __('Wavatar (Generated)'),
-	'monsterid' => __('MonsterID (Generated)'),
-	'retro' => __('Retro (Generated)')
-);
-/**
- * Filters the default avatars.
- *
- * Avatars are stored in key/value pairs, where the key is option value,
- * and the name is the displayed avatar name.
- *
- * @since WP-2.6.0
- *
- * @param array $avatar_defaults Array of default avatars.
- */
-$avatar_defaults = apply_filters( 'avatar_defaults', $avatar_defaults );
-$default = get_option( 'avatar_default', 'mystery' );
-$avatar_list = '';
 
-// Force avatars on to display these choices
-add_filter( 'pre_option_show_avatars', '__return_true', 100 );
-
-foreach ( $avatar_defaults as $default_key => $default_name ) {
-	$selected = ($default == $default_key) ? 'checked="checked" ' : '';
-	$avatar_list .= "\n\t<label><input type='radio' name='avatar_default' id='avatar_{$default_key}' value='" . esc_attr($default_key) . "' {$selected}/> ";
-	$avatar_list .= get_avatar( $user_email, 32, $default_key, '', array( 'force_default' => true ) );
-	$avatar_list .= ' ' . $default_name . '</label>';
-	$avatar_list .= '<br />';
-}
-
-remove_filter( 'pre_option_show_avatars', '__return_true', 100 );
 
 /**
  * Filters the HTML output of the default avatar list.
@@ -264,7 +229,7 @@ remove_filter( 'pre_option_show_avatars', '__return_true', 100 );
  *
  * @param string $avatar_list HTML markup of the avatar list.
  */
-echo apply_filters( 'default_avatar_select', $avatar_list );
+echo apply_filters( 'default_avatar_select', '<img src="'.includes_url().'images/default-avatar.png"><p>'.__('You can change the default Avatar using the <i>default_avatar_select</i> filter or a plugin.').'</p>' );
 ?>
 
 </fieldset></td>

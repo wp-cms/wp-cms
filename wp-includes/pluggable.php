@@ -2419,7 +2419,6 @@ if ( !function_exists( 'get_avatar' ) ) :
  *
  * @param mixed $id_or_email Accepts a user_id, user email, WP_User object, WP_Post object, or WP_Comment object.
  * @param int    $size       Optional. Height and width of the avatar image file in pixels. Default 96.
- * @param string $default    Optional. URL for the default image or a default type.
  * @param string $alt        Optional. Alternative text to use in &lt;img&gt; tag. Default empty.
  * @param array  $args       {
  *     Optional. Extra arguments to retrieve the avatar.
@@ -2438,14 +2437,10 @@ if ( !function_exists( 'get_avatar' ) ) :
  * }
  * @return false|string `<img>` tag for the user's avatar. False on failure.
  */
-function get_avatar( $id_or_email, $size = 96, $default = '', $alt = '', $args = null ) {
+function get_avatar( $id_or_email, $size = 96, $alt = '' ) {
 
     // Default avatar
     $avatar = '<img src="'.includes_url('images', 'relative').'/default-avatar.png" width="'.$size.'" height="'.$size.'" class="avatar">';
-    $args = array (
-        'height' => $size,
-        'width' => $size
-    );
 
 	/**
 	 * Filters the avatar to retrieve.
@@ -2456,11 +2451,9 @@ function get_avatar( $id_or_email, $size = 96, $default = '', $alt = '', $args =
 	 * @param string $avatar      img tag for the user's avatar.
 	 * @param mixed  $id_or_email Accepts a user_id, user email, WP_User object, WP_Post object, or WP_Comment object.
 	 * @param int    $size        Square avatar width and height in pixels to retrieve.
-	 * @param string $default     URL for the default image or a default type.
 	 * @param string $alt         Alternative text to use in the avatar image tag. Default empty.
-	 * @param array  $args        Arguments passed to get_avatar, after processing.
 	 */
-	return apply_filters( 'get_avatar', $avatar, $id_or_email, $size, $default, $alt, $args );
+	return apply_filters( 'get_avatar', $avatar, $id_or_email, $size, $alt);
 }
 endif;
 
