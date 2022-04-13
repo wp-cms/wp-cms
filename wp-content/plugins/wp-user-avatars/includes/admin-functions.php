@@ -77,8 +77,6 @@ function render_avatar_editing_section($user) {
     // Check if user has wp_user_avatar, if not show image from above
     $avatar_thumbnail = get_user_avatar($user->ID, 150);
 
-    $edit_attachment_link = esc_url(add_query_arg(array('post' => $current_avatar_id, 'action' => 'edit'), admin_url('post.php')));
-
     echo '<h2 class="user-profile-avatar">'.__('Avatar').'</h2>';
     ?>
 
@@ -104,7 +102,7 @@ function render_avatar_editing_section($user) {
         <?php echo $avatar_thumbnail; ?>
     </p>
     <button type="button" class="button" id="wpua-remove-button"<?php echo $hide_remove; ?>><?php _e('Remove Image'); ?></button>
-    <button type="button" class="button" id="wpua-undo-button"><?php _e('Undo'); ?></button>
+    <button type="button" class="button" id="wpua-undo-button" style="display: none;"><?php _e('Undo'); ?></button>
 
     </td>
     </tr>
