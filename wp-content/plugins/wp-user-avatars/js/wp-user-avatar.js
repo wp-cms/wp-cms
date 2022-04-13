@@ -1,4 +1,6 @@
-(function($) {
+(function() {
+
+    // Setup Media Library
     wp.media.wpUserAvatar = {
 		
         get: function() {
@@ -6,10 +8,10 @@
         },
 
         set: function(a) {
-            var b = wp.media.view.settings;
+            let b = wp.media.view.settings;
             b.post.wpUserAvatarId = a;
             if (b.post.wpUserAvatarId) {
-                $('#wp-user-avatar').val(b.post.wpUserAvatarId);
+                document.getElementById('wp-user-avatar').value = b.post.wpUserAvatarId;
             }
             wp.media.wpUserAvatar.frame().close()
         },
@@ -23,15 +25,13 @@
                     type: 'image'
                 },
                 multiple: false,
-                title: $('#wpua-add').data('title')
+                title: document.getElementById('wpua-add').dataset.title
             });
             this._frame.on('open', function() {
-                var a = $('#wp-user-avatar').val();
-                if (a == "") {
-                    $('div.media-router').find('a:first').trigger('click')
-                } else {
-                    var b = this.state().get('selection');
-                    attachment = wp.media.attachment(a);
+                let a = document.getElementById('wp-user-avatar').value;
+                if (a.length > 0) {
+                    let b = this.state().get('selection');
+                    let attachment = wp.media.attachment(a);
                     attachment.fetch();
                     b.add(attachment ? [attachment] : [])
                 }
@@ -48,43 +48,55 @@
         },
 
         init: function() {
-            $('body').on('click', '#wpua-add', function(e) {
+            document.getElementById('wpua-add').addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 wp.media.wpUserAvatar.frame().open()
-            })
+            });
         }
 
     }
 
+    // Initialize Media Library
     wp.media.wpUserAvatar.init();
 
-    const currentImage = $('#current-image-container img');
-    const avatarIdVal = $('#wp-user-avatar').val();
+    // Reference image and input field DOM Elements
+    const currentImage = document.querySelector('#current-image-container > img');
+    const avatarId = document.getElementById('wp-user-avatar');
 
-    // When clicking on remove button
-    $('body').on('click', '#wpua-remove-button', function(e) {
+    // Handle clicks on remove button
+    document.getElementById('wpua-remove-button').addEventListener('click', function(e) {
         e.preventDefault();
 
-        $('#wpua-remove-button, #wpua-thumbnail').hide();
+        // Toggle displayed buttons
+        document.getElementById('wpua-remove-button').style.display = 'none';
+        document.getElementById('wpua-undo-button').style.display = 'inline-block';
 
-        currentImage.data('previous', currentImage.attr('src'));
-        currentImage.attr('src', wpua_custom.avatar_thumb);
+        // Save image for later in case user wants to undo
+        currentImage.dataset.previousImage = currentImage.src;
+        avatarId.dataset.previousId = avatarId.value;
 
-        $('#wp-user-avatar').val('');
-        $('#wpua-undo-button').show();
+        // Update current image
+        currentImage.src = wpua_custom.avatar_thumb;
+
+        // Update input field value
+        avatarId.value='';
+
 
     });
 
-    // When clicking on undo
-    $('body').on('click', '#wpua-undo-button', function(e) {
+    // Handle clicks on undo button
+    document.getElementById('wpua-undo-button').addEventListener('click', function(e) {
         e.preventDefault();
 
-        currentImage.attr('src', currentImage.data('previous'));
+        // Toggle displayed buttons
+        document.getElementById('wpua-undo-button').style.display = 'none';
+        document.getElementById('wpua-remove-button').style.display = 'inline-block';
 
-        $('#wpua-undo-button').hide();
-        $('#wpua-remove-button').show();
-        $('#wp-user-avatar').val(avatarIdVal);
+        // Reset previous image and input value
+        currentImage.src = currentImage.dataset.previousImage;
+        avatarId.value = avatarId.dataset.previousId;
 
     })
-})(jQuery);
+
+})();
