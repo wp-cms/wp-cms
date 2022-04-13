@@ -5,3 +5,6 @@
 # WP private files
 wp-config.php
 wp-content/uploads
+
+# Plugin private files
+wp-content/plugins/wp-user-avatars/img/letters/*
