@@ -1,5 +1,6 @@
 # IDE config files
 .vscode
+.idea
 
 # WP private files
 wp-config.php
