@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: WP User Avatar
-Description: Allow users to upload a custom avatar image.
+Description: Autogenerate letter avatar, upload a default custom image and allow users to upload their own.
 Version: 2.0.2
 Text Domain: wp-user-avatar
-Domain Path: /lang/
+Domain Path: /languages/
 */
 
 namespace Core\UserAvatar;

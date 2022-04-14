@@ -45,6 +45,11 @@ function default_image($letter = 'A') {
 
 }
 
+/**
+ * Get a user either by id or email or WP_User/WP_Comment object
+ * @param $id_or_email
+ * @return WP_User|false
+ */
 function user_by_id_or_email_or_object($id_or_email){
 
     // Determine if we receive an ID, email, or type of object
@@ -65,7 +70,6 @@ function user_by_id_or_email_or_object($id_or_email){
 
 /**
  * Retrieve user_avatar for a given user id or email
- * @since 1.0
  * @param int|string $id_or_email
  * @return bool
  */
@@ -89,7 +93,6 @@ function get_user_avatar_meta($id_or_email='') {
 
 /**
  * Check if user has an avatar set with this plugin
- * @since 1.0
  * @param int|string $id_or_email
  * @return bool
  */
@@ -130,7 +133,8 @@ function get_user_avatar($id_or_email='', $size='96', $align='', $alt='') {
     } else {
 
         $user = user_by_id_or_email_or_object($id_or_email);
-        $image_src = default_image(strtoupper(mb_substr($user->display_name, 0, 1, "UTF-8")));
+        $letter = (isset($user->display_name)) ? strtoupper(mb_substr($user->display_name, 0, 1, "UTF-8")) : '?';
+        $image_src = default_image($letter);
 
     }
 
@@ -139,7 +143,6 @@ function get_user_avatar($id_or_email='', $size='96', $align='', $alt='') {
 
     /**
      * Filter get_user_avatar
-     * @since 1.9
      * @param string $avatar
      * @param int|string $id_or_email
      * @param int|string $size
@@ -149,6 +152,11 @@ function get_user_avatar($id_or_email='', $size='96', $align='', $alt='') {
     return apply_filters('get_user_avatar', $avatar, $id_or_email, $size, $align, $alt);
 }
 
+/**
+ * Get SVG src for provided letter
+ * @param $letter
+ * @return string
+ */
 function get_svg_letter($letter){
 
     // Generate svg if it doesn't exist
@@ -159,17 +167,24 @@ function get_svg_letter($letter){
     return plugin_dir_url( __DIR__ ).'img/letters/'.md5($letter).'.svg';
 }
 
+/**
+ * Generate an SVG with a random background color and the provided letter
+ * @param $letter
+ */
 function generate_svg_letter($letter) {
 
     // Pick a dark color at random for the background
     $colors = ["#E284B3", "#FFD900", "#681313", "#D6293A", "#735372", "#009975", "#FFBD39", "#FF0000", "#52437B", "#F76262", "#216583", "#293462", "#DD9D52", "#936B93", "#6DD38D", "#888888", "#6F8190", "#A27BEA", "#128762", "#96C2ED", "#3593CE", "#5EE2CD", "#96366E", "#E38080", "#FF3300", "#FFB366", "#0000FF", "#000099", "#000033"];
-
     $colors = apply_filters('wpua_avatar_backgrounds', $colors);
 
     $random_color_key = array_rand($colors, 1);
     $background = $colors[$random_color_key];
 
-    $svg = '<?xml version="1.0" encoding="UTF-8"?><svg style="font-weight:bold;" width="150px" height="150px" xmlns="http://www.w3.org/2000/svg"><defs><style type="text/css">@font-face {font-family: "Arial";font-weight: normal;font-style: normal;}</style></defs><rect x="0" y="0" width="500" height="500" style="fill:' . $background . '"/><text x="50%" y="50%" dy=".1em" fill="#eee" text-anchor="middle" dominant-baseline="middle" style="font-family: Arial, sans-serif; font-size:72px; line-height: 1">' . $letter . '</text></svg>';
+    $svg = '<?xml version="1.0" encoding="UTF-8"?>
+    <svg style="font-weight:bold;" width="150px" height="150px" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="150" height="150" style="fill:' . $background . '"/>
+    <text x="50%" y="50%" dy="0.1em" fill="#eee" text-anchor="middle" dominant-baseline="middle" style="font-family: Arial, sans-serif; font-size:90px; line-height: 1">' . $letter . '</text>
+    </svg>';
 
     file_put_contents(plugin_dir_path( __DIR__ ).'img/letters/'.md5($letter).'.svg', $svg);
 
