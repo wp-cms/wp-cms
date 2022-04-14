@@ -6,12 +6,12 @@ I am currently facing this on my own but anybody is welcome to join. This is my 
 
 ## STEP NUMBER 1 - "The removal"
 
-Remove irrelevant stuff:
+Remove irrelevant/outdated stuff:
 
-* ~~XML-RPC: old stuff, not needed~~ (done)
-* ~~Pingbacks: old stuff, not needed~~ (done)
-* ~~Gravatar: external host for profile pics, replace with self hosted~~ (done)
-* Links Manager: disabled links gallery plugin hidden inside the core
+* ~~XML-RPC: old stuff, not needed~~ ✅
+* ~~Pingbacks: old stuff, not needed~~ ✅
+* ~~Gravatar: external host for profile pics, replace with self hosted~~ ✅
+* Links Manager: disabled links gallery plugin hidden inside the core ✍️
 * Wpautop: hack for the old times
 * Deprecated stuff: yeah, remove deprecated stuff from core
 * Themes directory: WordPress themes are incompatible with WP CMS
@@ -28,7 +28,7 @@ Separate (not remove) things that are merged within or entangledly spread all ov
 
 ## STEP NUMBER 3 - "The cleanup"
 
-After getting this done, the WP CORE will be way lighter and I'd say to reorganize it, removing old PHP polyfills and back-compat stuff.
+After getting this done, the WP CORE will be way lighter, and I'd say to reorganize it, removing old PHP polyfills and back-compat stuff.
 
 ## STEP NUMBER 4 - "The media & editor upgrade"
 
