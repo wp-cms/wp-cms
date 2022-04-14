@@ -1,5 +1,4 @@
 # IDE config files
-.idea
 .vscode
 
 # WP private files
@@ -8,3 +7,6 @@ wp-content/uploads
 
 # Plugin private files
 wp-content/plugins/wp-user-avatars/img/letters/*
+
+# Non-core plugins (I'm installing them to make sure they keep working)
+wp-content/plugins/classic-commerce-master
