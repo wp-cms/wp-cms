@@ -19,9 +19,6 @@ if ( ! defined('WP_ADMIN') ) {
 /** ClassicPress Administration Hooks */
 require_once(ABSPATH . 'wp-admin/includes/admin-filters.php');
 
-/** ClassicPress Bookmark Administration API */
-require_once(ABSPATH . 'wp-admin/includes/bookmark.php');
-
 /** ClassicPress Comment Administration API */
 require_once(ABSPATH . 'wp-admin/includes/comment.php');
 

@@ -612,27 +612,6 @@ function wp_ajax_delete_tag() {
 		wp_die( 0 );
 }
 
-/**
- * Ajax handler for deleting a link.
- *
- * @since WP-3.1.0
- */
-function wp_ajax_delete_link() {
-	$id = isset( $_POST['id'] ) ? (int) $_POST['id'] : 0;
-
-	check_ajax_referer( "delete-bookmark_$id" );
-	if ( !current_user_can( 'manage_links' ) )
-		wp_die( -1 );
-
-	$link = get_bookmark( $id );
-	if ( !$link || is_wp_error( $link ) )
-		wp_die( 1 );
-
-	if ( wp_delete_link( $id ) )
-		wp_die( 1 );
-	else
-		wp_die( 0 );
-}
 
 /**
  * Ajax handler for deleting meta.
