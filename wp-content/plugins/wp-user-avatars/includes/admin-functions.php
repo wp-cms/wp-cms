@@ -3,17 +3,16 @@ namespace Core\UserAvatar;
 
 /**
  * Add filters and actions for the admin area
- * @since 1.0
  */
 function setup_admin_area() {
     global $pagenow;
 
     // Translations
-    load_plugin_textdomain('wp-user-avatar', 'wp-user-avatars/lang');
+    load_plugin_textdomain('wp-user-avatar', 'wp-user-avatars/languages');
 
     // Default avatar
     add_filter('default_avatar_select', 'Core\UserAvatar\render_default_avatar_editing_section', 10);
-    add_filter('whitelist_options', 'Core\UserAvatar\wpua_whitelist_options', 10);
+    add_filter('whitelist_options', 'Core\UserAvatar\whitelist_options', 10);
 
     // For own profile
     add_action('show_user_profile', 'Core\UserAvatar\render_avatar_editing_section');
@@ -38,7 +37,6 @@ function setup_admin_area() {
 
 /**
  * Update user meta
- * @since 1.0
  * @param int $user_id
  */
 function handle_avatar_update($user_id) {
@@ -60,7 +58,6 @@ function handle_avatar_update($user_id) {
 
 /**
  * Render the avatar section in the admin area user editing screens
- * @since 1.0
  * @param object $user
  */
 function render_avatar_editing_section($user) {
@@ -77,12 +74,12 @@ function render_avatar_editing_section($user) {
     // Check if user has wp_user_avatar, if not show image from above
     $avatar_thumbnail = get_user_avatar($user->ID, 150);
 
-    echo '<h2 class="user-profile-avatar">'.__('Avatar').'</h2>';
+    echo '<h2 class="user-profile-avatar">'.__('Avatar', 'wp-user-avatars').'</h2>';
     ?>
 
     <table class="form-table">
     <tbody><tr id="password" class="user-pass1-wrap">
-    <th><?php _e('Choose avatar'); ?></th>
+    <th><?php _e('Avatar', 'wp-user-avatars'); ?></th>
     <td>
 
     <input type="hidden" name="wp-user-avatar" id="wp-user-avatar" value="<?php echo $current_avatar_id; ?>" />
@@ -92,7 +89,7 @@ function render_avatar_editing_section($user) {
     if(current_user_can('upload_files')){
         ?>
         <p id="wpua-add-button">
-            <button type="button" class="button" id="wpua-add" name="wpua-add" data-title="<?php _e('Choose Image'); ?>: <?php echo $user->display_name; ?>"><?php _e('Choose Image'); ?></button>
+            <button type="button" class="button" id="wpua-add" name="wpua-add" data-title="<?php _e('Choose Image'); ?>: <?php echo $user->display_name; ?>"><?php _e('Choose Image', 'wp-user-avatars'); ?></button>
         </p>
         <?php
     }
@@ -101,8 +98,8 @@ function render_avatar_editing_section($user) {
     <p id="current-image-container">
         <?php echo $avatar_thumbnail; ?>
     </p>
-    <button type="button" class="button" id="wpua-remove-button"<?php echo $hide_remove; ?>><?php _e('Remove Image'); ?></button>
-    <button type="button" class="button" id="wpua-undo-button" style="display: none;"><?php _e('Undo'); ?></button>
+    <button type="button" class="button" id="wpua-remove-button"<?php echo $hide_remove; ?>><?php _e('Remove Image', 'wp-user-avatars'); ?></button>
+    <button type="button" class="button" id="wpua-undo-button" style="display: none;"><?php _e('Undo', 'wp-user-avatars'); ?></button>
 
     </td>
     </tr>
@@ -114,7 +111,6 @@ function render_avatar_editing_section($user) {
 
 /**
  * Enqueue necessary scripts and styles in the admin area
- * @since 1-0
  * @param object $user
  */
 function enqueue_scripts($user='') {
@@ -135,7 +131,7 @@ function enqueue_scripts($user='') {
 
 
 /**
- * Responsible for rendering the section that allows to edit the default avatar
+ * Render the section that allows to edit the default avatar
  * @return string
  */
 function render_default_avatar_editing_section() {
@@ -165,6 +161,7 @@ function render_default_avatar_editing_section() {
         $avatar_thumb = '<img src="'.$avatar_thumb_src[0].'" width="32" height="32" />';
         $hide_remove = '';
     } else {
+        $avatar_thumb = '<img src="'.plugin_dir_url( __DIR__ ).'img/image-placeholder.jpg" width="32" height="32" />';
         $hide_remove = ' style="display: none;"';
     }
 
@@ -173,9 +170,9 @@ function render_default_avatar_editing_section() {
 <p id="current-image-container">'.$avatar_thumb.'</p>'
         .__('Custom avatar', 'wp-user-avatar').'</label>
         <p id="wpua-edit">
-        <button type="button" class="button" id="wpua-add" name="wpua-add" data-avatar_default="true" data-title="'._('Choose Image').': '._('Default Avatar').'">'.__('Choose Image').'</button>
-        <button type="button" class="button" id="wpua-remove-button"'.$hide_remove.'>'.__('Remove').'</button>
-        <button type="button" class="button" id="wpua-undo-button" style="display: none;">'.__('Undo').'</button>
+        <button type="button" class="button" id="wpua-add" name="wpua-add" data-avatar_default="true" data-title="'.__('Choose Image', 'wp-user-avatars').': '.__('Default Avatar', 'wp-user-avatars').'">'.__('Choose Image', 'wp-user-avatars').'</button>
+        <button type="button" class="button" id="wpua-remove-button"'.$hide_remove.'>'.__('Remove', 'wp-user-avatars').'</button>
+        <button type="button" class="button" id="wpua-undo-button" style="display: none;">'.__('Undo', 'wp-user-avatars').'</button>
         </p>
         <input type="hidden" id="wp-user-avatar" name="wpua_default_avatar" value="'.get_option('wpua_default_avatar').'">
     </div>';
@@ -188,11 +185,10 @@ function render_default_avatar_editing_section() {
 
 /**
  * Add default avatar_default to whitelist
- * @since 1.0
  * @param array $options
  * @return array $options
  */
-function wpua_whitelist_options($options) {
+function whitelist_options($options) {
     $options['discussion'][] = 'wpua_default_avatar';
     return $options;
 }

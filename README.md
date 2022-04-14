@@ -8,11 +8,11 @@ I am currently facing this on my own but anybody is welcome to join. This is my 
 
 Remove irrelevant stuff:
 
-* XML-RPC: old stuff, not needed
-* Pingbacks: old stuff, not needed
-* Wpautop: hack for the old times
+* ~~XML-RPC: old stuff, not needed~~ (done)
+* ~~Pingbacks: old stuff, not needed~~ (done)
+* ~~Gravatar: external host for profile pics, replace with self hosted~~ (done)
 * Links Manager: disabled links gallery plugin hidden inside the core
-* Gravatar: external host for profile pics, replace with self hosted
+* Wpautop: hack for the old times
 * Deprecated stuff: yeah, remove deprecated stuff from core
 * Themes directory: WordPress themes are incompatible with WP CMS
 * Plugins directory: WordPress plugins are incompatible with WP CMS
