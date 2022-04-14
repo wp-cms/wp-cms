@@ -161,11 +161,11 @@ switch ( $step ) {
 		echo '	</tr>';
 		echo '	<tr>';
 		echo '		<th scope="row"><label for="uname">' . __( 'Database Username' ) . '</label></th>';
-		echo '		<td><input name="uname" id="uname" type="text" size="25" value="' . htmlspecialchars( _x( 'username', 'example username' ), ENT_QUOTES ) . '" /></td>';
+		echo '		<td><input name="uname" id="uname" type="text" size="25" value="root" /></td>';
 		echo '	</tr>';
 		echo '	<tr>';
 		echo '		<th scope="row"><label for="pwd">' . __( 'Database Password' ) . '</label></th>';
-		echo '		<td><input name="pwd" id="pwd" type="text" size="25" value="1ejm127$69%" autocomplete="off" /></td>';
+		echo '		<td><input name="pwd" id="pwd" type="text" size="25" value="" autocomplete="off" /></td>';
 		echo '	</tr>';
 		echo '	<tr>';
 		echo '		<th scope="row"><label for="dbhost">' . __( 'Database Host' ) . '</label></th>';
@@ -173,7 +173,7 @@ switch ( $step ) {
 		echo '	</tr>';
 		echo '	<tr>';
 		echo '		<th scope="row"><label for="prefix">' . __( 'Table Prefix' ) . '</label></th>';
-		echo '		<td><input name="prefix" id="prefix" type="text" value="cp_" size="25" /> ' .
+		echo '		<td><input name="prefix" id="prefix" type="text" value="'.time().'_" size="25" /> ' .
 			sprintf(
 				'<a href="%s" target="_blank" rel="noopener">' . __( 'Learn More' ) . '</a>',
 				esc_url('https://docs.classicpress.net/installing-classicpress/#installation-steps')

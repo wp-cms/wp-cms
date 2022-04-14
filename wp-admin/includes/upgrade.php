@@ -594,7 +594,6 @@ function upgrade_all() {
 	if ( $wp_current_db_version < 37965 )
 		upgrade_460();
 
-	maybe_disable_link_manager();
 
 	maybe_disable_automattic_widgets();
 
@@ -1526,21 +1525,6 @@ function maybe_disable_automattic_widgets() {
 			break;
 		}
 	}
-}
-
-/**
- * Disables the Link Manager on upgrade if, at the time of upgrade, no links exist in the DB.
- *
- * @since WP-3.5.0
- *
- * @global int  $wp_current_db_version
- * @global wpdb $wpdb ClassicPress database abstraction object.
- */
-function maybe_disable_link_manager() {
-	global $wp_current_db_version, $wpdb;
-
-	if ( $wp_current_db_version >= 22006 && get_option( 'link_manager_enabled' ) && ! $wpdb->get_var( "SELECT link_id FROM $wpdb->links LIMIT 1" ) )
-		update_option( 'link_manager_enabled', 0 );
 }
 
 /**
