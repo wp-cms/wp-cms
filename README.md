@@ -11,12 +11,10 @@ Remove irrelevant/outdated stuff:
 * ~~XML-RPC: old stuff, not needed~~ ✅
 * ~~Pingbacks: old stuff, not needed~~ ✅
 * ~~Gravatar: external host for profile pics, replace with self hosted~~ ✅
-* Links Manager: disabled links gallery plugin hidden inside the core ✍️
-* Wpautop: hack for the old times
-* Deprecated stuff: yeah, remove deprecated stuff from core
+* ~~Link Manager: disabled links gallery plugin hidden inside the core~~ ✅
+* Deprecated: remove deprecated functions, methods, classes and files ✍️
 * Themes directory: WordPress themes are incompatible with WP CMS
 * Plugins directory: WordPress plugins are incompatible with WP CMS
-* Customizer: WP is not a page builder or a theme editor, it's a CMS
 
 Note that removing the theme and plugin directories is just for the sake of cutting bonds with WordPress. It wouldn't make sense in any other way. You can find thousands of plugins out there and adapt them easily to the WP CMS, because the fundamental core will remain the same. Just run it, read the errors, and see what you can do about it. It's really that plain simple.
 

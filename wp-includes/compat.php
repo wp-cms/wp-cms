@@ -283,48 +283,11 @@ function _hash_hmac($algo, $data, $key, $raw_output = false) {
 }
 
 if ( !function_exists('json_encode') ) {
-	function json_encode( $string ) {
-		global $wp_json;
-
-		if ( ! ( $wp_json instanceof Services_JSON ) ) {
-			require_once( ABSPATH . WPINC . '/class-json.php' );
-			$wp_json = new Services_JSON();
-		}
-
-		return $wp_json->encodeUnsafe( $string );
-	}
+	die('Update your PHP version');
 }
 
 if ( !function_exists('json_decode') ) {
-	/**
-	 * @global Services_JSON $wp_json
-	 * @param string $string
-	 * @param bool   $assoc_array
-	 * @return object|array
-	 */
-	function json_decode( $string, $assoc_array = false ) {
-		global $wp_json;
-
-		if ( ! ($wp_json instanceof Services_JSON ) ) {
-			require_once( ABSPATH . WPINC . '/class-json.php' );
-			$wp_json = new Services_JSON();
-		}
-
-		$res = $wp_json->decode( $string );
-		if ( $assoc_array )
-			$res = _json_decode_object_helper( $res );
-		return $res;
-	}
-
-	/**
-	 * @param object $data
-	 * @return array
-	 */
-	function _json_decode_object_helper($data) {
-		if ( is_object($data) )
-			$data = get_object_vars($data);
-		return is_array($data) ? array_map(__FUNCTION__, $data) : $data;
-	}
+    die('Update your PHP version');
 }
 
 if ( ! function_exists( 'hash_equals' ) ) :
