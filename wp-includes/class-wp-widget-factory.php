@@ -33,16 +33,6 @@ class WP_Widget_Factory {
 	}
 
 	/**
-	 * PHP4 constructor.
-	 *
-	 * @since WP-2.8.0
-	 */
-	public function WP_Widget_Factory() {
-		_deprecated_constructor( 'WP_Widget_Factory', 'WP-4.2.0' );
-		self::__construct();
-	}
-
-	/**
 	 * Memory for the number of times unique class instances have been hashed.
 	 *
 	 * This can be eliminated in favor of straight spl_object_hash() when 5.3

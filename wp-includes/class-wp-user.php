@@ -433,37 +433,6 @@ class WP_User {
 	}
 
 	/**
-	 * Set up capability object properties.
-	 *
-	 * Will set the value for the 'cap_key' property to current database table
-	 * prefix, followed by 'capabilities'. Will then check to see if the
-	 * property matching the 'cap_key' exists and is an array. If so, it will be
-	 * used.
-	 *
-	 * @since WP-2.1.0
-	 * @deprecated WP-4.9.0 Use WP_User::for_site()
-	 *
-	 * @global wpdb $wpdb ClassicPress database abstraction object.
-	 *
-	 * @param string $cap_key Optional capability key
-	 */
-	protected function _init_caps( $cap_key = '' ) {
-		global $wpdb;
-
-		_deprecated_function( __METHOD__, 'WP-4.9.0', 'WP_User::for_site()' );
-
-		if ( empty( $cap_key ) ) {
-			$this->cap_key = $wpdb->get_blog_prefix( $this->site_id ) . 'capabilities';
-		} else {
-			$this->cap_key = $cap_key;
-		}
-
-		$this->caps = $this->get_caps_data();
-
-		$this->get_role_caps();
-	}
-
-	/**
 	 * Retrieve all of the role capabilities and merge with individual capabilities.
 	 *
 	 * All of the capabilities of the roles the user belongs to are merged with
@@ -768,22 +737,6 @@ class WP_User {
 	 */
 	public function translate_level_to_cap( $level ) {
 		return 'level_' . $level;
-	}
-
-	/**
-	 * Set the site to operate on. Defaults to the current site.
-	 *
-	 * @since WP-3.0.0
-	 * @deprecated WP-4.9.0 Use WP_User::for_site()
-	 *
-	 * @global wpdb $wpdb ClassicPress database abstraction object.
-	 *
-	 * @param int $blog_id Optional. Site ID, defaults to current site.
-	 */
-	public function for_blog( $blog_id = '' ) {
-		_deprecated_function( __METHOD__, 'WP-4.9.0', 'WP_User::for_site()' );
-
-		$this->for_site( $blog_id );
 	}
 
 	/**
