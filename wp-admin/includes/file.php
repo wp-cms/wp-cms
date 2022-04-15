@@ -54,7 +54,6 @@ $wp_file_descriptions = array(
 	'editor-style-rtl.css'  => __( 'Visual Editor RTL Stylesheet' ),
 	'rtl.css'               => __( 'RTL Stylesheet' ),
 	// Other
-	'my-hacks.php'          => __( 'my-hacks.php (legacy hacks support)' ),
 	'.htaccess'             => __( '.htaccess (for rewrite rules )' ),
 	// Deprecated files
 	'wp-layout.css'         => __( 'Stylesheet' ),

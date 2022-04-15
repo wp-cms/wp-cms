@@ -1576,18 +1576,6 @@ final class _WP_Editors {
 	}
 
 	/**
-	 * Outputs the HTML for distraction-free writing mode.
-	 *
-	 * @since WP-3.2.0
-	 * @deprecated WP-4.3.0
-	 *
-	 * @static
-	 */
-	public static function wp_fullscreen_html() {
-		_deprecated_function( __FUNCTION__, 'WP-4.3.0' );
-	}
-
-	/**
 	 * Performs post queries for internal linking.
 	 *
 	 * @since WP-3.1.0

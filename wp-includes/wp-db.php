@@ -1074,25 +1074,6 @@ class wpdb {
 	}
 
 	/**
-	 * Do not use, deprecated.
-	 *
-	 * Use esc_sql() or wpdb::prepare() instead.
-	 *
-	 * @since WP-2.8.0
-	 * @deprecated WP-3.6.0 Use wpdb::prepare()
-	 * @see wpdb::prepare
-	 * @see esc_sql()
-	 *
-	 * @param string $string
-	 * @return string
-	 */
-	function _weak_escape( $string ) {
-		if ( func_num_args() === 1 && function_exists( '_deprecated_function' ) )
-			_deprecated_function( __METHOD__, 'WP-3.6.0', 'wpdb::prepare() or esc_sql()' );
-		return addslashes( $string );
-	}
-
-	/**
 	 * Real escape, using mysqli_real_escape_string() or mysql_real_escape_string()
 	 *
 	 * @see mysqli_real_escape_string()
@@ -1143,36 +1124,6 @@ class wpdb {
 			}
 		} else {
 			$data = $this->_real_escape( $data );
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Do not use, deprecated.
-	 *
-	 * Use esc_sql() or wpdb::prepare() instead.
-	 *
-	 * @since WP-0.71
-	 * @deprecated WP-3.6.0 Use wpdb::prepare()
-	 * @see wpdb::prepare()
-	 * @see esc_sql()
-	 *
-	 * @param mixed $data
-	 * @return mixed
-	 */
-	public function escape( $data ) {
-		if ( func_num_args() === 1 && function_exists( '_deprecated_function' ) )
-			_deprecated_function( __METHOD__, 'WP-3.6.0', 'wpdb::prepare() or esc_sql()' );
-		if ( is_array( $data ) ) {
-			foreach ( $data as $k => $v ) {
-				if ( is_array( $v ) )
-					$data[$k] = $this->escape( $v, 'recursive' );
-				else
-					$data[$k] = $this->_weak_escape( $v, 'internal' );
-			}
-		} else {
-			$data = $this->_weak_escape( $data, 'internal' );
 		}
 
 		return $data;
@@ -3321,23 +3272,6 @@ class wpdb {
 			/* translators: 1: ClassicPress version number, 2: Minimum required MySQL version number */
 			return new WP_Error('database_version', sprintf( __( '<strong>ERROR</strong>: ClassicPress %1$s requires MySQL %2$s or higher' ), $wp_version, $required_mysql_version ));
 		}
-	}
-
-	/**
-	 * Whether the database supports collation.
-	 *
-	 * Called when ClassicPress is generating the table scheme.
-	 *
-	 * Use `wpdb::has_cap( 'collation' )`.
-	 *
-	 * @since WP-2.5.0
-	 * @deprecated WP-3.5.0 Use wpdb::has_cap()
-	 *
-	 * @return bool True if collation is supported, false if version does not
-	 */
-	public function supports_collation() {
-		_deprecated_function( __FUNCTION__, 'WP-3.5.0', 'wpdb::has_cap( \'collation\' )' );
-		return $this->has_cap( 'collation' );
 	}
 
 	/**
