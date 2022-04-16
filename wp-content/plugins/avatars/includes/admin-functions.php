@@ -1,5 +1,5 @@
 <?php
-namespace Core\UserAvatar;
+namespace Core\Avatars;
 
 /**
  * Add filters and actions for the admin area
@@ -8,28 +8,28 @@ function setup_admin_area() {
     global $pagenow;
 
     // Translations
-    load_plugin_textdomain('wp-user-avatar', 'wp-user-avatars/languages');
+    load_plugin_textdomain('wp-user-avatar', 'avatars/languages');
 
     // Default avatar
-    add_filter('default_avatar_select', 'Core\UserAvatar\render_default_avatar_editing_section', 10);
-    add_filter('whitelist_options', 'Core\UserAvatar\whitelist_options', 10);
+    add_filter('default_avatar_select', 'Core\Avatars\render_default_avatar_editing_section', 10);
+    add_filter('whitelist_options', 'Core\Avatars\whitelist_options', 10);
 
     // For own profile
-    add_action('show_user_profile', 'Core\UserAvatar\render_avatar_editing_section');
-    add_action('personal_options_update', 'Core\UserAvatar\handle_avatar_update');
+    add_action('show_user_profile', 'Core\Avatars\render_avatar_editing_section');
+    add_action('personal_options_update', 'Core\Avatars\handle_avatar_update');
 
     // For someone else's profile
-    add_action('edit_user_profile', 'Core\UserAvatar\render_avatar_editing_section');
-    add_action('edit_user_profile_update', 'Core\UserAvatar\handle_avatar_update');
+    add_action('edit_user_profile', 'Core\Avatars\render_avatar_editing_section');
+    add_action('edit_user_profile_update', 'Core\Avatars\handle_avatar_update');
 
     // For new user creation
-    add_action('user_new_form', 'Core\UserAvatar\render_avatar_editing_section');
-    add_action('user_register', 'Core\UserAvatar\handle_avatar_update');
+    add_action('user_new_form', 'Core\Avatars\render_avatar_editing_section');
+    add_action('user_register', 'Core\Avatars\handle_avatar_update');
 
     // Load scripts if necessary
     $pages = array('profile.php', 'options-discussion.php', 'user-edit.php', 'user-new.php');
     if(in_array($pagenow, $pages) || ($pagenow == 'admin.php' && isset($_GET['page']) && $_GET['page'] == 'wp-user-avatar')) {
-        add_action('admin_enqueue_scripts', 'Core\UserAvatar\enqueue_scripts');
+        add_action('admin_enqueue_scripts', 'Core\Avatars\enqueue_scripts');
     }
 
 }
@@ -74,12 +74,12 @@ function render_avatar_editing_section($user) {
     // Check if user has wp_user_avatar, if not show image from above
     $avatar_thumbnail = get_user_avatar($user->ID, 150);
 
-    echo '<h2 class="user-profile-avatar">'.__('Avatar', 'wp-user-avatars').'</h2>';
+    echo '<h2 class="user-profile-avatar">'.__('Avatar', 'avatars').'</h2>';
     ?>
 
     <table class="form-table">
     <tbody><tr id="password" class="user-pass1-wrap">
-    <th><?php _e('Avatar', 'wp-user-avatars'); ?></th>
+    <th><?php _e('Avatar', 'avatars'); ?></th>
     <td>
 
     <input type="hidden" name="wp-user-avatar" id="wp-user-avatar" value="<?php echo $current_avatar_id; ?>" />
@@ -89,7 +89,7 @@ function render_avatar_editing_section($user) {
     if(current_user_can('upload_files')){
         ?>
         <p id="wpua-add-button">
-            <button type="button" class="button" id="wpua-add" name="wpua-add" data-title="<?php _e('Choose Image'); ?>: <?php echo $user->display_name; ?>"><?php _e('Choose Image', 'wp-user-avatars'); ?></button>
+            <button type="button" class="button" id="wpua-add" name="wpua-add" data-title="<?php _e('Choose Image'); ?>: <?php echo $user->display_name; ?>"><?php _e('Choose Image', 'avatars'); ?></button>
         </p>
         <?php
     }
@@ -98,8 +98,8 @@ function render_avatar_editing_section($user) {
     <p id="current-image-container">
         <?php echo $avatar_thumbnail; ?>
     </p>
-    <button type="button" class="button" id="wpua-remove-button"<?php echo $hide_remove; ?>><?php _e('Remove Image', 'wp-user-avatars'); ?></button>
-    <button type="button" class="button" id="wpua-undo-button" style="display: none;"><?php _e('Undo', 'wp-user-avatars'); ?></button>
+    <button type="button" class="button" id="wpua-remove-button"<?php echo $hide_remove; ?>><?php _e('Remove Image', 'avatars'); ?></button>
+    <button type="button" class="button" id="wpua-undo-button" style="display: none;"><?php _e('Undo', 'avatars'); ?></button>
 
     </td>
     </tr>
@@ -168,11 +168,11 @@ function render_default_avatar_editing_section() {
     $selected = (get_option('avatar_default') == 'custom') ? ' checked="checked" ' : '';
     $select_default_avatar_html .= '<label><input type="radio" name="avatar_default" value="custom"'.$selected.'"/>
 <p id="current-image-container">'.$avatar_thumb.'</p>'
-        .__('Custom avatar', 'wp-user-avatar').'</label>
+        .__('Custom avatar', 'avatars').'</label>
         <p id="wpua-edit">
-        <button type="button" class="button" id="wpua-add" name="wpua-add" data-avatar_default="true" data-title="'.__('Choose Image', 'wp-user-avatars').': '.__('Default Avatar', 'wp-user-avatars').'">'.__('Choose Image', 'wp-user-avatars').'</button>
-        <button type="button" class="button" id="wpua-remove-button"'.$hide_remove.'>'.__('Remove', 'wp-user-avatars').'</button>
-        <button type="button" class="button" id="wpua-undo-button" style="display: none;">'.__('Undo', 'wp-user-avatars').'</button>
+        <button type="button" class="button" id="wpua-add" name="wpua-add" data-avatar_default="true" data-title="'.__('Choose Image', 'avatars').': '.__('Default Avatar', 'avatars').'">'.__('Choose Image', 'avatars').'</button>
+        <button type="button" class="button" id="wpua-remove-button"'.$hide_remove.'>'.__('Remove', 'avatars').'</button>
+        <button type="button" class="button" id="wpua-undo-button" style="display: none;">'.__('Undo', 'avatars').'</button>
         </p>
         <input type="hidden" id="wp-user-avatar" name="wpua_default_avatar" value="'.get_option('wpua_default_avatar').'">
     </div>';

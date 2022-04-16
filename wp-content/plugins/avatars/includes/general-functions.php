@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\UserAvatar;
+namespace Core\Avatars;
 
 /**
  * Filter the native WP get_avatar() function
