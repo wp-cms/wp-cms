@@ -180,7 +180,62 @@ function plugins_api( $action, $args = array() ) {
 				$request->get_error_message()
 			);
 		} else {
-			$res = maybe_unserialize( wp_remote_retrieve_body( $request ) );
+
+
+
+
+            // -------------------------------
+
+            /* I want to test with a plugin directory that consists of JSON files with plugin infos,
+            instead of an externally hosted directory. Will set this up temporarily without breaking
+            everything else, for the moment */
+
+            // Old $res
+            // $res = maybe_unserialize( wp_remote_retrieve_body( $request ) );
+
+            // New $res
+            if(isset($args->slug)){
+                $all_json_files = array(ABSPATH . 'wp-admin/plugins-directory/'.$args->slug.'.json');
+            }else{
+                $all_json_files = glob(ABSPATH . 'wp-admin/plugins-directory/*.json');
+            }
+
+            $all_plugins = array();
+            foreach($all_json_files as $file) {
+
+                $plugin = json_decode(file_get_contents($file));
+                $plugin->ratings = (array) $plugin->ratings;
+                $plugin->sections = (array) $plugin->sections;
+                $plugin->screenshots = (array) $plugin->screenshots;
+
+                foreach ($plugin->screenshots as $key_2=>$screenshot){
+                    $plugin->screenshots[$key_2] = (array) $screenshot;
+                }
+
+                $plugin->tags = (array) $plugin->tags;
+                $plugin->versions = (array) $plugin->versions;
+                $plugin->icons = (array) $plugin->icons;
+
+                $all_plugins[] = $plugin;
+            }
+
+            if(isset($args->slug)){
+                $res = $all_plugins[0];
+            }else{
+                $info = array(
+                    'page' => 1,
+                    'pages' => 1,
+                    'results' => 1
+                );
+                $res = (object) ['info' => $info, 'plugins' => $all_plugins];
+            }
+
+            // -------------------------------
+
+
+
+
+
 			if ( ! is_object( $res ) && ! is_array( $res ) ) {
 				$res = new WP_Error( 'plugins_api_failed',
 					sprintf(
