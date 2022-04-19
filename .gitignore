@@ -6,17 +6,5 @@
 wp-config.php
 wp-content/uploads
 
-# Plugin private files
-wp-content/plugins/avatars/img/letters/*
-
-# Non-core plugins (I'm installing them to make sure they keep working)
-wp-content/plugins/classic-commerce-master
-wp-content/plugins/query-monitor-3.8.2
-wp-content/plugins/contact-form-7.5.1.9
-wp-content/plugins/simple-cpt
-wp-content/plugins/shortcodes-ultimate
-wp-content/plugins/wps-hide-login
-wp-content/plugins/wps-limit-login
-wp-content/plugins/cachify
-wp-content/plugins/statify
-wp-content/plugins/slim-seo
+# The whole plugins folder
+wp-content/plugins
