@@ -1,0 +1,89 @@
+{
+  "name": "Clone Posts",
+  "slug": "clone-posts",
+  "version": "1.0.0",
+  "author": "<a href='#'>Author URL</a>",
+  "author_profile": "<a href='#'>Author profile URL</a>",
+  "requires": "1.0",
+  "tested": "6.0",
+  "requires_php": "7.0",
+  "rating": 100,
+  "ratings": {
+    "5": 2719,
+    "4": 34,
+    "3": 6,
+    "2": 3,
+    "1": 20
+  },
+  "num_ratings": 2782,
+  "support_threads": 12,
+  "support_threads_resolved": 10,
+  "active_installs": 1000000,
+  "downloaded": 24085040,
+  "last_updated": "2022-04-13 3:49am GMT",
+  "added": "2017-07-26",
+  "homepage": "#",
+  "sections": {
+    "description": "Allow the user to clone posts",
+    "installation": "Blablabla about install",
+    "changelog": "Blablabla about changes"
+  },
+  "short_description": "Short blabla",
+  "download_link": "https://downloads.wordpress.org/plugin/download-plugin.2.0.3.zip",
+  "screenshots": {
+    "1": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-1.jpg?rev=2641079",
+      "caption": "Select the page builder of your choice."
+    },
+    "2": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-2.jpg?rev=2641079",
+      "caption": "Browse through available Starter Templtes and select the site that you like."
+    },
+    "3": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-3.jpg?rev=2641079",
+      "caption": "Add a logo and preview how it will look in the template, Skip if you do not have a logo right away."
+    },
+    "4": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-4.jpg?rev=2641079",
+      "caption": "Customize the color palette for the site, you can skip and customize this later on as well."
+    },
+    "5": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-5.jpg?rev=2641079",
+      "caption": "Customize the typography of the website, you can skip and customize this later on as well."
+    },
+    "6": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-6.jpg?rev=2641079",
+      "caption": "Start the website building process."
+    },
+    "7": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-7.png?rev=2641079",
+      "caption": "Blocks import in Elementor editor."
+    },
+    "8": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-8.png?rev=2641079",
+      "caption": "Free Images by Pixabay right inside the WordPress media popup."
+    }
+  },
+  "tags": {
+    "beaver-builder": "beaver builder",
+    "block-editor": "block-editor",
+    "elementor": "elementor",
+    "gutenberg": "gutenberg",
+    "templates": "templates"
+  },
+  "versions": {
+    "1.0.0": "https:\/\/downloads.wordpress.org\/plugin\/astra-sites.1.0.0.zip",
+    "1.0.1": "https:\/\/downloads.wordpress.org\/plugin\/astra-sites.1.0.1.zip",
+    "1.0.10": "https:\/\/downloads.wordpress.org\/plugin\/astra-sites.1.0.10.zip",
+    "1.0.11": "https:\/\/downloads.wordpress.org\/plugin\/astra-sites.1.0.11.zip",
+    "1.0.12": "https:\/\/downloads.wordpress.org\/plugin\/astra-sites.1.0.12.zip",
+    "1.0.13": "https:\/\/downloads.wordpress.org\/plugin\/astra-sites.1.0.13.zip",
+    "1.0.14": "https:\/\/downloads.wordpress.org\/plugin\/astra-sites.1.0.14.zip",
+    "trunk": "https:\/\/downloads.wordpress.org\/plugin\/astra-sites.zip"
+  },
+  "donate_link": "https:\/\/wpastra.com\/pro\/",
+  "icons": {
+    "1x": "https:\/\/ps.w.org\/astra-sites\/assets\/icon.svg?rev=2345985",
+    "svg": "https:\/\/ps.w.org\/astra-sites\/assets\/icon.svg?rev=2345985"
+  }
+}
