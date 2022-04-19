@@ -1,0 +1,79 @@
+{
+  "name": "Avatars",
+  "slug": "avatars-main",
+  "version": "1.0.0",
+  "author": "<a href='#'>Author URL</a>",
+  "author_profile": "<a href='#'>Author profile URL</a>",
+  "requires": "1.0",
+  "tested": "6.0",
+  "requires_php": "7.0",
+  "rating": 100,
+  "ratings": {
+    "5": 2719,
+    "4": 34,
+    "3": 6,
+    "2": 3,
+    "1": 20
+  },
+  "num_ratings": 2782,
+  "support_threads": 12,
+  "support_threads_resolved": 10,
+  "active_installs": 1000000,
+  "downloaded": 24085040,
+  "last_updated": "2022-04-13 3:49am GMT",
+  "added": "2017-07-26",
+  "homepage": "#",
+  "sections": {
+    "description": "Allow avatars",
+    "installation": "Blablabla about install",
+    "changelog": "Blablabla about changes"
+  },
+  "short_description": "Short blabla",
+  "download_link": "https://github.com/wp-cms/avatars/archive/refs/heads/main.zip",
+  "screenshots": {
+    "1": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-1.jpg?rev=2641079",
+      "caption": "Caption 1"
+    },
+    "2": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-2.jpg?rev=2641079",
+      "caption": "Caption 2"
+    },
+    "3": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-3.jpg?rev=2641079",
+      "caption": "Caption 3"
+    },
+    "4": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-4.jpg?rev=2641079",
+      "caption": "Caption 4"
+    },
+    "5": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-5.jpg?rev=2641079",
+      "caption": "Caption 5"
+    },
+    "6": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-6.jpg?rev=2641079",
+      "caption": "Caption 6"
+    },
+    "7": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-7.png?rev=2641079",
+      "caption": "Caption 7"
+    },
+    "8": {
+      "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-8.png?rev=2641079",
+      "caption": "Caption 8"
+    }
+  },
+  "tags": {
+    "amazing": "Amazing",
+    "yeah": "Yeah"
+  },
+  "versions": {
+    "1.0.0": "https://github.com/wp-cms/avatars/archive/refs/heads/main.zip"
+  },
+  "donate_link": "#",
+  "icons": {
+    "1x": "https:\/\/ps.w.org\/astra-sites\/assets\/icon.svg?rev=2345985",
+    "svg": "https:\/\/ps.w.org\/astra-sites\/assets\/icon.svg?rev=2345985"
+  }
+}
