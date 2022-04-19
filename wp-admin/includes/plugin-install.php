@@ -290,38 +290,7 @@ function install_popular_tags( $args = array() ) {
  * @since WP-2.7.0
  */
 function install_dashboard() {
-	?>
-	<p><?php printf( __( 'Plugins extend and expand the functionality of ClassicPress. You may automatically install plugins from the <a href="%1$s">WordPress Plugin Directory</a> or upload a plugin in .zip format by clicking the button at the top of this page.' ), __( 'https://wordpress.org/plugins/' ) ); ?></p>
-
-	<?php display_plugins_table(); ?>
-
-	<div class="plugins-popular-tags-wrapper">
-	<h2><?php _e( 'Popular tags' ) ?></h2>
-	<p><?php _e( 'You may also browse based on the most popular tags in the Plugin Directory:' ) ?></p>
-	<?php
-
-	$api_tags = install_popular_tags();
-
-	echo '<p class="popular-tags">';
-	if ( is_wp_error($api_tags) ) {
-		echo $api_tags->get_error_message();
-	} else {
-		//Set up the tags in a way which can be interpreted by wp_generate_tag_cloud()
-		$tags = array();
-		foreach ( (array) $api_tags as $tag ) {
-			$url = self_admin_url( 'plugin-install.php?tab=search&type=tag&s=' . urlencode( $tag['name'] ) );
-			$data = array(
-				'link' => esc_url( $url ),
-				'name' => $tag['name'],
-				'slug' => $tag['slug'],
-				'id' => sanitize_title_with_dashes( $tag['name'] ),
-				'count' => $tag['count']
-			);
-			$tags[ $tag['name'] ] = (object) $data;
-		}
-		echo wp_generate_tag_cloud($tags, array( 'single_text' => __('%s plugin'), 'multiple_text' => __('%s plugins') ) );
-	}
-	echo '</p><br class="clear" /></div>';
+	display_plugins_table();
 }
 
 /**

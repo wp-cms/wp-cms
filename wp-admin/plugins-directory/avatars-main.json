@@ -73,7 +73,7 @@
   },
   "donate_link": "#",
   "icons": {
-    "1x": "https:\/\/ps.w.org\/astra-sites\/assets\/icon.svg?rev=2345985",
-    "svg": "https:\/\/ps.w.org\/astra-sites\/assets\/icon.svg?rev=2345985"
+    "1x": "https://raw.githubusercontent.com/wp-cms/avatars/main/icon.svg",
+    "svg": "https://raw.githubusercontent.com/wp-cms/avatars/main/icon.svg"
   }
 }
