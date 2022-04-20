@@ -721,9 +721,6 @@ function load_plugin_textdomain( $domain, $plugin_rel_path = false ) {
 
 	if ( false !== $plugin_rel_path ) {
 		$path = WP_PLUGIN_DIR . '/' . trim( $plugin_rel_path, '/' );
-	} elseif ( false !== $deprecated ) {
-		_deprecated_argument( __FUNCTION__, 'WP-2.7.0' );
-		$path = ABSPATH . trim( $deprecated, '/' );
 	} else {
 		$path = WP_PLUGIN_DIR;
 	}
