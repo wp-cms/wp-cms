@@ -1,6 +1,6 @@
 {
-  "name": "Clone Posts",
-  "slug": "clone-posts-main",
+  "name": "Taxonomies",
+  "slug": "taxonomies-main",
   "version": "1.0.0",
   "author": "<a href='#'>Author URL</a>",
   "author_profile": "<a href='#'>Author profile URL</a>",
@@ -24,12 +24,12 @@
   "added": "2017-07-26",
   "homepage": "#",
   "sections": {
-    "description": "Allow the user to clone posts",
+    "description": "Allow custom taxonomies",
     "installation": "Blablabla about install",
     "changelog": "Blablabla about changes"
   },
-  "short_description": "Enable posts cloning functionality",
-  "download_link": "https://github.com/wp-cms/clone-posts/archive/refs/heads/main.zip",
+  "short_description": "Enable custom taxonomies functionality",
+  "download_link": "https://github.com/wp-cms/taxonomies/archive/refs/heads/main.zip",
   "screenshots": {
     "1": {
       "src": "https:\/\/ps.w.org\/astra-sites\/assets\/screenshot-1.jpg?rev=2641079",
@@ -69,11 +69,11 @@
     "yeah": "Yeah"
   },
   "versions": {
-    "1.0.0": "https://github.com/wp-cms/clone-posts/archive/refs/heads/main.zip"
+    "1.0.0": "https://github.com/wp-cms/taxonomies/archive/refs/heads/main.zip"
   },
   "donate_link": "#",
   "icons": {
-    "1x": "https://raw.githubusercontent.com/wp-cms/clone-posts/main/icon.svg",
-    "svg": "https://raw.githubusercontent.com/wp-cms/clone-posts/main/icon.svg"
+    "1x": "https://raw.githubusercontent.com/wp-cms/taxonomies/main/icon.svg",
+    "svg": "https://raw.githubusercontent.com/wp-cms/taxonomies/main/icon.svg"
   }
 }

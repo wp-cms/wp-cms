@@ -4732,6 +4732,25 @@ function sanitize_text_field( $str ) {
 }
 
 /**
+ * Sanitizes an array of strings from user input or from the database.
+ *
+ * @since    1.0.0
+ * @param    array    $input        The posted array.
+ * @return   array    $output	    The array sanitized.
+ */
+function sanitize_text_field_array( $input ) {
+
+    $output = array();
+
+    foreach ( $input as $key => $val ) {
+        $output[ $key ] = ( isset($val) ) ? sanitize_text_field( $val ) : '';
+    }
+
+    return $output;
+
+}
+
+/**
  * Sanitizes a multiline string from user input or from the database.
  *
  * The function is like sanitize_text_field(), but preserves
