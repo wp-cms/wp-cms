@@ -28,7 +28,7 @@
     "installation": "Blablabla about install",
     "changelog": "Blablabla about changes"
   },
-  "short_description": "Short blabla",
+  "short_description": "Enable custom avatars functionality",
   "download_link": "https://github.com/wp-cms/avatars/archive/refs/heads/main.zip",
   "screenshots": {
     "1": {

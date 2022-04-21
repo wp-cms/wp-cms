@@ -284,7 +284,7 @@ class WP_Plugin_Install_List_Table extends WP_List_Table {
 
 		$this->screen->render_screen_reader_content( 'heading_views' );
 ?>
-<div class="wp-filter">
+<div class="wp-filter" style="display:none;">
 	<ul class="filter-links">
 		<?php
 		if ( ! empty( $views ) ) {
@@ -626,7 +626,7 @@ class WP_Plugin_Install_List_Table extends WP_List_Table {
 					<p class="authors"><?php echo $author; ?></p>
 				</div>
 			</div>
-			<div class="plugin-card-bottom">
+			<div class="plugin-card-bottom" style="display:none;"><!-- Hidden for now, will very probably remove this -->
 				<div class="vers column-rating">
 					<?php
 					wp_star_rating(
