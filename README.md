@@ -1,8 +1,13 @@
-WP is a PHP based CMS, forked from ClassicPress, a WordPress fork.
 
-The goal of this project is to remove irrelevant stuff and achieve a clean, lean and optimized core which you can use and extend in any way you like to create awesome web projects.
+WP is a PHP based CMS, forked from ClassicPress, a WordPress fork. **Focused towards developers**.
 
-I am currently facing this on my own but anybody is welcome to join. This is my proposed roadmap:
+This is a personal experiment, with which I want to achieve a clean, lean and optimized core that developers can use and extend in any way they like to create awesome web projects.
+
+- If you are looking for a tool like [Wix](https://www.wix.com/), but open source, go to [WordPress](https://wordpress.org/).
+- If you are looking for the good old WordPress, without the blocks fuss and with a focus on "please keep things the way they were and don't mess with it", go to [ClassicPress](https://www.classicpress.net/).
+- If you are an adventurous developer who loves the old WP Way of doing things, but hate bloat... stay here. Just be warned: I don't care about backwards compatibility with old plugins. I will move this thing forwards however I want and whatever it takes. I usually never use public plugins for my sites as they are, I copy and tweak GPL licensed stuff to make it behave and look like I want it to. If something stops working it doesn't mean you have to throw it all away, in most cases you probably just have to modify or remove a few lines of code. If you understand that, all cool.
+
+I am currently facing this on my own but anybody is welcome to submit PRs. If I like the idea I will merge it. This is my proposed and dynamic roadmap (it changes whenever my creativity changes color, which happens often):
 
 ## STEP NUMBER 1 - "The removal"
 
@@ -10,19 +15,17 @@ Remove irrelevant/outdated stuff:
 
 * ~~XML-RPC: old stuff, not needed~~ ✅
 * ~~Pingbacks: old stuff, not needed~~ ✅
-* ~~Gravatar: external host for profile pics~~ ✅
+* ~~Gravatar: external host for profile and low quality monster pics~~ ✅
 * ~~Link Manager: disabled links gallery plugin hidden inside the core~~ ✅
 * ~~Deprecated: remove deprecated functions, methods, classes and files~~ ✅
 
 ## STEP NUMBER 2 - "Independent Themes & Plugins Directory"
 
-WordPress themes and plugins won't work. So, a new directory has to exist for this purpose. Instead of using an external service for this, I am playing around with JSON files that contain the information about themes and plugins. I'm not sure a JSON files based directory is better than an external API, but this is just a quick solution to cut from the WordPress directory for the moment and start a fresh directory with a set of useful plugins.
+WordPress themes and plugins won't work. So, a new directory has to exist for this purpose.
 
-So, I will be adding basic and useful plugins to this new directory and also come up with a clean folder and files structure that will serve as a reference for WP Plugin Development.
+Since I really like ClassicPress, I will collaborate with plugins in the [CP Plugin Directory](https://directory.classicpress.net/plugins), and integrate that directory into WP CMS. Why? Because it's a fresh directory and there is potential for it to grow without all the really old stuff (and new fuss!) that causes problems.
 
-* ~~Add Plugin: Avatars: allow users to upload a custom avatar to their profile~~ ✅
-* ~~Add Plugin: Clone Posts: allow users to clone posts for a potential faster workflow.~~ ✅
-* Add Plugin: Custom Post Types: allow users to create custom post types from the admin area. Something simple that goes straight to the point, without complications. ✍️
+Currently working on this integration. ✍️
 
 ## STEP NUMBER 3 - "Core Plugins"
 
