@@ -25,25 +25,20 @@ WordPress themes and plugins won't work. So, a new directory has to exist for th
 
 Since I really like ClassicPress, I will collaborate with plugins in the [CP Plugin Directory](https://directory.classicpress.net/plugins), and integrate that directory into WP CMS. Why? Because it's a fresh directory and there is potential for it to grow without all the really old stuff (and new fuss!) that causes problems.
 
-Currently working on this integration. ✍️
+ClassicPress directory is under construction. ✍️
 
-## STEP NUMBER 3 - "Core Plugins"
-
-Once those basic and useful plugins are provided and well organized, separate (not remove) things that are merged within or entangledly spread all over the core and keep them as Core Plugins:
-
-* Comments System
-* REST API
-
-## STEP NUMBER 4 - "The cleanup"
+## STEP NUMBER 3 - "The cleanup"
 
 After getting this done, the WP Core will be way lighter, and I'd say to reorganize it, removing old PHP polyfills and back-compat stuff.
 
-Also, I would like to cleanup the database. Specially the `wp_posts` table, which has some crazy columns. Remove non GMT date and probably move post content into it's own table. Some posts don't use the post content field and some would actually need two or three different post content instances.
+Remove big features that I never use, especially the whole Comments system.
 
-## STEP NUMBER 5 - "The media & editor upgrade"
+Also, I would like to cleanup the database. Specially the `wp_posts` table, which has some crazy columns. Remove non GMT date and probably move post content into its own table. Some posts don't use the post content field and some would actually need two or three different post content instances.
+
+## STEP NUMBER 4 - "The media & editor upgrade"
 
 Both the Media Library and the Editor need to be refreshed. Instead of retweaking the currently tewaked tweaks, why not? --> ADD a modern editor and then instead of fixing all the jquery plugins to make them work with OLD oldness, create what needs to be created from scratch or implement existing open source alternatives that fit the case.
 
-## STEP NUMBER 6 - "Constant optimization"
+## STEP NUMBER 5 - "Constant optimization"
 
 Clean and optimize the core as much as possible, iterate over it with that goal in mind.
