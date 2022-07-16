@@ -562,7 +562,6 @@ class WP_Admin_Bar {
 
 		// Site related.
 		add_action( 'admin_bar_menu', 'wp_admin_bar_sidebar_toggle', 0 );
-		add_action( 'admin_bar_menu', 'wp_admin_bar_wp_menu', 10 );
 		add_action( 'admin_bar_menu', 'wp_admin_bar_my_sites_menu', 20 );
 		add_action( 'admin_bar_menu', 'wp_admin_bar_site_menu', 30 );
 		add_action( 'admin_bar_menu', 'wp_admin_bar_customize_menu', 40 );
