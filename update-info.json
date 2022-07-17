@@ -1,0 +1,22 @@
+{
+  "offers": [
+    {
+      "response":"testing-this-will-be-removed",
+      "download":"https://github.com/ClassicPress/ClassicPress-release/archive/1.4.2.zip",
+      "locale":"en_US",
+      "packages":{
+        "full":"https://github.com/ClassicPress/ClassicPress-release/archive/1.4.2.zip",
+        "no_content":null,
+        "new_bundled":null,
+        "partial":false,
+        "rollback":false
+      },
+      "current":"1.4.2",
+      "version":"2.5.0",
+      "php_version":"5.6.4",
+      "mysql_version":"5.0",
+      "new_bundled":"4.7",
+      "partial_version":false
+    }
+  ]
+}
