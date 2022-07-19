@@ -27,20 +27,12 @@
  *
  * @global string $cp_version
  */
-$cp_version = '1.4.1+dev';
+$cp_version = '1.0.0+dev';
 
 /**
- * The WordPress version string
- *
- * This is still used internally for various core and plugin functions, and to
- * keep compatibility checks working as intended.  The ClassicPress version is
- * stored separately.
- *
- * @see classicpress_version()
- *
- * @global string $wp_version
+ * The WP version string
  */
-$wp_version = '4.9.20';
+$wp_version = '1.0.0';
 
 /**
  * Holds the ClassicPress DB revision, increments when changes are made to the ClassicPress DB schema.
@@ -61,7 +53,7 @@ $tinymce_version = '49110-20201110';
  *
  * @global string $required_php_version
  */
-$required_php_version = '5.6.0';
+$required_php_version = '7.0.0';
 
 /**
  * Holds the required MySQL version
@@ -82,8 +74,8 @@ $required_mysql_version = '5.0';
  */
 if ( ! function_exists( 'classicpress_version' ) ) {
 	function classicpress_version() {
-		global $cp_version;
-		return $cp_version;
+		global $wp_version;
+		return $wp_version;
 	}
 }
 
@@ -96,8 +88,8 @@ if ( ! function_exists( 'classicpress_version' ) ) {
  */
 if ( ! function_exists( 'classicpress_version_short' ) ) {
 	function classicpress_version_short() {
-		global $cp_version;
-		return preg_replace( '#[+-].*$#', '', $cp_version );
+		global $wp_version;
+		return preg_replace( '#[+-].*$#', '', $wp_version );
 	}
 }
 
@@ -114,7 +106,6 @@ if ( ! function_exists( 'classicpress_version_short' ) ) {
  */
 if ( ! function_exists( 'classicpress_is_dev_install' ) ) {
 	function classicpress_is_dev_install() {
-		global $cp_version;
-		return substr( $cp_version, -4 ) === '+dev';
+		return true;
 	}
 }

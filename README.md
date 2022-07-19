@@ -20,6 +20,7 @@ Developers who know some traditional web development skills: PHP, HTML, CSS, Jav
 
 Remove irrelevant/outdated stuff:
 
+* ~~Gutenberg: WP CMS is not a page builder!~~ ✅
 * ~~XML-RPC: old stuff, not needed~~ ✅
 * ~~Pingbacks: old stuff, not needed~~ ✅
 * ~~Gravatar: external host for profile and low quality monster pics~~ ✅
@@ -44,6 +45,10 @@ Both the Media Library and the Editor need to be refreshed. Instead of retweakin
 ## KEY NUMBER 5 - "Constant optimization"
 
 Clean and optimize the core as much as possible, iterate over it with PHP 8 as minimum supported PHP version in mind.
+
+# Compatibility with WordPress Plugins & Themes!
+
+I cannot make progress if I keep compatibility with WordPress in mind. But there is something very important you shall know: I am not reinventing the wheel, I'm just decluttering the original WordPress core from things that were deprecated or almost unused. Everything else is still the same, and the nice part of the story is, there are a ton of open source plugins and themes that you can still use. If something breaks it's going to be a very simple thing to fix. Probably a function that doesn't exist anymore or something like that. You can see WP CMS as WordPress before it introduced Blocks and also without old and unused stuff. So 95% of the code you find out there, you can just copy/paste with no harm. That's it!
 
 > “Simplicity is the ultimate sophistication. It takes a lot of hard
 > work to make something simple, to truly understand the underlying

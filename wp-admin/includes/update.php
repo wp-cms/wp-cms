@@ -31,19 +31,22 @@ function get_core_updates( $options = array() ) {
 	$options = array_merge( array( 'available' => true, 'dismissed' => false ), $options );
 	$dismissed = get_site_option( 'dismissed_update_core' );
 
-	if ( ! is_array( $dismissed ) )
+	if ( ! is_array( $dismissed ) ) {
 		$dismissed = array();
+    }
 
 	$from_api = get_site_transient( 'update_core' );
 
-	if ( ! isset( $from_api->updates ) || ! is_array( $from_api->updates ) )
+	if ( ! isset( $from_api->updates ) || ! is_array( $from_api->updates ) ) {
 		return false;
+	}
 
 	$updates = $from_api->updates;
 	$result = array();
 	foreach ( $updates as $update ) {
-		if ( $update->response == 'autoupdate' )
+		if ( $update->response == 'autoupdate' ) {
 			continue;
+		}
 
 		if ( array_key_exists( $update->current . '|' . $update->locale, $dismissed ) ) {
 			if ( $options['dismissed'] ) {
@@ -177,14 +180,17 @@ function undismiss_core_update( $version, $locale ) {
 function find_core_update( $version, $locale ) {
 	$from_api = get_site_transient( 'update_core' );
 
-	if ( ! isset( $from_api->updates ) || ! is_array( $from_api->updates ) )
+	if ( ! isset( $from_api->updates ) || ! is_array( $from_api->updates ) ) {
 		return false;
+	}
 
 	$updates = $from_api->updates;
 	foreach ( $updates as $update ) {
-		if ( $update->current == $version && $update->locale == $locale )
+		if ( $update->current == $version && $update->locale == $locale ) {
 			return $update;
+		}
 	}
+
 	return false;
 }
 

@@ -1,50 +1,35 @@
 <?php
-/**
- * A simple set of functions to check our version 1.0 update service.
- *
- * @package WordPress
- * @since WP-2.3.0
- */
+// A set of functions to check for updates.
 
 /**
- * Check WordPress version against the newest version.
- *
- * The WordPress version, PHP version, and Locale is sent. Checks against the
- * WordPress server at api.wordpress.org server. Will only check if WordPress
- * isn't installing.
- *
- * @since WP-2.3.0
- * @global wpdb   $wpdb
- * @global string $wp_local_package
- *
- * @param array $extra_stats Extra statistics to report to the WordPress.org API.
- * @param bool  $force_check Whether to bypass the transient cache and force a fresh update check. Defaults to false, true if $extra_stats is set.
+ * Check WP version against the newest version.
  */
 function wp_version_check( $extra_stats = array(), $force_check = false ) {
+
+	// Early return if we are installing WP
 	if ( wp_installing() ) {
 		return;
 	}
 
-	global $wpdb, $wp_local_package;
-	// include an unmodified $cp_version
+	// Include $wp_version
 	include( ABSPATH . WPINC . '/version.php' );
-	$php_version = phpversion();
 
 	$current = get_site_transient( 'update_core' );
-	$translations = wp_get_installed_translations( 'core' );
 
-	// Invalidate the transient when $cp_version changes
-	if ( is_object( $current ) && $cp_version != $current->version_checked )
+	// Invalidate the transient when $wp_version changes
+	if ( is_object( $current ) && $wp_version != $current->version_checked ) {
 		$current = false;
+	}
 
 	if ( ! is_object($current) ) {
 		$current = new stdClass;
 		$current->updates = array();
-		$current->version_checked = $cp_version;
+		$current->version_checked = $wp_version;
 	}
 
-	if ( ! empty( $extra_stats ) )
+	if ( ! empty( $extra_stats ) ) {
 		$force_check = true;
+	}
 
 	// Wait 60 seconds between multiple version check requests
 	$timeout = 60;
@@ -53,81 +38,17 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 		return;
 	}
 
-	/**
-	 * Filters the locale requested for WordPress core translations.
-	 *
-	 * @since WP-2.8.0
-	 *
-	 * @param string $locale Current locale.
-	 */
-	$locale = apply_filters( 'core_version_check_locale', get_locale() );
-
 	// Update last_checked for current to prevent multiple blocking requests if request hangs
 	$current->last_checked = time();
 	set_site_transient( 'update_core', $current );
 
-	if ( method_exists( $wpdb, 'db_version' ) )
-		$mysql_version = preg_replace('/[^0-9.].*/', '', $wpdb->db_version());
-	else
-		$mysql_version = 'N/A';
-
 	if ( is_multisite() ) {
 		$wp_install = network_site_url();
-		$multisite_enabled = 1;
 	} else {
-		$multisite_enabled = 0;
 		$wp_install = home_url( '/' );
 	}
 
-	$query = array(
-		'version'            => $cp_version,
-		'php'                => $php_version,
-		'locale'             => $locale,
-		'mysql'              => $mysql_version,
-		'local_package'      => isset( $wp_local_package ) ? $wp_local_package : '',
-		'multisite_enabled'  => $multisite_enabled,
-		'initial_db_version' => get_site_option( 'initial_db_version' ),
-		'extra_stats'        => $extra_stats,
-		'failure_data'       => get_site_option( 'auto_core_update_failed' ),
-		'translations'       => wp_json_encode( $translations ),
-	);
-
-	/**
-	 * Filter the query arguments sent as part of the core version check.
-	 *
-	 * WARNING: Changing this data may result in your site not receiving security updates.
-	 * Please exercise extreme caution.
-	 *
-	 * @since WP-4.9.0
-	 * @since 1.0.0 Added `extra_stats`, `failure_data`, and `translations`
-	 * parameters to query (in WP these are passed in a POST body).
-	 *
-	 * @param array $query {
-	 *     Version check query arguments.
-	 *
-	 *     @type string $version            ClassicPress version number.
-	 *     @type string $php                PHP version number.
-	 *     @type string $locale             The locale to retrieve updates for.
-	 *     @type string $mysql              MySQL version number.
-	 *     @type string $local_package      The value of the $wp_local_package global, when set.
-	 *     @type int    $multisite_enabled  Whether this ClassicPress installation uses Multisite.
-	 *     @type int    $initial_db_version Database version of ClassicPress at time of installation.
-	 *     @type array  $extra_stats        Failure data from the current update, if any.
-	 *     @type array  $failure_data       Failure data from a previous update, if any.
-	 *     @type array  $translations       Core translations installed on this site.
-	 * }
-	 */
-	$query = apply_filters( 'core_version_check_query_args', $query );
-
-	// ClassicPress installed via the migration plugin has a version number
-	// like `1.0.0-alpha1+migration.20181113`.  The API does not generate
-	// upgrade paths for these versions, but what we actually want is to check
-	// for an upgrade from the base version, in this case `1.0.0-alpha1`.
-	$cp_base_version = preg_replace( '#\+migration\.\d+$#', '', $cp_version );
-
-	$url = 'https://api-v1.classicpress.net/upgrade/'
-		. $cp_base_version . '.json'
-		. '?' . http_build_query( $query, null, '&' );
+	$url = 'https://raw.githubusercontent.com/wp-cms/wp-cms/main/update-info.json';
 
 	$doing_cron = wp_doing_cron();
 
@@ -145,16 +66,16 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 		trigger_error(
 			sprintf(
 				/* translators: %s: support forums URL */
-				__( 'An unexpected error occurred. Something may be wrong with ClassicPress.net or this server&#8217;s configuration. If you continue to have problems, please report this issue in our <a href="%s">support forum</a>.' ),
-				'https://forums.classicpress.net/c/support/'
-			) . ' ' . __( '(ClassicPress could not establish a secure connection to ClassicPress.net. Please contact your server administrator.)' ),
+				__( 'An unexpected error occurred. All I can say is try again later or open a <a href="%s">GitHub Issue</a>.' ),
+				'https://github.com/wp-cms/wp-cms/issues'
+			),
 			headers_sent() || WP_DEBUG ? E_USER_WARNING : E_USER_NOTICE
 		);
 		return;
 	}
 
 	if ( 200 != wp_remote_retrieve_response_code( $response ) ) {
-		// Most likely 404 due to unrecognized ClassicPress version
+		// Most likely 404 due to a change in GitHub raw files URL
 		return;
 	}
 
@@ -184,20 +105,9 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 	$updates = new stdClass();
 	$updates->updates = $offers;
 	$updates->last_checked = time();
-	$updates->version_checked = $cp_version;
-
-	if ( isset( $body['translations'] ) )
-		$updates->translations = $body['translations'];
+	$updates->version_checked = $wp_version;
 
 	set_site_transient( 'update_core', $updates );
-
-	if ( ! empty( $body['ttl'] ) ) {
-		$ttl = (int) $body['ttl'];
-		if ( $ttl && ( time() + $ttl < wp_next_scheduled( 'wp_version_check' ) ) ) {
-			// Queue an event to re-run the update check in $ttl seconds.
-			wp_schedule_single_event( time() + $ttl, 'wp_version_check' );
-		}
-	}
 
 	// Trigger background updates if running non-interactively, and we weren't called from the update handler.
 	if ( $doing_cron && ! doing_action( 'wp_maybe_auto_update' ) ) {
@@ -657,14 +567,14 @@ function wp_get_update_data() {
  * @global string $wp_version
  */
 function _maybe_update_core() {
-	// include an unmodified $cp_version
+	// include an unmodified $wp_version
 	include( ABSPATH . WPINC . '/version.php' );
 
 	$current = get_site_transient( 'update_core' );
 
 	if ( isset( $current->last_checked, $current->version_checked ) &&
 		12 * HOUR_IN_SECONDS > ( time() - $current->last_checked ) &&
-		$current->version_checked == $cp_version ) {
+		$current->version_checked == $wp_version ) {
 		return;
 	}
 	wp_version_check();

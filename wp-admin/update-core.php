@@ -32,66 +32,61 @@ if ( ! current_user_can( 'update_core' ) && ! current_user_can( 'update_themes' 
  * @param object $update
  */
 function list_core_update( $update ) {
- 	global $wp_local_package, $wpdb;
+ 	global $wpdb;
   	static $first_pass = true;
 
-	$wp_version = get_bloginfo( 'version' );
+    $current_wp_version = get_bloginfo( 'version' );
 
- 	if ( 'en_US' == $update->locale && 'en_US' == get_locale() )
- 		$version_string = $update->current;
- 	// If the only available update is a partial builds, it doesn't need a language-specific version string.
- 	elseif ( 'en_US' == $update->locale && $update->packages->partial && $wp_version == $update->partial_version && ( $updates = get_core_updates() ) && 1 == count( $updates ) )
- 		$version_string = $update->current;
- 	else
- 		$version_string = sprintf( "%s&ndash;<strong>%s</strong>", $update->current, $update->locale );
-
+    // Determine if we are already on the latest available version or not
 	$current = false;
-	if ( !isset($update->response) || 'latest' == $update->response )
+	if ( $update->version == $current_wp_version ) {
 		$current = true;
-	$submit = __('Update Now');
-	$form_action = 'update-core.php?action=do-core-upgrade';
-	$php_version    = phpversion();
-	$mysql_version  = $wpdb->db_version();
-	$show_buttons = true;
-	if ( 'development' == $update->response ) {
-		$message = __('You are using a development version of ClassicPress. You can update to the latest nightly build automatically:');
-	} else {
-		if ( $current ) {
-			$message = sprintf( __( 'If you need to re-install version %s, you can do so here:' ), $version_string );
-			$submit = __('Re-install Now');
-			$form_action = 'update-core.php?action=do-core-reinstall';
-		} else {
-			$php_compat     = version_compare( $php_version, $update->php_version, '>=' );
-			if ( file_exists( WP_CONTENT_DIR . '/db.php' ) && empty( $wpdb->is_mysql ) )
-				$mysql_compat = true;
-			else
-				$mysql_compat = version_compare( $mysql_version, $update->mysql_version, '>=' );
-
-			if ( !$mysql_compat && !$php_compat )
-				/* translators: 1: ClassicPress version number, 2: Minimum required PHP version number, 3: Minimum required MySQL version number, 4: Current PHP version number, 5: Current MySQL version number */
-				$message = sprintf( __('You cannot update because <a href="https://www.classicpress.net/version/%1$s">ClassicPress %1$s</a> requires PHP version %2$s or higher and MySQL version %3$s or higher. You are running PHP version %4$s and MySQL version %5$s.'), $update->current, $update->php_version, $update->mysql_version, $php_version, $mysql_version );
-			elseif ( !$php_compat )
-				/* translators: 1: ClassicPress version number, 2: Minimum required PHP version number, 3: Current PHP version number */
-				$message = sprintf( __('You cannot update because <a href="https://www.classicpress.net/version/%1$s">ClassicPress %1$s</a> requires PHP version %2$s or higher. You are running version %3$s.'), $update->current, $update->php_version, $php_version );
-			elseif ( !$mysql_compat )
-				/* translators: 1: ClassicPress version number, 2: Minimum required MySQL version number, 3: Current MySQL version number */
-				$message = sprintf( __('You cannot update because <a href="https://www.classicpress.net/version/%1$s">ClassicPress %1$s</a> requires MySQL version %2$s or higher. You are running version %3$s.'), $update->current, $update->mysql_version, $mysql_version );
-			else
-				/* translators: 1: ClassicPress version number, 2: ClassicPress version number including locale if necessary */
-				$message = 	sprintf(__('You can update to <a href="https://www.classicpress.net/version/%1$s">ClassicPress %2$s</a> automatically:'), $update->current, $version_string);
-			if ( !$mysql_compat || !$php_compat )
-				$show_buttons = false;
-		}
 	}
 
-	echo '<p>';
-	echo $message;
-	echo '</p>';
-	echo '<form method="post" action="' . $form_action . '" name="upgrade" class="upgrade">';
+	$submit        = __('Update Now');
+	$form_action   = 'update-core.php?action=do-core-upgrade';
+	$php_version   = phpversion();
+	$mysql_version = $wpdb->db_version();
+	$show_buttons  = true;
+
+    if ( $current ) {
+        $message = sprintf( __( 'If you need to re-install version %s, you can do so here:' ), $update->version );
+        $submit = __('Re-install Now');
+        $form_action = 'update-core.php?action=do-core-reinstall';
+    } else {
+        $php_compat     = version_compare( $php_version, $update->php_version, '>=' );
+
+        if ( file_exists( WP_CONTENT_DIR . '/db.php' ) && empty( $wpdb->is_mysql ) ) {
+	        $mysql_compat = true;
+        } else {
+	        $mysql_compat = version_compare( $mysql_version, $update->mysql_version, '>=' );
+        }
+
+        if ( !$mysql_compat && !$php_compat ) {
+	        /* translators: 1: WP version number, 2: Minimum required PHP version number, 3: Minimum required MySQL version number, 4: Current PHP version number, 5: Current MySQL version number */
+	        $message = sprintf( __( 'You cannot update because WP %1$s requires PHP version %2$s or higher and MySQL version %3$s or higher. You are running PHP version %4$s and MySQL version %5$s.' ), $update->current, $update->php_version, $update->mysql_version, $php_version, $mysql_version );
+        } elseif ( !$php_compat ) {
+	        /* translators: 1: WP version number, 2: Minimum required PHP version number, 3: Current PHP version number */
+	        $message = sprintf( __( 'You cannot update because WP %1$s requires PHP version %2$s or higher. You are running version %3$s.' ), $update->current, $update->php_version, $php_version );
+        } elseif ( !$mysql_compat ) {
+	        /* translators: 1: WP version number, 2: Minimum required MySQL version number, 3: Current MySQL version number */
+	        $message = sprintf( __( 'You cannot update because WP %1$s requires MySQL version %2$s or higher. You are running version %3$s.' ), $update->current, $update->mysql_version, $mysql_version );
+        } else {
+	        /* translators: 1: WP version number */
+	        $message = sprintf( __( 'You can update to WP %1$s automatically:' ), $update->version );
+        }
+
+        if ( !$mysql_compat || !$php_compat ) {
+	        $show_buttons = false;
+        }
+    }
+
+
+	echo '<p>' . $message . '</p>
+    <form method="post" action="' . $form_action . '" name="upgrade" class="upgrade">';
 	wp_nonce_field('upgrade-core');
-	echo '<p>';
-	echo '<input name="version" value="'. esc_attr($update->current) .'" type="hidden"/>';
-	echo '<input name="locale" value="'. esc_attr($update->locale) .'" type="hidden"/>';
+	echo '<p>
+    <input name="version" value="'. esc_attr($update->version) .'" type="hidden">';
 	if ( $show_buttons ) {
 		if ( $first_pass ) {
 			submit_button( $submit, $current ? '' : 'primary regular', 'upgrade', false );
@@ -100,19 +95,14 @@ function list_core_update( $update ) {
 			submit_button( $submit, '', 'upgrade', false );
 		}
 	}
-	if ( 'en_US' != $update->locale )
-		if ( !isset( $update->dismissed ) || !$update->dismissed )
-			submit_button( __( 'Hide this update' ), '', 'dismiss', false );
-		else
-			submit_button( __( 'Bring back this update' ), '', 'undismiss', false );
-	echo '</p>';
-	if ( 'en_US' != $update->locale && ( !isset($wp_local_package) || $wp_local_package != $update->locale ) )
-	    echo '<p class="hint">'.__('This localized version contains both the translation and various other localization fixes. You can skip upgrading if you want to keep your current translation.').'</p>';
-	// Partial builds don't need language-specific warnings.
-	elseif ( 'en_US' == $update->locale && get_locale() != 'en_US' && ( ! $update->packages->partial && $wp_version == $update->partial_version ) ) {
-	    echo '<p class="hint">'.sprintf( __('You are about to install ClassicPress %s <strong>in English (US).</strong> There is a chance this update will break your translation. You may prefer to wait for the localized version to be released.'), $update->response != 'development' ? $update->current : '' ).'</p>';
-	}
-	echo '</form>';
+
+    if ( !isset( $update->dismissed ) || !$update->dismissed ) {
+        submit_button( __( 'Hide this update' ), '', 'dismiss', false );
+    } else {
+        submit_button( __( 'Bring back this update' ), '', 'undismiss', false );
+    }
+	echo '</p>
+    </form>';
 
 }
 
@@ -245,8 +235,8 @@ function core_upgrade_preamble() {
 function list_plugin_updates() {
 	$wp_version = get_bloginfo( 'version' );
 	$cur_wp_version = preg_replace( '/-.*$/', '', $wp_version );
-	global $cp_version;
-	$cur_cp_version = preg_replace( '/\+.*$/', '', $cp_version );
+	global $wp_version;
+	$cur_cp_version = preg_replace( '/\+.*$/', '', $wp_version );
 
 	require_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
 	$plugins = get_plugin_updates();
@@ -517,30 +507,6 @@ function list_theme_updates() {
 }
 
 /**
- * @since WP-3.7.0
- */
-function list_translation_updates() {
-	$updates = wp_get_translation_updates();
-	if ( ! $updates ) {
-		if ( 'en_US' != get_locale() ) {
-			echo '<h2>' . __( 'Translations' ) . '</h2>';
-			echo '<p>' . __( 'Your translations are all up to date.' ) . '</p>';
-		}
-		return;
-	}
-
-	$form_action = 'update-core.php?action=do-translation-upgrade';
-	?>
-	<h2><?php _e( 'Translations' ); ?></h2>
-	<form method="post" action="<?php echo esc_url( $form_action ); ?>" name="upgrade-translations" class="upgrade">
-		<p><?php _e( 'New translations are available.' ); ?></p>
-		<?php wp_nonce_field( 'upgrade-translations' ); ?>
-		<p><input class="button" type="submit" value="<?php esc_attr_e( 'Update Translations' ); ?>" name="upgrade" /></p>
-	</form>
-	<?php
-}
-
-/**
  * Upgrade ClassicPress core display.
  *
  * @since WP-2.7.0
@@ -572,10 +538,10 @@ function do_core_upgrade( $reinstall = false ) {
 
 ?>
 	<div class="wrap">
-	<h1><?php _e( 'Update ClassicPress' ); ?></h1>
+	<h1><?php _e( 'Update WP' ); ?></h1>
 <?php
 
-	if ( false === ( $credentials = request_filesystem_credentials( $url, '', false, ABSPATH, array( 'version', 'locale' ), $allow_relaxed_file_ownership ) ) ) {
+	if ( false === ( $credentials = request_filesystem_credentials( $url, '', false, ABSPATH, array( 'version' ), $allow_relaxed_file_ownership ) ) ) {
 		echo '</div>';
 		return;
 	}
@@ -686,10 +652,10 @@ if ( ( 'do-theme-upgrade' == $action || ( 'do-plugin-upgrade' == $action && ! is
 	$action = 'upgrade-core';
 }
 
-$title = __('ClassicPress Updates');
+$title = __('WP Updates');
 $parent_file = 'index.php';
 
-$updates_overview  = '<p>' . __( 'On this screen, you can update to the latest version of ClassicPress, as well as update your themes, plugins, and translations from the ClassicPress.net repositories.' ) . '</p>';
+$updates_overview  = '<p>' . __( 'On this screen, you can update to the latest version of WP, as well as update your themes and plugins from the ClassicPress.net repositories.' ) . '</p>';
 $updates_overview .= '<p>' . __( 'If an update is available, you&#8127;ll see a notification appear in the Toolbar and navigation menu.' ) . ' ' . __( 'Keeping your site updated is important for security. It also makes the internet a safer place for you and your readers.' ) . '</p>';
 
 get_current_screen()->add_help_tab( array(
@@ -725,7 +691,7 @@ if ( 'upgrade-core' == $action ) {
 	require_once(ABSPATH . 'wp-admin/admin-header.php');
 	?>
 	<div class="wrap">
-	<h1><?php _e( 'ClassicPress Updates' ); ?></h1>
+	<h1><?php _e( 'WP Updates' ); ?></h1>
 	<?php
 	if ( $upgrade_error ) {
 		echo '<div class="error"><p>';
@@ -757,9 +723,6 @@ if ( 'upgrade-core' == $action ) {
 	}
 	if ( current_user_can( 'update_themes' ) ) {
 		list_theme_updates();
-	}
-	if ( current_user_can( 'update_languages' ) ) {
-		list_translation_updates();
 	}
 
 	/**
@@ -862,7 +825,7 @@ if ( 'upgrade-core' == $action ) {
 	?>
 	<div class="wrap">
 		<h1><?php _e( 'Update Themes' ); ?></h1>
-		<iframe src="<?php echo $url ?>" style="width: 100%; height: 100%; min-height: 750px;" frameborder="0" title="<?php esc_attr_e( 'Update progress' ); ?>"></iframe>
+		<iframe src="<?php echo $url ?>" style="width: 100%; height: 100%; min-height: 750px;" title="<?php esc_attr_e( 'Update progress' ); ?>"></iframe>
 	</div>
 	<?php
 
@@ -871,30 +834,6 @@ if ( 'upgrade-core' == $action ) {
 	) );
 
 	include(ABSPATH . 'wp-admin/admin-footer.php');
-
-} elseif ( 'do-translation-upgrade' == $action ) {
-
-	if ( ! current_user_can( 'update_languages' ) )
-		wp_die( __( 'Sorry, you are not allowed to update this site.' ) );
-
-	check_admin_referer( 'upgrade-translations' );
-
-	require_once( ABSPATH . 'wp-admin/admin-header.php' );
-	include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-
-	$url = 'update-core.php?action=do-translation-upgrade';
-	$nonce = 'upgrade-translations';
-	$title = __( 'Update Translations' );
-	$context = WP_LANG_DIR;
-
-	$upgrader = new Language_Pack_Upgrader( new Language_Pack_Upgrader_Skin( compact( 'url', 'nonce', 'title', 'context' ) ) );
-	$result = $upgrader->bulk_upgrade();
-
-	wp_localize_script( 'updates', '_wpUpdatesItemCounts', array(
-		'totals'  => wp_get_update_data(),
-	) );
-
-	require_once( ABSPATH . 'wp-admin/admin-footer.php' );
 
 } else {
 	/**

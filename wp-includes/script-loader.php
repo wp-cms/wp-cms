@@ -81,7 +81,7 @@ function classicpress_asset_version( $type = 'script', $handle = null ) {
  * @param WP_Scripts $scripts WP_Scripts object.
  */
 function wp_default_scripts( &$scripts ) {
-	include( ABSPATH . WPINC . '/version.php' ); // include an unmodified $cp_version
+	include( ABSPATH . WPINC . '/version.php' ); // include an unmodified $wp_version
 
 	$develop_src = classicpress_is_dev_install();
 

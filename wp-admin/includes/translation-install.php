@@ -45,7 +45,7 @@ function translations_api( $type, $args = null ) {
 		);
 		if ( 'core' === $type ) {
 			// Get ClassicPress core translations from the ClassicPress.net API.
-			$stats['cp_version'] = $cp_version;
+			$stats['cp_version'] = $wp_version;
 			$options['method'] = 'GET';
 			$url = add_query_arg(
 				$stats,

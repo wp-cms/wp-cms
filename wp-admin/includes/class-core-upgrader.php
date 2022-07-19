@@ -130,9 +130,10 @@ class Core_Upgrader extends WP_Upgrader {
 		$this->init();
 		$this->upgrade_strings();
 
-		// Is an update available?
-		if ( !isset( $current->response ) || $current->response == 'latest' )
-			return new WP_Error('up_to_date', $this->strings['up_to_date']);
+		// Is an update available or is the current version up to date?
+		if ( !isset( $current->version ) || $current->version == $wp_version ) {
+			return new WP_Error( 'up_to_date', $this->strings['up_to_date'] );
+		}
 
 		$res = $this->fs_connect( array( ABSPATH, WP_CONTENT_DIR ), $parsed_args['allow_relaxed_file_ownership'] );
 		if ( ! $res || is_wp_error( $res ) ) {
@@ -268,10 +269,10 @@ class Core_Upgrader extends WP_Upgrader {
 	 * @return bool True if we should update to the offered version, otherwise false.
 	 */
 	public static function should_update_to_version( $offered_ver ) {
-		include( ABSPATH . WPINC . '/version.php' ); // $cp_version; // x.y.z
+		include( ABSPATH . WPINC . '/version.php' ); // $wp_version; // x.y.z
 
 		return self::_auto_update_enabled_for_versions(
-			$cp_version,
+			$wp_version,
 			$offered_ver,
 			defined( 'WP_AUTO_UPDATE_CORE' ) ? WP_AUTO_UPDATE_CORE : null
 		);
@@ -598,21 +599,21 @@ class Core_Upgrader extends WP_Upgrader {
 	 * version, not the equivalent WordPress version. This function is no
 	 * longer used during the core update process.
 	 *
-	 * @global string $cp_version
+	 * @global string $wp_version
 	 *
 	 * @return bool True if the checksums match, otherwise false.
 	 */
 	public function check_files() {
-		global $cp_version;
+		global $wp_version;
 
-		if ( version_compare( $cp_version, '1.3.0-rc1', '<' ) ) {
+		if ( version_compare( $wp_version, '1.3.0-rc1', '<' ) ) {
 			// This version of ClassicPress has a `get_core_checksums()`
 			// function which incorrectly expects a WordPress version, so there
 			// is no point in continuing.
 			return false;
 		}
 
-		$checksums = get_core_checksums( $cp_version, 'en_US' );
+		$checksums = get_core_checksums( $wp_version, 'en_US' );
 
 		if ( ! is_array( $checksums ) )
 			return false;

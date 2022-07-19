@@ -186,7 +186,7 @@ function update_core($from, $to) {
 		return new WP_Error( 'insane_distro', __('The update could not be unpacked') );
 	}
 
-	// Import $cp_version, $wp_version, $required_php_version, and
+	// Import $wp_version, $wp_version, $required_php_version, and
 	// $required_mysql_version from the new version.
 	//
 	// NOTE: These variables are NOT modified in the global scope, and this
@@ -237,7 +237,7 @@ function update_core($from, $to) {
 		// Find the local version of the working directory
 		$working_dir_local = WP_CONTENT_DIR . '/upgrade/' . basename( $from ) . $distro;
 
-		$checksums = cp_get_core_checksums( $cp_version );
+		$checksums = cp_get_core_checksums( $wp_version );
 
 		if ( is_array( $checksums ) ) {
 			foreach ( $checksums as $file => $checksum ) {
@@ -369,13 +369,6 @@ function update_core($from, $to) {
 	// Remove maintenance file, we're done with potential site-breaking changes
 	$wp_filesystem->delete( $maintenance_file );
 
-	// WP-3.5 -> WP-3.5+ - an empty twentytwelve directory was created upon upgrade to WP-3.5 for some users, preventing installation of Twenty Twelve.
-	if ( '3.5' == $old_wp_version ) {
-		if ( is_dir( WP_CONTENT_DIR . '/themes/twentytwelve' ) && ! file_exists( WP_CONTENT_DIR . '/themes/twentytwelve/style.css' )  ) {
-			$wp_filesystem->delete( $wp_filesystem->wp_themes_dir() . 'twentytwelve/' );
-		}
-	}
-
 	// Copy New bundled plugins & themes
 	// This gives us the ability to install new plugins & themes bundled with future versions of ClassicPress whilst avoiding the re-install upon upgrade issue.
 	// $development_build controls us overwriting bundled themes and plugins when a non-stable release is being updated
@@ -470,9 +463,9 @@ function update_core($from, $to) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $cp_version The current ClassicPress version.
+	 * @param string $wp_version The current ClassicPress version.
 	 */
-	do_action( 'classicpress_core_updated_successfully', $cp_version );
+	do_action( 'classicpress_core_updated_successfully', $wp_version );
 
 	/**
 	 * Fires after ClassicPress core has been successfully updated.
@@ -491,7 +484,7 @@ function update_core($from, $to) {
 	if ( function_exists( 'delete_site_option' ) )
 		delete_site_option( 'auto_core_update_failed' );
 
-	return $cp_version;
+	return $wp_version;
 }
 
 /**
