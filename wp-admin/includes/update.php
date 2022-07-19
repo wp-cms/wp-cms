@@ -174,10 +174,9 @@ function undismiss_core_update( $version, $locale ) {
 /**
  *
  * @param string $version
- * @param string $locale
  * @return object|false
  */
-function find_core_update( $version, $locale ) {
+function find_core_update( $version ) {
 	$from_api = get_site_transient( 'update_core' );
 
 	if ( ! isset( $from_api->updates ) || ! is_array( $from_api->updates ) ) {
@@ -186,7 +185,7 @@ function find_core_update( $version, $locale ) {
 
 	$updates = $from_api->updates;
 	foreach ( $updates as $update ) {
-		if ( $update->current == $version && $update->locale == $locale ) {
+		if ( $update->version == $version ) {
 			return $update;
 		}
 	}

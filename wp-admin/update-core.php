@@ -520,17 +520,18 @@ function do_core_upgrade( $reinstall = false ) {
 
 	include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
 
-	if ( $reinstall )
+	if ( $reinstall ) {
 		$url = 'update-core.php?action=do-core-reinstall';
-	else
+	} else {
 		$url = 'update-core.php?action=do-core-upgrade';
+	}
 	$url = wp_nonce_url($url, 'upgrade-core');
 
 	$version = isset( $_POST['version'] )? $_POST['version'] : false;
-	$locale = isset( $_POST['locale'] )? $_POST['locale'] : 'en_US';
-	$update = find_core_update( $version, $locale );
-	if ( !$update )
+	$update = find_core_update( $version );
+	if ( !$update ) {
 		return;
+	}
 
 	// Allow relaxed file ownership writes for User-initiated upgrades when the API specifies
 	// that it's safe to do so. This only happens when there are no new files to create.
