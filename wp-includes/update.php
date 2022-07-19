@@ -48,7 +48,7 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 		$wp_install = home_url( '/' );
 	}
 
-	$url = 'https://raw.githubusercontent.com/wp-cms/wp-cms/main/update-info.json';
+	$url = 'https://raw.githubusercontent.com/wp-cms/update-info/main/update-info.json';
 
 	$doing_cron = wp_doing_cron();
 
