@@ -136,7 +136,7 @@ function dismissed_updates() {
 }
 
 /**
- * Display upgrade ClassicPress for downloading latest or upgrading automatically form.
+ * Display upgrade WP for downloading latest
  *
  * @since WP-2.7.0
  *
@@ -144,48 +144,15 @@ function dismissed_updates() {
  * @global string $required_mysql_version
  */
 function core_upgrade_preamble() {
-	global $required_php_version, $required_mysql_version;
 
 	$wp_version = get_bloginfo( 'version' );
 	$updates = get_core_updates();
 
-	if ( ! isset( $updates[0]->response ) || 'latest' === $updates[0]->response ) {
-		if ( ! isset( $updates[0]->response ) ) {
-			if ( classicpress_is_dev_install() ) {
-				echo '<h2>';
-				_e( 'You are running a development version of ClassicPress.' );
-				echo "</h2>\n";
-				echo '<p>';
-				_e( 'Development versions of ClassicPress do not receive automatic updates.' );
-				echo "</p>\n";
-			} else {
-				echo '<h2>';
-				_e( 'Unable to determine whether a ClassicPress update is available.' );
-				echo "</h2>\n";
-				echo '<p>';
-				_e( 'You may be running a customized build of ClassicPress, or your server may be having internet connectivity problems.' );
-				echo "</p>\n";
-			}
-		} else { // 'latest'
-			echo '<h2>';
-			_e( 'You have the latest version of ClassicPress.' );
-			echo "</h2>\n";
-		}
+	if ( ! isset( $updates[0]->response ) || $wp_version === $updates[0]->version ) {
 
-		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-		$upgrader = new WP_Automatic_Updater;
-		$future_minor_update = (object) array(
-			'current'       => $wp_version . '.1.next.minor',
-			'version'       => $wp_version . '.1.next.minor',
-			'php_version'   => $required_php_version,
-			'mysql_version' => $required_mysql_version,
-		);
-		$should_auto_update = $upgrader->should_update( 'core', $future_minor_update, ABSPATH );
-		if ( $should_auto_update ) {
-			echo '<p>';
-			_e( 'Future security updates will be applied automatically.' );
-			echo "</p>\n";
-		}
+        echo '<h2>';
+        _e( 'You have the latest version of ClassicPress.' );
+        echo "</h2>\n";
 
 	} else {
 		echo '<div class="notice notice-warning"><p>';
@@ -198,11 +165,11 @@ function core_upgrade_preamble() {
 		echo '</p></div>';
 
 		echo '<h2 class="response">';
-		_e( 'An updated version of ClassicPress is available.' );
+		_e( 'An updated version of WP is available.' );
 		echo '</h2>';
 	}
 
-	if ( isset( $updates[0] ) && $updates[0]->response == 'development' ) {
+	if ( isset( $updates[0] ) ) {
 		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 		$upgrader = new WP_Automatic_Updater;
 		if ( $upgrader->should_update( 'core', $updates[0], ABSPATH ) ) {
@@ -219,8 +186,9 @@ function core_upgrade_preamble() {
 		echo '</li>';
 	}
 	echo '</ul>';
+
 	// Don't show the maintenance mode notice when we are only showing a single re-install option.
-	if ( $updates && ( count( $updates ) > 1 || $updates[0]->response != 'latest' ) ) {
+	if ( $updates && ( count( $updates ) > 1 || $updates[0]->version != $wp_version) ) {
 		echo '<p>' . __( 'While your site is being updated, it will be in maintenance mode. As soon as your updates are complete, your site will return to normal.' ) . '</p>';
 	} elseif ( ! $updates ) {
 		echo '<p>' . sprintf(
@@ -229,6 +197,7 @@ function core_upgrade_preamble() {
 			classicpress_version()
 		) . '</p>';
 	}
+
 	dismissed_updates();
 }
 

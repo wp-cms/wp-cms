@@ -44,21 +44,10 @@ function get_core_updates( $options = array() ) {
 	$updates = $from_api->updates;
 	$result = array();
 	foreach ( $updates as $update ) {
-		if ( $update->response == 'autoupdate' ) {
-			continue;
-		}
-
-		if ( array_key_exists( $update->current . '|' . $update->locale, $dismissed ) ) {
-			if ( $options['dismissed'] ) {
-				$update->dismissed = true;
-				$result[] = $update;
-			}
-		} else {
-			if ( $options['available'] ) {
-				$update->dismissed = false;
-				$result[] = $update;
-			}
-		}
+        if ( $options['available'] ) {
+            $update->dismissed = false;
+            $result[] = $update;
+        }
 	}
 	return $result;
 }

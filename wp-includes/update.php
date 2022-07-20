@@ -515,18 +515,16 @@ function wp_get_update_data() {
 
 	if ( ( $core = current_user_can( 'update_core' ) ) && function_exists( 'get_core_updates' ) ) {
 		$update_wordpress = get_core_updates( array('dismissed' => false) );
-		if ( ! empty( $update_wordpress ) && ! in_array( $update_wordpress[0]->response, array('development', 'latest') ) && current_user_can('update_core') )
+		if ( ! empty( $update_wordpress ) && current_user_can('update_core') ) {
 			$counts['wordpress'] = 1;
+		}
 	}
 
-	if ( ( $core || $plugins || $themes ) && wp_get_translation_updates() )
-		$counts['translations'] = 1;
-
-	$counts['total'] = $counts['plugins'] + $counts['themes'] + $counts['wordpress'] + $counts['translations'];
+	$counts['total'] = $counts['plugins'] + $counts['themes'] + $counts['wordpress'];
 	$titles = array();
 	if ( $counts['wordpress'] ) {
 		/* translators: 1: Number of updates available to WordPress */
-		$titles['wordpress'] = sprintf( __( '%d WordPress Update'), $counts['wordpress'] );
+		$titles['wordpress'] = sprintf( __( '%d WP Update'), $counts['wordpress'] );
 	}
 	if ( $counts['plugins'] ) {
 		/* translators: 1: Number of updates available to plugins */
@@ -535,9 +533,6 @@ function wp_get_update_data() {
 	if ( $counts['themes'] ) {
 		/* translators: 1: Number of updates available to themes */
 		$titles['themes'] = sprintf( _n( '%d Theme Update', '%d Theme Updates', $counts['themes'] ), $counts['themes'] );
-	}
-	if ( $counts['translations'] ) {
-		$titles['translations'] = __( 'Translation Updates' );
 	}
 
 	$update_title = $titles ? esc_attr( implode( ', ', $titles ) ) : '';
