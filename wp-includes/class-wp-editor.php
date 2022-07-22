@@ -389,6 +389,7 @@ final class _WP_Editors {
 
 					$plugins = array(
 						'charmap',
+                        'codesample',
 						'colorpicker',
 						'hr',
 						'lists',
@@ -588,7 +589,7 @@ final class _WP_Editors {
 				 */
 				$mce_buttons = apply_filters( 'mce_buttons', $mce_buttons, $editor_id );
 
-				$mce_buttons_2 = array( 'strikethrough', 'hr', 'forecolor', 'pastetext', 'removeformat', 'charmap', 'outdent', 'indent', 'undo', 'redo' );
+				$mce_buttons_2 = array( 'strikethrough', 'hr', 'forecolor', 'pastetext', 'removeformat', 'charmap', 'codesample', 'outdent', 'indent', 'undo', 'redo' );
 
 				if ( ! wp_is_mobile() ) {
 					$mce_buttons_2[] = 'wp_help';
