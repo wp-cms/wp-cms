@@ -1615,7 +1615,7 @@ function wp_ajax_inline_save() {
 
 	$data = &$_POST;
 
-	$post = get_post( $post_ID, ARRAY_A );
+	$post = get_post( $post_ID, 'associative_array' );
 
 	// Since it's coming from the database.
 	$post = wp_slash($post);
@@ -2438,7 +2438,7 @@ function wp_ajax_save_attachment() {
 		wp_send_json_error();
 
 	$changes = $_REQUEST['changes'];
-	$post    = get_post( $id, ARRAY_A );
+	$post    = get_post( $id, 'associative_array' );
 
 	if ( 'attachment' != $post['post_type'] )
 		wp_send_json_error();
@@ -2515,7 +2515,7 @@ function wp_ajax_save_attachment_compat() {
 	if ( ! current_user_can( 'edit_post', $id ) )
 		wp_send_json_error();
 
-	$post = get_post( $id, ARRAY_A );
+	$post = get_post( $id, 'associative_array' );
 
 	if ( 'attachment' != $post['post_type'] )
 		wp_send_json_error();

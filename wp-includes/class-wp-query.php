@@ -919,7 +919,7 @@ class WP_Query {
 			if ( $this->queried_object && 'attachment' == $this->queried_object->post_type ) {
 				if ( preg_match( "/^[^%]*%(?:postname)%/", get_option( 'permalink_structure' ) ) ) {
 					// See if we also have a post with the same slug
-					$post = get_page_by_path( $qv['pagename'], OBJECT, 'post' );
+					$post = get_page_by_path( $qv['pagename'], 'object', 'post' );
 					if ( $post ) {
 						$this->queried_object = $post;
 						$this->is_page = false;
@@ -1851,7 +1851,7 @@ class WP_Query {
 						if ( !$ptype_obj || !$ptype_obj->hierarchical )
 							continue;
 
-						$reqpage = get_page_by_path($q['pagename'], OBJECT, $_post_type);
+						$reqpage = get_page_by_path($q['pagename'], 'object', $_post_type);
 						if ( $reqpage )
 							break;
 					}
@@ -3802,7 +3802,7 @@ class WP_Query {
 				if ( ! strpos( $postpath, '/' ) ) {
 					continue;
 				}
-				$postpath_obj = get_page_by_path( $postpath, OBJECT, $post_obj->post_type );
+				$postpath_obj = get_page_by_path( $postpath, 'object', $post_obj->post_type );
 
 				if ( $postpath_obj && ( $postpath_obj->ID == $post_obj->ID ) ) {
 					return true;

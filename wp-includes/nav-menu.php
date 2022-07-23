@@ -622,13 +622,13 @@ function _is_valid_nav_menu_item( $item ) {
  *     Optional. Arguments to pass to get_posts().
  *
  *     @type string $order       How to order nav menu items as queried with get_posts(). Will be ignored
- *                               if 'output' is ARRAY_A. Default 'ASC'.
+ *                               if 'output' is 'associative_array'. Default 'ASC'.
  *     @type string $orderby     Field to order menu items by as retrieved from get_posts(). Supply an orderby
  *                               field via 'output_key' to affect the output order of nav menu items.
  *                               Default 'menu_order'.
  *     @type string $post_type   Menu items post type. Default 'nav_menu_item'.
  *     @type string $post_status Menu items post status. Default 'publish'.
- *     @type string $output      How to order outputted menu items. Default ARRAY_A.
+ *     @type string $output      How to order outputted menu items. Default 'associative_array'.
  *     @type string $output_key  Key to use for ordering the actual menu items that get returned. Note that
  *                               that is not a get_posts() argument and will only affect output of menu items
  *                               processed in this function. Default 'menu_order'.
@@ -651,7 +651,7 @@ function wp_get_nav_menu_items( $menu, $args = array() ) {
 	}
 
 	$defaults = array( 'order' => 'ASC', 'orderby' => 'menu_order', 'post_type' => 'nav_menu_item',
-		'post_status' => 'publish', 'output' => ARRAY_A, 'output_key' => 'menu_order', 'nopaging' => true );
+		'post_status' => 'publish', 'output' => 'associative_array', 'output_key' => 'menu_order', 'nopaging' => true );
 	$args = wp_parse_args( $args, $defaults );
 	$args['include'] = $items;
 
@@ -701,7 +701,7 @@ function wp_get_nav_menu_items( $menu, $args = array() ) {
 		$items = array_filter( $items, '_is_valid_nav_menu_item' );
 	}
 
-	if ( ARRAY_A == $args['output'] ) {
+	if ( 'associative_array' == $args['output'] ) {
 		$items = wp_list_sort( $items, array(
 			$args['output_key'] => 'ASC',
 		) );

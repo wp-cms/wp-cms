@@ -907,7 +907,7 @@ function has_meta( $postid ) {
 
 	return $wpdb->get_results( $wpdb->prepare("SELECT meta_key, meta_value, meta_id, post_id
 			FROM $wpdb->postmeta WHERE post_id = %d
-			ORDER BY meta_key,meta_id", $postid), ARRAY_A );
+			ORDER BY meta_key,meta_id", $postid), 'associative_array' );
 }
 
 /**
@@ -941,7 +941,7 @@ function update_meta( $meta_id, $meta_key, $meta_value ) {
  * @return void|int|WP_Error Void if nothing fixed. 0 or WP_Error on update failure. The post ID on update success.
  */
 function _fix_attachment_links( $post ) {
-	$post = get_post( $post, ARRAY_A );
+	$post = get_post( $post, 'associative_array' );
 	$content = $post['post_content'];
 
 	// Don't run if no pretty permalinks or post is not published, scheduled, or privately published.

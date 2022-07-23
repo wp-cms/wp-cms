@@ -1015,7 +1015,7 @@ function _wp_delete_orphaned_draft_menu_items() {
  * @return array $messages The menu updated message
  */
 function wp_nav_menu_update_menu_items ( $nav_menu_selected_id, $nav_menu_selected_title ) {
-	$unsorted_menu_items = wp_get_nav_menu_items( $nav_menu_selected_id, array( 'orderby' => 'ID', 'output' => ARRAY_A, 'output_key' => 'ID', 'post_status' => 'draft,publish' ) );
+	$unsorted_menu_items = wp_get_nav_menu_items( $nav_menu_selected_id, array( 'orderby' => 'ID', 'output' => 'associative_array', 'output_key' => 'ID', 'post_status' => 'draft,publish' ) );
 	$messages = array();
 	$menu_items = array();
 	// Index menu items by db ID

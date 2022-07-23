@@ -1065,7 +1065,7 @@ abstract class WP_Privacy_Requests_Table extends WP_List_Table {
 			AND post_name = %s
 			GROUP BY post_status";
 
-		$results = (array) $wpdb->get_results( $wpdb->prepare( $query, $this->post_type, $this->request_type ), ARRAY_A );
+		$results = (array) $wpdb->get_results( $wpdb->prepare( $query, $this->post_type, $this->request_type ), 'associative_array' );
 		$counts  = array_fill_keys( get_post_stati(), 0 );
 
 		foreach ( $results as $row ) {

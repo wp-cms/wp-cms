@@ -25,7 +25,7 @@ function _wp_post_revision_fields( $post = array(), $deprecated = false ) {
 	static $fields = null;
 
 	if ( ! is_array( $post ) ) {
-		$post = get_post( $post, ARRAY_A );
+		$post = get_post( $post, 'associative_array' );
 	}
 
 	if ( is_null( $fields ) ) {
@@ -77,7 +77,7 @@ function _wp_post_revision_fields( $post = array(), $deprecated = false ) {
  */
 function _wp_post_revision_data( $post = array(), $autosave = false ) {
 	if ( ! is_array( $post ) ) {
-		$post = get_post( $post, ARRAY_A );
+		$post = get_post( $post, 'associative_array' );
 	}
 
 	$fields = _wp_post_revision_fields( $post );
@@ -286,7 +286,7 @@ function _wp_put_post_revision( $post = null, $autosave = false ) {
 	if ( is_object($post) )
 		$post = get_object_vars( $post );
 	elseif ( !is_array($post) )
-		$post = get_post($post, ARRAY_A);
+		$post = get_post($post, 'associative_array');
 
 	if ( ! $post || empty($post['ID']) )
 		return new WP_Error( 'invalid_post', __( 'Invalid post ID.' ) );
@@ -321,23 +321,23 @@ function _wp_put_post_revision( $post = null, $autosave = false ) {
  * @since WP-2.6.0
  *
  * @param int|WP_Post $post   The post ID or object.
- * @param string      $output Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which correspond to
+ * @param string      $output Optional. The required return type. One of 'object', 'associative_array', or 'numeric_array', which correspond to
  *                            a WP_Post object, an associative array, or a numeric array, respectively. Default OBJECT.
  * @param string      $filter Optional sanitation filter. See sanitize_post().
  * @return WP_Post|array|null WP_Post (or array) on success, or null on failure.
  */
-function wp_get_post_revision(&$post, $output = OBJECT, $filter = 'raw') {
-	if ( !$revision = get_post( $post, OBJECT, $filter ) )
+function wp_get_post_revision(&$post, $output = 'object', $filter = 'raw') {
+	if ( !$revision = get_post( $post, 'object', $filter ) )
 		return $revision;
 	if ( 'revision' !== $revision->post_type )
 		return null;
 
-	if ( $output == OBJECT ) {
+	if ( $output == 'object' ) {
 		return $revision;
-	} elseif ( $output == ARRAY_A ) {
+	} elseif ( $output == 'associative_array' ) {
 		$_revision = get_object_vars($revision);
 		return $_revision;
-	} elseif ( $output == ARRAY_N ) {
+	} elseif ( $output == 'numeric_array' ) {
 		$_revision = array_values(get_object_vars($revision));
 		return $_revision;
 	}
@@ -357,7 +357,7 @@ function wp_get_post_revision(&$post, $output = OBJECT, $filter = 'raw') {
  * @return int|false|null Null if error, false if no fields to restore, (int) post ID if success.
  */
 function wp_restore_post_revision( $revision_id, $fields = null ) {
-	if ( !$revision = wp_get_post_revision( $revision_id, ARRAY_A ) )
+	if ( !$revision = wp_get_post_revision( $revision_id, 'associative_array' ) )
 		return $revision;
 
 	if ( !is_array( $fields ) )

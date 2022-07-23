@@ -169,11 +169,11 @@ function get_approved_comments( $post_id, $args = array() ) {
  * @global WP_Comment $comment
  *
  * @param WP_Comment|string|int $comment Comment to retrieve.
- * @param string                $output  Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which correspond to
+ * @param string                $output  Optional. The required return type. One of 'object', 'associative_array', or 'numeric_array', which correspond to
  *                                       a WP_Comment object, an associative array, or a numeric array, respectively. Default OBJECT.
  * @return WP_Comment|array|null Depends on $output value.
  */
-function get_comment( $comment = null, $output = OBJECT ) {
+function get_comment( $comment = null, $output = 'object' ) {
 	if ( empty( $comment ) && isset( $GLOBALS['comment'] ) ) {
 		$comment = $GLOBALS['comment'];
 	}
@@ -199,11 +199,11 @@ function get_comment( $comment = null, $output = OBJECT ) {
 	 */
 	$_comment = apply_filters( 'get_comment', $_comment );
 
-	if ( $output == OBJECT ) {
+	if ( $output == 'object' ) {
 		return $_comment;
-	} elseif ( $output == ARRAY_A ) {
+	} elseif ( $output == 'associative_array' ) {
 		return $_comment->to_array();
-	} elseif ( $output == ARRAY_N ) {
+	} elseif ( $output == 'numeric_array' ) {
 		return array_values( $_comment->to_array() );
 	}
 	return $_comment;
@@ -356,7 +356,7 @@ function get_comment_count( $post_id = 0 ) {
 		FROM {$wpdb->comments}
 		{$where}
 		GROUP BY comment_approved
-	", ARRAY_A);
+	", 'associative_array');
 
 	$comment_count = array(
 		'approved'            => 0,
@@ -2209,7 +2209,7 @@ function wp_update_comment($commentarr) {
 	global $wpdb;
 
 	// First, get all of the original fields
-	$comment = get_comment($commentarr['comment_ID'], ARRAY_A);
+	$comment = get_comment($commentarr['comment_ID'], 'associative_array');
 	if ( empty( $comment ) ) {
 		return 0;
 	}

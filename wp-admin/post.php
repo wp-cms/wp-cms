@@ -169,7 +169,7 @@ case 'edit':
 	}
 
 	$title = $post_type_object->labels->edit_item;
-	$post = get_post($post_id, OBJECT, 'edit');
+	$post = get_post($post_id, 'object', 'edit');
 
 	if ( post_type_supports($post_type, 'comments') ) {
 		wp_enqueue_script('admin-comments');

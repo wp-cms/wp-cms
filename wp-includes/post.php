@@ -459,12 +459,12 @@ function _wp_relative_upload_path( $path ) {
  * @global WP_Post $post
  *
  * @param mixed  $args   Optional. User defined arguments for replacing the defaults. Default empty.
- * @param string $output Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which correspond to
+ * @param string $output Optional. The required return type. One of 'object', 'associative_array', or 'numeric_array', which correspond to
  *                       a WP_Post object, an associative array, or a numeric array, respectively. Default OBJECT.
  * @return array Array of children, where the type of each element is determined by $output parameter.
  *               Empty array on failure.
  */
-function get_children( $args = '', $output = OBJECT ) {
+function get_children( $args = '', $output = 'object' ) {
 	$kids = array();
 	if ( empty( $args ) ) {
 		if ( isset( $GLOBALS['post'] ) ) {
@@ -498,15 +498,15 @@ function get_children( $args = '', $output = OBJECT ) {
 	foreach ( $children as $key => $child )
 		$kids[$child->ID] = $children[$key];
 
-	if ( $output == OBJECT ) {
+	if ( $output == 'object' ) {
 		return $kids;
-	} elseif ( $output == ARRAY_A ) {
+	} elseif ( $output == 'associative_array' ) {
 		$weeuns = array();
 		foreach ( (array) $kids as $kid ) {
 			$weeuns[$kid->ID] = get_object_vars($kids[$kid->ID]);
 		}
 		return $weeuns;
-	} elseif ( $output == ARRAY_N ) {
+	} elseif ( $output == 'numeric_array' ) {
 		$babes = array();
 		foreach ( (array) $kids as $kid ) {
 			$babes[$kid->ID] = array_values(get_object_vars($kids[$kid->ID]));
@@ -563,14 +563,14 @@ function get_extended( $post ) {
  * @global WP_Post $post
  *
  * @param int|WP_Post|null $post   Optional. Post ID or post object. Defaults to global $post.
- * @param string           $output Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which correspond to
+ * @param string           $output Optional. The required return type. One of 'object', 'associative_array', or 'numeric_array', which correspond to
  *                                 a WP_Post object, an associative array, or a numeric array, respectively. Default OBJECT.
  * @param string           $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db',
  *                                 or 'display'. Default 'raw'.
  * @return WP_Post|array|null Type corresponding to $output on success or null on failure.
- *                            When $output is OBJECT, a `WP_Post` instance is returned.
+ *                            When $output is 'object', a `WP_Post` instance is returned.
  */
-function get_post( $post = null, $output = OBJECT, $filter = 'raw' ) {
+function get_post( $post = null, $output = 'object', $filter = 'raw' ) {
 	if ( empty( $post ) && isset( $GLOBALS['post'] ) )
 		$post = $GLOBALS['post'];
 
@@ -594,9 +594,9 @@ function get_post( $post = null, $output = OBJECT, $filter = 'raw' ) {
 
 	$_post = $_post->filter( $filter );
 
-	if ( $output == ARRAY_A )
+	if ( $output == 'associative_array' )
 		return $_post->to_array();
-	elseif ( $output == ARRAY_N )
+	elseif ( $output == 'numeric_array' )
 		return array_values( $_post->to_array() );
 
 	return $_post;
@@ -2333,7 +2333,7 @@ function wp_count_posts( $type = 'post', $perm = '' ) {
 	}
 	$query .= ' GROUP BY post_status';
 
-	$results = (array) $wpdb->get_results( $wpdb->prepare( $query, $type ), ARRAY_A );
+	$results = (array) $wpdb->get_results( $wpdb->prepare( $query, $type ), 'associative_array' );
 	$counts = array_fill_keys( get_post_stati(), 0 );
 
 	foreach ( $results as $row ) {
@@ -2377,7 +2377,7 @@ function wp_count_attachments( $mime_type = '' ) {
 	global $wpdb;
 
 	$and = wp_post_mime_type_where( $mime_type );
-	$count = $wpdb->get_results( "SELECT post_mime_type, COUNT( * ) AS num_posts FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' $and GROUP BY post_mime_type", ARRAY_A );
+	$count = $wpdb->get_results( "SELECT post_mime_type, COUNT( * ) AS num_posts FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' $and GROUP BY post_mime_type", 'associative_array' );
 
 	$counts = array();
 	foreach ( (array) $count as $row ) {
@@ -3035,12 +3035,12 @@ function wp_get_post_terms( $post_id = 0, $taxonomy = 'post_tag', $args = array(
  * @see get_posts()
  *
  * @param array  $args   Optional. Arguments to retrieve posts. Default empty array.
- * @param string $output Optional. The required return type. One of OBJECT or ARRAY_A, which correspond to
- *                       a WP_Post object or an associative array, respectively. Default ARRAY_A.
+ * @param string $output Optional. The required return type. One of OBJECT or 'associative_array', which correspond to
+ *                       a WP_Post object or an associative array, respectively. Default 'associative_array'.
  * @return array|false Array of recent posts, where the type of each element is determined by $output parameter.
  *                     Empty array on failure.
  */
-function wp_get_recent_posts( $args = array(), $output = ARRAY_A ) {
+function wp_get_recent_posts( $args = array(), $output = 'associative_array' ) {
 
 	if ( is_numeric( $args ) ) {
 		_deprecated_argument( __FUNCTION__, 'WP-3.1.0', __( 'Passing an integer number of posts is deprecated. Pass an array of arguments instead.' ) );
@@ -3062,7 +3062,7 @@ function wp_get_recent_posts( $args = array(), $output = ARRAY_A ) {
 	$results = get_posts( $r );
 
 	// Backward compatibility. Prior to WP-3.1 expected posts to be returned in array.
-	if ( ARRAY_A == $output ){
+	if ( 'associative_array' == $output ){
 		foreach ( $results as $key => $result ) {
 			$results[$key] = get_object_vars( $result );
 		}
@@ -3711,7 +3711,7 @@ function wp_update_post( $postarr = array(), $wp_error = false ) {
 	}
 
 	// First, get all of the original fields.
-	$post = get_post($postarr['ID'], ARRAY_A);
+	$post = get_post($postarr['ID'], 'associative_array');
 
 	if ( is_null( $post ) ) {
 		if ( $wp_error )
@@ -4199,13 +4199,13 @@ function get_all_page_ids() {
  * @deprecated WP-3.5.0 Use get_post()
  *
  * @param mixed  $page   Page object or page ID. Passed by reference.
- * @param string $output Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which correspond to
+ * @param string $output Optional. The required return type. One of 'object', 'associative_array', or 'numeric_array', which correspond to
  *                       a WP_Post object, an associative array, or a numeric array, respectively. Default OBJECT.
  * @param string $filter Optional. How the return value should be filtered. Accepts 'raw',
  *                       'edit', 'db', 'display'. Default 'raw'.
  * @return WP_Post|array|null WP_Post (or array) on success, or null on failure.
  */
-function get_page( $page, $output = OBJECT, $filter = 'raw') {
+function get_page( $page, $output = 'object', $filter = 'raw') {
 	return get_post( $page, $output, $filter );
 }
 
@@ -4217,12 +4217,12 @@ function get_page( $page, $output = OBJECT, $filter = 'raw') {
  * @global wpdb $wpdb ClassicPress database abstraction object.
  *
  * @param string       $page_path Page path.
- * @param string       $output    Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which correspond to
+ * @param string       $output    Optional. The required return type. One of 'object', 'associative_array', or 'numeric_array', which correspond to
  *                                a WP_Post object, an associative array, or a numeric array, respectively. Default OBJECT.
  * @param string|array $post_type Optional. Post type or array of post types. Default 'page'.
  * @return WP_Post|array|null WP_Post (or array) on success, or null on failure.
  */
-function get_page_by_path( $page_path, $output = OBJECT, $post_type = 'page' ) {
+function get_page_by_path( $page_path, $output = 'object', $post_type = 'page' ) {
 	global $wpdb;
 
 	$last_changed = wp_cache_get_last_changed( 'posts' );
@@ -4263,7 +4263,7 @@ function get_page_by_path( $page_path, $output = OBJECT, $post_type = 'page' ) {
 		AND post_type IN ($post_type_in_string)
 	";
 
-	$pages = $wpdb->get_results( $sql, OBJECT_K );
+	$pages = $wpdb->get_results( $sql, 'object_key_first_column' );
 
 	$revparts = array_reverse( $parts );
 
@@ -4309,12 +4309,12 @@ function get_page_by_path( $page_path, $output = OBJECT, $post_type = 'page' ) {
  * @global wpdb $wpdb ClassicPress database abstraction object.
  *
  * @param string       $page_title Page title
- * @param string       $output     Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which correspond to
+ * @param string       $output     Optional. The required return type. One of 'object', 'associative_array', or 'numeric_array', which correspond to
  *                                 a WP_Post object, an associative array, or a numeric array, respectively. Default OBJECT.
  * @param string|array $post_type  Optional. Post type or array of post types. Default 'page'.
  * @return WP_Post|array|null WP_Post (or array) on success, or null on failure.
  */
-function get_page_by_title( $page_title, $output = OBJECT, $post_type = 'page' ) {
+function get_page_by_title( $page_title, $output = 'object', $post_type = 'page' ) {
 	global $wpdb;
 
 	if ( is_array( $post_type ) ) {

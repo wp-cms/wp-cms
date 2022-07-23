@@ -386,7 +386,7 @@ function wp_resolve_numeric_slug_conflicts( $query_vars = array() ) {
 	// This is the potentially clashing slug.
 	$value = $query_vars[ $compare ];
 
-	$post = get_page_by_path( $value, OBJECT, 'post' );
+	$post = get_page_by_path( $value, 'object', 'post' );
 	if ( ! ( $post instanceof WP_Post ) ) {
 		return $query_vars;
 	}

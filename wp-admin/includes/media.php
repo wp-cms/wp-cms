@@ -651,7 +651,7 @@ function media_upload_form_handler() {
 	}
 
 	if ( !empty($_POST['attachments']) ) foreach ( $_POST['attachments'] as $attachment_id => $attachment ) {
-		$post = $_post = get_post($attachment_id, ARRAY_A);
+		$post = $_post = get_post($attachment_id, 'associative_array');
 
 		if ( !current_user_can( 'edit_post', $attachment_id ) )
 			continue;
