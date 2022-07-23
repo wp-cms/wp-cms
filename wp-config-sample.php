@@ -15,28 +15,15 @@
  *
  */
 
-/** The name of the database for WP */
-const DB_NAME = 'database_name_here';
-
-/** MySQL database username */
-const DB_USER = 'username_here';
-
-/** MySQL database password */
+// Database information
+const DB_NAME     = 'database_name_here';
+const DB_USER     = 'username_here';
 const DB_PASSWORD = 'password_here';
+const DB_HOST     = 'localhost';
+const DB_CHARSET  = 'utf8';
+const DB_COLLATE  = '';
 
-/** MySQL hostname */
-const DB_HOST = 'localhost';
-
-/** Database Charset to use in creating database tables. */
-const DB_CHARSET = 'utf8';
-
-/** The Database Collate type. Don't change this if in doubt. */
-const DB_COLLATE = '';
-
-/**
- * Authentication Unique Keys and Salts.
- * @since WP-1.0.0
- */
+// Authentication Unique Keys and Salts
 const AUTH_KEY         = 'put your unique phrase here';
 const SECURE_AUTH_KEY  = 'put your unique phrase here';
 const LOGGED_IN_KEY    = 'put your unique phrase here';
