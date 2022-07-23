@@ -14,6 +14,15 @@ Developers who know some traditional web development skills: PHP, HTML, CSS, Jav
 - If you are looking for the good old WordPress, without the blocks fuss and with a focus on "please keep things the way they were and don't mess with it", go to [ClassicPress](https://www.classicpress.net/).
 - If you are an adventurous developer who loves the old WP Way of doing things, but hate bloat... stay here.
 
+# Version 1.0.0 is not released yet
+
+I am currently working on a stable version 1.0.0 with:
+
+* Big main bloat removed
+* PHP 8.2.0 compatible
+* WP Coding Standars applied to the whole core
+* ClassicPress Plugins/Themes directory integrated
+
 # Key points of the WP CMS philosophy
 
 ## KEY NUMBER 1 - "Remove Bloat"
