@@ -20,7 +20,7 @@ I am currently working on a stable version 1.0.0 with:
 
 * Big main bloat removed
 * PHP 8.2.0 compatible
-* WP Coding Standars applied to the whole core
+* WP Coding Standards applied to the whole core
 * ClassicPress Plugins/Themes directory integrated
 
 # Key points of the WP CMS philosophy
