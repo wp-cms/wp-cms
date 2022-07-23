@@ -3,17 +3,15 @@
  * Bootstrap file for setting the ABSPATH constant
  * and loading the wp-config.php file. The wp-config.php
  * file will then load the wp-settings.php file, which
- * will then set up the ClassicPress environment.
+ * will then set up the WP environment.
  *
  * If the wp-config.php file is not found then an error
  * will be displayed asking the visitor to set up the
  * wp-config.php file.
  *
- * Will also search for wp-config.php in ClassicPress' parent
- * directory to allow the ClassicPress directory to remain
+ * Will also search for wp-config.php in WPs' parent
+ * directory to allow the WP directory to remain
  * untouched.
- *
- * @package ClassicPress
  */
 
 /** Define ABSPATH as this file's directory */
@@ -26,12 +24,12 @@ error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_W
 /*
  * If wp-config.php exists in the ClassicPress root, or if it exists in the root and wp-settings.php
  * doesn't, load wp-config.php. The secondary check for wp-settings.php has the added benefit
- * of avoiding cases where the current directory is a nested installation, e.g. / is ClassicPress(a)
- * and /blog/ is ClassicPress(b).
+ * of avoiding cases where the current directory is a nested installation, e.g. / is WP(a)
+ * and /blog/ is WP(b).
  *
  * If neither set of conditions is true, initiate loading the setup process.
  */
-if ( file_exists( ABSPATH . 'wp-config.php') ) {
+if ( file_exists( ABSPATH . 'wp-config.php' ) ) {
 
 	/** The config file resides in ABSPATH */
 	require_once( ABSPATH . 'wp-config.php' );
@@ -60,7 +58,7 @@ if ( file_exists( ABSPATH . 'wp-config.php') ) {
 	 * in an infinite loop, that's a silly thing to assume, don't you think? If
 	 * we're traveling in circles, our last-ditch effort is "Need more help?"
 	 */
-	if ( false === strpos( $_SERVER['REQUEST_URI'], 'setup-config' ) ) {
+	if ( ! str_contains( $_SERVER['REQUEST_URI'], 'setup-config' ) ) {
 		header( 'Location: ' . $path );
 		exit;
 	}
@@ -72,9 +70,9 @@ if ( file_exists( ABSPATH . 'wp-config.php') ) {
 	wp_load_translations_early();
 
 	// Die with an error message
-	$die  = sprintf(
+	$die = sprintf(
 		/* translators: %s: wp-config.php */
-		__( "There doesn't seem to be a %s file. I need this before we can get started." ),
+		__( "There doesn't seem to be a %s file." ),
 		'<code>wp-config.php</code>'
 	) . '</p>';
 	$die .= '<p>' . sprintf(
@@ -87,7 +85,7 @@ if ( file_exists( ABSPATH . 'wp-config.php') ) {
 		__( "You can create a %s file through a web interface, but this doesn't work for all server setups. The safest way is to manually create the file." ),
 		'<code>wp-config.php</code>'
 	) . '</p>';
-	$die .= '<p><a href="' . $path . '" class="button button-large">' . __( "Create a Configuration File" ) . '</a>';
+	$die .= '<p><a href="' . $path . '" class="button button-large">' . __( 'Create a Configuration File' ) . '</a>';
 
-	wp_die( $die, __( 'ClassicPress &rsaquo; Error' ) );
+	wp_die( $die, __( 'WP &rsaquo; Error' ) );
 }

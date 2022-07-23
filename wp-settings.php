@@ -1,19 +1,15 @@
 <?php
 /**
  * Used to set up and fix common variables and include
- * the ClassicPress procedural and class library.
+ * the WP procedural and class library.
  *
  * Allows for some configuration in wp-config.php (see default-constants.php)
- *
- * @package ClassicPress
  */
 
 /**
- * Stores the location of the ClassicPress directory of functions, classes, and core content.
- *
- * @since WP-1.0.0
+ * Stores the location of the WP directory of functions, classes, and core content.
  */
-define( 'WPINC', 'wp-includes' );
+const WPINC = 'wp-includes';
 
 // Include files required for initialization.
 require( ABSPATH . WPINC . '/load.php' );
@@ -33,7 +29,6 @@ require( ABSPATH . WPINC . '/version.php' );
  * configuration. In multisite, it will be overridden by default in ms-settings.php.
  *
  * @global int $blog_id
- * @since WP-2.0.0
  */
 global $blog_id;
 
@@ -42,10 +37,6 @@ wp_initial_constants();
 
 // Check for the required PHP version and for the MySQL extension or a database drop-in.
 wp_check_php_mysql_versions();
-
-// Disable magic quotes at runtime. Magic quotes are added using wpdb later in wp-settings.php.
-@ini_set( 'magic_quotes_runtime', 0 );
-@ini_set( 'magic_quotes_sybase',  0 );
 
 // ClassicPress calculates offsets from UTC.
 date_default_timezone_set( 'UTC' );
@@ -73,15 +64,12 @@ wp_debug_mode();
  *
  * This filter runs before it can be used by plugins. It is designed for non-web
  * run-times. If false is returned, advanced-cache.php will never be loaded.
- *
- * @since WP-4.6.0
- *
  * @param bool $enable_advanced_cache Whether to enable loading advanced-cache.php (if present).
  *                                    Default true.
  */
 if ( WP_CACHE && apply_filters( 'enable_loading_advanced_cache_dropin', true ) ) {
 	// For an advanced caching plugin to use. Uses a static drop-in because you would only want one.
-	WP_DEBUG ? include( WP_CONTENT_DIR . '/advanced-cache.php' ) : @include( WP_CONTENT_DIR . '/advanced-cache.php' );
+	include( WP_CONTENT_DIR . '/advanced-cache.php' );
 
 	// Re-initialize any hooks added manually by advanced-cache.php
 	if ( $wp_filter ) {
@@ -89,10 +77,10 @@ if ( WP_CACHE && apply_filters( 'enable_loading_advanced_cache_dropin', true ) )
 	}
 }
 
-// Define WP_LANG_DIR if not set.
+// Define WP_LANG_DIR if not set
 wp_set_lang_dir();
 
-// Load early ClassicPress files.
+// Load early WP files
 require( ABSPATH . WPINC . '/compat.php' );
 require( ABSPATH . WPINC . '/class-wp-list-util.php' );
 require( ABSPATH . WPINC . '/functions.php' );
@@ -101,21 +89,21 @@ require( ABSPATH . WPINC . '/class-wp.php' );
 require( ABSPATH . WPINC . '/class-wp-error.php' );
 require( ABSPATH . WPINC . '/pomo/mo.php' );
 
-// Include the wpdb class and, if present, a db.php database drop-in.
+// Include the wpdb class and, if present, a db.php database drop-in
 global $wpdb;
 require_wp_db();
 
-// Set the database table prefix and the format specifiers for database table columns.
+// Set the database table prefix and the format specifiers for database table columns
 $GLOBALS['table_prefix'] = $table_prefix;
 wp_set_wpdb_vars();
 
-// Start the ClassicPress object cache, or an external object cache if the drop-in is present.
+// Start the ClassicPress object cache, or an external object cache if the drop-in is present
 wp_start_object_cache();
 
-// Attach the default filters.
+// Attach the default filters
 require( ABSPATH . WPINC . '/default-filters.php' );
 
-// Initialize multisite if enabled.
+// Initialize multisite if enabled
 if ( is_multisite() ) {
 	require( ABSPATH . WPINC . '/class-wp-site-query.php' );
 	require( ABSPATH . WPINC . '/class-wp-network-query.php' );
@@ -127,7 +115,7 @@ if ( is_multisite() ) {
 
 register_shutdown_function( 'shutdown_action_hook' );
 
-// Stop most of ClassicPress from being loaded if we just want the basics.
+// Stop most of WP from being loaded if we just want the basics
 if ( SHORTINIT ) {
 	return false;
 }
@@ -137,10 +125,10 @@ require_once( ABSPATH . WPINC . '/l10n.php' );
 require_once( ABSPATH . WPINC . '/class-wp-locale.php' );
 require_once( ABSPATH . WPINC . '/class-wp-locale-switcher.php' );
 
-// Run the installer if ClassicPress is not installed.
+// Run the installer if WP is not installed
 wp_not_installed();
 
-// Load most of ClassicPress.
+// Load most of WP
 require( ABSPATH . WPINC . '/class-wp-walker.php' );
 require( ABSPATH . WPINC . '/class-wp-ajax-response.php' );
 require( ABSPATH . WPINC . '/formatting.php' );
@@ -241,20 +229,20 @@ require( ABSPATH . WPINC . '/rest-api/fields/class-wp-rest-user-meta-fields.php'
 
 $GLOBALS['wp_embed'] = new WP_Embed();
 
-// Load multisite-specific files.
+// Load multisite-specific files
 if ( is_multisite() ) {
 	require( ABSPATH . WPINC . '/ms-functions.php' );
 	require( ABSPATH . WPINC . '/ms-default-filters.php' );
 	require( ABSPATH . WPINC . '/ms-deprecated.php' );
 }
 
-// Define constants that rely on the API to obtain the default value.
-// Define must-use plugin directory constants, which may be overridden in the sunrise.php drop-in.
+// Define constants that rely on the API to obtain the default value
+// Define must-use plugin directory constants, which may be overridden in the sunrise.php drop-in
 wp_plugin_directory_constants();
 
 $GLOBALS['wp_plugin_paths'] = array();
 
-// Load must-use plugins.
+// Load must-use plugins
 foreach ( wp_get_mu_plugins() as $mu_plugin ) {
 	include_once( $mu_plugin );
 }
@@ -271,8 +259,6 @@ if ( is_multisite() ) {
 
 /**
  * Fires once all must-use and network-activated plugins have loaded.
- *
- * @since WP-2.8.0
  */
 do_action( 'muplugins_loaded' );
 
@@ -322,8 +308,6 @@ if ( WP_CACHE && function_exists( 'wp_cache_postload' ) ) {
  * Fires once activated plugins have loaded.
  *
  * Pluggable functions are also available at this point in the loading order.
- *
- * @since WP-1.5.0
  */
 do_action( 'plugins_loaded' );
 
@@ -335,68 +319,58 @@ wp_magic_quotes();
 
 /**
  * Fires when comment cookies are sanitized.
- *
- * @since WP-2.0.11
  */
 do_action( 'sanitize_comment_cookies' );
 
 /**
- * ClassicPress Query object
+ * WP Query object
  * @global WP_Query $wp_the_query
- * @since WP-2.0.0
  */
 $GLOBALS['wp_the_query'] = new WP_Query();
 
 /**
  * Holds the reference to @see $wp_the_query
- * Use this global for ClassicPress queries
+ * Use this global for WP queries
  * @global WP_Query $wp_query
- * @since WP-1.5.0
  */
 $GLOBALS['wp_query'] = $GLOBALS['wp_the_query'];
 
 /**
- * Holds the ClassicPress Rewrite object for creating pretty URLs
+ * Holds the WP Rewrite object for creating pretty URLs
  * @global WP_Rewrite $wp_rewrite
- * @since WP-1.5.0
  */
 $GLOBALS['wp_rewrite'] = new WP_Rewrite();
 
 /**
- * ClassicPress Object
+ * WP Object
  * @global WP $wp
- * @since WP-2.0.0
  */
 $GLOBALS['wp'] = new WP();
 
 /**
- * ClassicPress Widget Factory Object
+ * WP Widget Factory Object
  * @global WP_Widget_Factory $wp_widget_factory
- * @since WP-2.8.0
  */
 $GLOBALS['wp_widget_factory'] = new WP_Widget_Factory();
 
 /**
- * ClassicPress User Roles
+ * WP User Roles
  * @global WP_Roles $wp_roles
- * @since WP-2.0.0
  */
 $GLOBALS['wp_roles'] = new WP_Roles();
 
 /**
  * Fires before the theme is loaded.
- *
- * @since WP-2.6.0
  */
 do_action( 'setup_theme' );
 
 // Define the template related constants.
-wp_templating_constants(  );
+wp_templating_constants();
 
 // Load the default text localization domain.
 load_default_textdomain();
 
-$locale = get_locale();
+$locale      = get_locale();
 $locale_file = WP_LANG_DIR . "/$locale.php";
 if ( ( 0 === validate_file( $locale ) ) && is_readable( $locale_file ) ) {
 	require( $locale_file );
@@ -404,17 +378,13 @@ if ( ( 0 === validate_file( $locale ) ) && is_readable( $locale_file ) ) {
 unset( $locale_file );
 
 /**
- * ClassicPress Locale object for loading locale domain date and various strings.
+ * WP Locale object for loading locale domain date and various strings.
  * @global WP_Locale $wp_locale
- * @since WP-2.1.0
  */
 $GLOBALS['wp_locale'] = new WP_Locale();
 
 /**
- *  ClassicPress Locale Switcher object for switching locales.
- *
- * @since WP-4.7.0
- *
+ * WP Locale Switcher object for switching locales.
  * @global WP_Locale_Switcher $wp_locale_switcher ClassicPress locale switcher object.
  */
 $GLOBALS['wp_locale_switcher'] = new WP_Locale_Switcher();
@@ -432,8 +402,6 @@ if ( ! wp_installing() || 'wp-activate.php' === $pagenow ) {
 
 /**
  * Fires after the theme is loaded.
- *
- * @since WP-3.0.0
  */
 do_action( 'after_setup_theme' );
 
@@ -441,25 +409,24 @@ do_action( 'after_setup_theme' );
 $GLOBALS['wp']->init();
 
 /**
- * Fires after ClassicPress has finished loading but before any headers are sent.
+ * Fires after WP has finished loading but before any headers are sent.
  *
  * Most of WP is loaded at this stage, and the user is authenticated. WP continues
  * to load on the {@see 'init'} hook that follows (e.g. widgets), and many plugins instantiate
  * themselves on it for all sorts of reasons (e.g. they need a user, a taxonomy, etc.).
  *
  * If you wish to plug an action once WP is loaded, use the {@see 'wp_loaded'} hook below.
- *
- * @since WP-1.5.0
  */
 do_action( 'init' );
 
 // Check site status
 if ( is_multisite() ) {
-	if ( true !== ( $file = ms_site_check() ) ) {
+	$file = ms_site_check();
+	if ( true !== $file ) {
 		require( $file );
 		die();
 	}
-	unset($file);
+	unset( $file );
 }
 
 /**
@@ -467,9 +434,5 @@ if ( is_multisite() ) {
  *
  * Ajax requests should use wp-admin/admin-ajax.php. admin-ajax.php can handle requests for
  * users not logged in.
- *
- * @link https://codex.wordpress.org/AJAX_in_Plugins
- *
- * @since WP-3.0.0
  */
 do_action( 'wp_loaded' );
