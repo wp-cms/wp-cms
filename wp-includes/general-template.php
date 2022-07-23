@@ -1,13 +1,10 @@
 <?php
 /**
  * General template tags that can go anywhere in a template.
- *
- * @package ClassicPress
- * @subpackage Template
  */
 
 /**
- * Load header template.
+ * Loads header template.
  *
  * Includes the header template for a theme or if a name is specified then a
  * specialised header will be included.
@@ -15,34 +12,39 @@
  * For the parameter, if the file is called "header-special.php" then specify
  * "special".
  *
- * @since WP-1.5.0
+ * @param string|null $name The name of the specialised header.
+ * @param array $args Optional. Additional arguments passed to the header template.
+ *                     Default empty array.
  *
- * @param string $name The name of the specialised header.
+ * @return void|false Void on success, false if the template does not exist.
+ * @since 1.0.0
+ *
  */
-function get_header( $name = null ) {
+function get_header( string $name = null, array $args = array() ) {
 	/**
 	 * Fires before the header template file is loaded.
 	 *
-	 * @since WP-2.1.0
-	 * @since WP-2.8.0 $name parameter added.
-	 *
-	 * @param string|null $name Name of the specific header file to use. null for the default header.
+	 * @param string|null $name Name of the specific header file to use. Null for the default header.
+	 * @param array       $args Additional arguments passed to the header template.
+     * @since 1.0.0
 	 */
-	do_action( 'get_header', $name );
+	do_action( 'get_header', $name, $args );
 
 	$templates = array();
-	$name = (string) $name;
+	$name      = (string) $name;
 	if ( '' !== $name ) {
 		$templates[] = "header-{$name}.php";
 	}
 
 	$templates[] = 'header.php';
 
-	locate_template( $templates, true );
+	if ( ! locate_template( $templates, true, true, $args ) ) {
+		return false;
+	}
 }
 
 /**
- * Load footer template.
+ * Loads footer template.
  *
  * Includes the footer template for a theme or if a name is specified then a
  * specialised footer will be included.
@@ -50,34 +52,39 @@ function get_header( $name = null ) {
  * For the parameter, if the file is called "footer-special.php" then specify
  * "special".
  *
- * @since WP-1.5.0
+ * @param string|null $name The name of the specialised footer.
+ * @param array $args Optional. Additional arguments passed to the footer template.
+ *                     Default empty array.
  *
- * @param string $name The name of the specialised footer.
+ * @return void|false Void on success, false if the template does not exist.
+ * @since 1.0.0
+ *
  */
-function get_footer( $name = null ) {
+function get_footer( string $name = null, array $args = array() ) {
 	/**
 	 * Fires before the footer template file is loaded.
 	 *
-	 * @since WP-2.1.0
-	 * @since WP-2.8.0 $name parameter added.
-	 *
-	 * @param string|null $name Name of the specific footer file to use. null for the default footer.
+	 * @param string|null $name Name of the specific footer file to use. Null for the default footer.
+	 * @param array       $args Additional arguments passed to the footer template.
+     * @since 1.0.0
 	 */
-	do_action( 'get_footer', $name );
+	do_action( 'get_footer', $name, $args );
 
 	$templates = array();
-	$name = (string) $name;
+	$name      = (string) $name;
 	if ( '' !== $name ) {
 		$templates[] = "footer-{$name}.php";
 	}
 
-	$templates[]    = 'footer.php';
+	$templates[] = 'footer.php';
 
-	locate_template( $templates, true );
+	if ( ! locate_template( $templates, true, true, $args ) ) {
+		return false;
+	}
 }
 
 /**
- * Load sidebar template.
+ * Loads sidebar template.
  *
  * Includes the sidebar template for a theme or if a name is specified then a
  * specialised sidebar will be included.
@@ -85,29 +92,39 @@ function get_footer( $name = null ) {
  * For the parameter, if the file is called "sidebar-special.php" then specify
  * "special".
  *
- * @since WP-1.5.0
+ * @since 1.5.0
+ * @since 5.5.0 A return value was added.
+ * @since 5.5.0 The `$args` parameter was added.
  *
  * @param string $name The name of the specialised sidebar.
+ * @param array  $args Optional. Additional arguments passed to the sidebar template.
+ *                     Default empty array.
+ * @return void|false Void on success, false if the template does not exist.
  */
-function get_sidebar( $name = null ) {
+function get_sidebar( $name = null, $args = array() ) {
 	/**
 	 * Fires before the sidebar template file is loaded.
 	 *
-	 * @since WP-2.2.0
-	 * @since WP-2.8.0 $name parameter added.
+	 * @since 2.2.0
+	 * @since 2.8.0 The `$name` parameter was added.
+	 * @since 5.5.0 The `$args` parameter was added.
 	 *
-	 * @param string|null $name Name of the specific sidebar file to use. null for the default sidebar.
+	 * @param string|null $name Name of the specific sidebar file to use. Null for the default sidebar.
+	 * @param array       $args Additional arguments passed to the sidebar template.
 	 */
-	do_action( 'get_sidebar', $name );
+	do_action( 'get_sidebar', $name, $args );
 
 	$templates = array();
-	$name = (string) $name;
-	if ( '' !== $name )
+	$name      = (string) $name;
+	if ( '' !== $name ) {
 		$templates[] = "sidebar-{$name}.php";
+	}
 
 	$templates[] = 'sidebar.php';
 
-	locate_template( $templates, true );
+	if ( ! locate_template( $templates, true, true, $args ) ) {
+		return false;
+	}
 }
 
 /**
@@ -116,43 +133,47 @@ function get_sidebar( $name = null ) {
  * Provides a simple mechanism for child themes to overload reusable sections of code
  * in the theme.
  *
- * Includes the named template part for a theme or if a name is specified then a
- * specialised part will be included. If the theme contains no {slug}.php file
- * then no template will be included.
- *
- * The template is included using require, not require_once, so you may include the
- * same template part multiple times.
- *
- * For the $name parameter, if the file is called "{slug}-special.php" then specify
- * "special".
- *
- * @since WP-3.0.0
- *
  * @param string $slug The slug name for the generic template.
- * @param string $name The name of the specialised template.
+ * @param array $args Optional. Additional arguments passed to the template.
+ *                     Default empty array.
+ *
+ * @return void|false Void on success, false if the template does not exist.
+ * @difference-with-wordpress Removed the $name param because it's useless. Wanna
+ * load whatever-name? Well... guess what, you can call get_template_part('whatever-name').
  */
-function get_template_part( $slug, $name = null ) {
+function get_template_part( string $slug, array $args = array() ) {
 	/**
 	 * Fires before the specified template part file is loaded.
 	 *
 	 * The dynamic portion of the hook name, `$slug`, refers to the slug name
 	 * for the generic template part.
 	 *
-	 * @since WP-3.0.0
+	 * @since 3.0.0
+	 * @since 5.5.0 The `$args` parameter was added.
 	 *
 	 * @param string      $slug The slug name for the generic template.
 	 * @param string|null $name The name of the specialized template.
+	 * @param array       $args Additional arguments passed to the template.
 	 */
-	do_action( "get_template_part_{$slug}", $slug, $name );
+	do_action( "get_template_part_{$slug}", $slug, $args );
 
-	$templates = array();
-	$name = (string) $name;
-	if ( '' !== $name )
-		$templates[] = "{$slug}-{$name}.php";
+	$templates = array( $slug . '.php' );
 
-	$templates[] = "{$slug}.php";
+	/**
+	 * Fires before an attempt is made to locate and load a template part.
+	 *
+	 * @since 5.2.0
+	 * @since 5.5.0 The `$args` parameter was added.
+	 *
+	 * @param string   $slug      The slug name for the generic template.
+	 * @param string[] $templates Array of template files to search for, in order.
+	 * @param array    $args      Additional arguments passed to the template.
+	 */
+	do_action( 'get_template_part', $slug, $templates, $args );
 
-	locate_template($templates, true, false);
+	if ( ! locate_template( $templates, true, false, $args ) ) {
+		return false;
+	}
 }
 
 /**
@@ -4220,22 +4241,6 @@ function selected( $selected, $current = true, $echo = true ) {
  */
 function disabled( $disabled, $current = true, $echo = true ) {
 	return __checked_selected_helper( $disabled, $current, $echo, 'disabled' );
-}
-
-/**
- * Outputs the html readonly attribute.
- *
- * Compares the first two arguments and if identical marks as readonly
- *
- * @since WP-4.9.0
- *
- * @param mixed $readonly One of the values to compare
- * @param mixed $current  (true) The other value to compare if not just true
- * @param bool  $echo     Whether to echo or just return the string
- * @return string html attribute or empty string
- */
-function readonly( $readonly, $current = true, $echo = true ) {
-	return __checked_selected_helper( $readonly, $current, $echo, 'readonly' );
 }
 
 /**
