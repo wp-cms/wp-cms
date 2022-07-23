@@ -35,9 +35,9 @@ Remove irrelevant/outdated stuff:
 * ~~Gravatar: external host for profile and low quality monster pics~~ ✅
 * ~~Link Manager: disabled links gallery plugin hidden inside the core~~ ✅
 * ~~Deprecated: remove deprecated functions, methods, classes and files~~ ✅
+* ~~Post via email: from the old blogging times~~ ✅
 * Emojis: useless bloat
 * Quick draft dashboard widget: does anyone use that?
-* Post via email: from the old blogging times
 
 ## KEY NUMBER 2 - "Independent Themes & Plugins Directory"
 
