@@ -1,89 +1,74 @@
 <?php
 /**
- * The base configuration for ClassicPress
+ * The base configuration for WP
  *
  * The wp-config.php creation script uses this file during the
- * installation. You don't have to use the web site, you can
+ * installation. You don't have to use the website, you can
  * copy this file to "wp-config.php" and fill in the values.
  *
  * This file contains the following configurations:
  *
- * * MySQL settings
- * * Secret keys
- * * Database table prefix
- * * ABSPATH
+ * - MySQL settings
+ * - Secret keys
+ * - Database table prefix
+ * - ABSPATH
  *
- * @link https://wordpress.org/support/article/editing-wp-config-php/
- *
- * @package ClassicPress
  */
 
-// ** MySQL settings - You can get this info from your web host ** //
-/** The name of the database for ClassicPress */
-define('DB_NAME', 'database_name_here');
+/** The name of the database for WP */
+const DB_NAME = 'database_name_here';
 
 /** MySQL database username */
-define('DB_USER', 'username_here');
+const DB_USER = 'username_here';
 
 /** MySQL database password */
-define('DB_PASSWORD', 'password_here');
+const DB_PASSWORD = 'password_here';
 
 /** MySQL hostname */
-define('DB_HOST', 'localhost');
+const DB_HOST = 'localhost';
 
 /** Database Charset to use in creating database tables. */
-define('DB_CHARSET', 'utf8');
+const DB_CHARSET = 'utf8';
 
 /** The Database Collate type. Don't change this if in doubt. */
-define('DB_COLLATE', '');
-
-/**#@+
- * Authentication Unique Keys and Salts.
- *
- * Change these to different unique phrases!
- * You can generate these using the {@link https://api.classicpress.net/secret-key/1.0/salt/ ClassicPress.net secret-key service}
- * You can change these at any point in time to invalidate all existing cookies. This will force all users to have to log in again.
- *
- * @since WP-2.6.0
- */
-define('AUTH_KEY',         'put your unique phrase here');
-define('SECURE_AUTH_KEY',  'put your unique phrase here');
-define('LOGGED_IN_KEY',    'put your unique phrase here');
-define('NONCE_KEY',        'put your unique phrase here');
-define('AUTH_SALT',        'put your unique phrase here');
-define('SECURE_AUTH_SALT', 'put your unique phrase here');
-define('LOGGED_IN_SALT',   'put your unique phrase here');
-define('NONCE_SALT',       'put your unique phrase here');
-
-/**#@-*/
+const DB_COLLATE = '';
 
 /**
- * ClassicPress Database Table prefix.
+ * Authentication Unique Keys and Salts.
+ * @since WP-1.0.0
+ */
+const AUTH_KEY         = 'put your unique phrase here';
+const SECURE_AUTH_KEY  = 'put your unique phrase here';
+const LOGGED_IN_KEY    = 'put your unique phrase here';
+const NONCE_KEY        = 'put your unique phrase here';
+const AUTH_SALT        = 'put your unique phrase here';
+const SECURE_AUTH_SALT = 'put your unique phrase here';
+const LOGGED_IN_SALT   = 'put your unique phrase here';
+const NONCE_SALT       = 'put your unique phrase here';
+
+/**
+ * WP Database Table prefix.
  *
  * You can have multiple installations in one database if you give each
  * a unique prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix  = 'cp_';
+$table_prefix = 'wp_';
 
 /**
- * For developers: ClassicPress debugging mode.
+ * For developers: WP debugging mode.
  *
  * Change this to true to enable the display of notices during development.
  * It is strongly recommended that plugin and theme developers use WP_DEBUG
  * in their development environments.
- *
- * For information on other constants that can be used for debugging,
- * visit the Codex.
- *
- * @link https://wordpress.org/support/article/debugging-in-wordpress/
  */
-define('WP_DEBUG', false);
+const WP_DEBUG = false;
 
-/* That's all, stop editing! Happy blogging. */
+/* That's all, stop editing! Happy crafting! */
 
-/** Absolute path to the ClassicPress directory. */
-if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
+/** Absolute path to the WP directory. */
+if ( ! defined( 'ABSPATH' ) ) {
+	define( 'ABSPATH', dirname( __FILE__ ) . '/' );
+}
 
-/** Sets up ClassicPress vars and included files. */
-require_once(ABSPATH . 'wp-settings.php');
+/** Sets up WP vars and included files. */
+require_once( ABSPATH . 'wp-settings.php' );
