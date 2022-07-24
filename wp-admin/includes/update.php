@@ -23,6 +23,12 @@ function get_core_updates( $options = array() ) {
         $options
     );
 
+	$dismissed_updates = get_site_option( 'dismissed_update_core' );
+
+	if ( ! is_array( $dismissed_updates ) ) {
+		$dismissed = array();
+	}
+
 	$available_updates_information = get_site_transient( 'update_core' );
 
 	if ( ! isset( $available_updates_information->updates ) || ! is_array( $available_updates_information->updates ) ) {
@@ -32,10 +38,17 @@ function get_core_updates( $options = array() ) {
 	$updates = $available_updates_information->updates;
 	$result  = array();
 	foreach ( $updates as $update ) {
-        if ( $options['available'] ) {
-            $update->dismissed = false;
-            $result[]          = $update;
-        }
+		if ( array_key_exists( $update->version, $dismissed_updates ) ) {
+			if ( $options['dismissed'] ) {
+				$update->dismissed = true;
+				$result[]          = $update;
+			}
+		} else {
+			if ( $options['available'] ) {
+				$update->dismissed = false;
+				$result[]          = $update;
+			}
+		}
 	}
 	return $result;
 }
@@ -46,25 +59,24 @@ function get_core_updates( $options = array() ) {
  * @return bool
  */
 function dismiss_core_update( $update ) {
-	$dismissed = get_site_option( 'dismissed_update_core' );
-	$dismissed[ $update->current . '|' . $update->locale ] = true;
+	$dismissed                     = get_site_option( 'dismissed_update_core' );
+	$dismissed[ $update->version ] = true;
 	return update_site_option( 'dismissed_update_core', $dismissed );
 }
 
 /**
  *
  * @param string $version
- * @param string $locale
  * @return bool
  */
-function undismiss_core_update( $version, $locale ) {
+function undismiss_core_update( $version ) {
 	$dismissed = get_site_option( 'dismissed_update_core' );
-	$key = $version . '|' . $locale;
 
-	if ( ! isset( $dismissed[$key] ) )
+	if ( ! isset( $dismissed[ $version ] ) ) {
 		return false;
+	}
 
-	unset( $dismissed[$key] );
+	unset( $dismissed[ $version ] );
 	return update_site_option( 'dismissed_update_core', $dismissed );
 }
 

@@ -149,7 +149,7 @@ class Core_Upgrader extends WP_Upgrader {
 		}
 
 		// ClassicPress only supports the "full" upgrade package.
-		$download = $this->download_package( $current->packages->full );
+		$download = $this->download_package( $current->download );
 		if ( is_wp_error( $download ) ) {
 			WP_Upgrader::release_lock( 'core_updater' );
 			return $download;
