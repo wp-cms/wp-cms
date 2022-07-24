@@ -179,7 +179,7 @@ function update_core( string $from, string $to ) {
 			}
 
 			// Store package-relative paths (the key) of non-writable files in the WP_Error object.
-			$error_data = version_compare( $old_wp_version, '3.7-beta2', '>' ) ? array_keys( $files_not_writable ) : '';
+			$error_data = array_keys( $files_not_writable );
 
 			if ( $files_not_writable ) {
 				return new WP_Error( 'files_not_writable', __( 'The update cannot be installed because we will be unable to copy some files. This is usually due to inconsistent file permissions.' ), implode( ', ', $error_data ) );
