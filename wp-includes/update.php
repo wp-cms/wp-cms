@@ -86,6 +86,10 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 		return;
 	}
 
+	if ( $wp_version === $update_info_returned_by_server->version ) {
+		return;
+	}
+
 	$updates                  = new stdClass();
 	$updates->updates         = array( $update_info_returned_by_server );
 	$updates->last_checked    = time();
@@ -460,38 +464,42 @@ function wp_get_translation_updates() {
 
 /**
  * Collect counts and UI strings for available updates
- *
- * @since WP-3.3.0
- *
  * @return array
  */
 function wp_get_update_data() {
-	$counts = array( 'plugins' => 0, 'themes' => 0, 'wordpress' => 0, 'translations' => 0 );
 
-	if ( $plugins = current_user_can( 'update_plugins' ) ) {
+	$counts = array(
+		'plugins'   => 0,
+		'themes'    => 0,
+		'wordpress' => 0,
+		);
+
+	if ( current_user_can( 'update_plugins' ) ) {
 		$update_plugins = get_site_transient( 'update_plugins' );
-		if ( ! empty( $update_plugins->response ) )
+		if ( ! empty( $update_plugins->response ) ) {
 			$counts['plugins'] = count( $update_plugins->response );
+		}
 	}
 
-	if ( $themes = current_user_can( 'update_themes' ) ) {
+	if ( current_user_can( 'update_themes' ) ) {
 		$update_themes = get_site_transient( 'update_themes' );
-		if ( ! empty( $update_themes->response ) )
+		if ( ! empty( $update_themes->response ) ) {
 			$counts['themes'] = count( $update_themes->response );
+		}
 	}
 
-	if ( ( $core = current_user_can( 'update_core' ) ) && function_exists( 'get_core_updates' ) ) {
-		$update_wordpress = get_core_updates( array('dismissed' => false) );
-		if ( ! empty( $update_wordpress ) && current_user_can('update_core') ) {
+	if ( ( current_user_can( 'update_core' ) ) ) {
+		$update_wordpress = get_core_updates( array( 'dismissed' => false ) );
+		if ( ! empty( $update_wordpress ) && current_user_can( 'update_core' ) ) {
 			$counts['wordpress'] = 1;
 		}
 	}
 
 	$counts['total'] = $counts['plugins'] + $counts['themes'] + $counts['wordpress'];
-	$titles = array();
+	$titles          = array();
 	if ( $counts['wordpress'] ) {
 		/* translators: 1: Number of updates available to WordPress */
-		$titles['wordpress'] = sprintf( __( '%d WP Update'), $counts['wordpress'] );
+		$titles['wordpress'] = sprintf( __( '%d WP Update' ), $counts['wordpress'] );
 	}
 	if ( $counts['plugins'] ) {
 		/* translators: 1: Number of updates available to plugins */
@@ -504,12 +512,13 @@ function wp_get_update_data() {
 
 	$update_title = $titles ? esc_attr( implode( ', ', $titles ) ) : '';
 
-	$update_data = array( 'counts' => $counts, 'title' => $update_title );
+	$update_data = array(
+		'counts' => $counts,
+		'title'  => $update_title,
+	);
+
 	/**
 	 * Filters the returned array of update data for plugins, themes, and WordPress core.
-	 *
-	 * @since WP-3.5.0
-	 *
 	 * @param array $update_data {
 	 *     Fetched update data.
 	 *

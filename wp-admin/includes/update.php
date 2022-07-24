@@ -14,7 +14,8 @@
  * @return array|false Array of the update objects on success, false on failure.
  */
 function get_core_updates( $options = array() ) {
-	$options = array_merge(
+
+    $options = array_merge(
         array(
         'available' => true,
         'dismissed' => false,
