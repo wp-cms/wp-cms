@@ -31,55 +31,44 @@ if ( ! current_user_can( 'update_core' ) && ! current_user_can( 'update_themes' 
  */
 function list_core_update( $update ) {
  	global $wpdb;
-  	static $first_pass = true;
 
     $current_wp_version = get_bloginfo( 'version' );
 
     // Determine if we are already on the latest available version or not
-	$current = false;
 	if ( $update->version === $current_wp_version ) {
-		$current = true;
+        return;
 	}
 
-	$submit        = __( 'Update Now' );
-	$form_action   = 'update-core.php?action=do-core-upgrade';
-	$php_version   = phpversion();
-	$mysql_version = $wpdb->db_version();
-	$show_buttons  = true;
+    $form_action   = 'update-core.php?action=do-core-upgrade';
+    $php_version   = phpversion();
+    $mysql_version = $wpdb->db_version();
+    $show_buttons  = true;
 
-    if ( $current ) {
-	    /* translators: 1: WP version number */
-		$message     = sprintf( __( 'If you need to re-install version %s, you can do so here:' ), $update->version );
-		$submit      = __( 'Re-install Now' );
-		$form_action = 'update-core.php?action=do-core-reinstall';
-	} else {
-		$php_compat = version_compare( $php_version, $update->php_version, '>=' );
+    $php_compat = version_compare( $php_version, $update->php_version, '>=' );
 
-		if ( file_exists( WP_CONTENT_DIR . '/db.php' ) && empty( $wpdb->is_mysql ) ) {
-			$mysql_compat = true;
-		} else {
-			$mysql_compat = version_compare( $mysql_version, $update->mysql_version, '>=' );
-		}
-
-		if ( ! $mysql_compat && ! $php_compat ) {
-			/* translators: 1: WP version number, 2: Minimum required PHP version number, 3: Minimum required MySQL version number, 4: Current PHP version number, 5: Current MySQL version number */
-	        $message = sprintf( __( 'You cannot update because WP %1$s requires PHP version %2$s or higher and MySQL version %3$s or higher. You are running PHP version %4$s and MySQL version %5$s.' ), $update->current, $update->php_version, $update->mysql_version, $php_version, $mysql_version );
-        } elseif ( ! $php_compat ) {
-	        /* translators: 1: WP version number, 2: Minimum required PHP version number, 3: Current PHP version number */
-	        $message = sprintf( __( 'You cannot update because WP %1$s requires PHP version %2$s or higher. You are running version %3$s.' ), $update->current, $update->php_version, $php_version );
-        } elseif ( ! $mysql_compat ) {
-	        /* translators: 1: WP version number, 2: Minimum required MySQL version number, 3: Current MySQL version number */
-	        $message = sprintf( __( 'You cannot update because WP %1$s requires MySQL version %2$s or higher. You are running version %3$s.' ), $update->current, $update->mysql_version, $mysql_version );
-        } else {
-	        /* translators: 1: WP version number */
-	        $message = sprintf( __( 'You can update to WP %1$s automatically:' ), $update->version );
-        }
-
-        if ( ! $mysql_compat || ! $php_compat ) {
-	        $show_buttons = false;
-        }
+    if ( file_exists( WP_CONTENT_DIR . '/db.php' ) && empty( $wpdb->is_mysql ) ) {
+        $mysql_compat = true;
+    } else {
+        $mysql_compat = version_compare( $mysql_version, $update->mysql_version, '>=' );
     }
 
+    if ( ! $mysql_compat && ! $php_compat ) {
+        /* translators: 1: WP version number, 2: Minimum required PHP version number, 3: Minimum required MySQL version number, 4: Current PHP version number, 5: Current MySQL version number */
+        $message = sprintf( __( 'You cannot update because WP %1$s requires PHP version %2$s or higher and MySQL version %3$s or higher. You are running PHP version %4$s and MySQL version %5$s.' ), $update->current, $update->php_version, $update->mysql_version, $php_version, $mysql_version );
+    } elseif ( ! $php_compat ) {
+        /* translators: 1: WP version number, 2: Minimum required PHP version number, 3: Current PHP version number */
+        $message = sprintf( __( 'You cannot update because WP %1$s requires PHP version %2$s or higher. You are running version %3$s.' ), $update->current, $update->php_version, $php_version );
+    } elseif ( ! $mysql_compat ) {
+        /* translators: 1: WP version number, 2: Minimum required MySQL version number, 3: Current MySQL version number */
+        $message = sprintf( __( 'You cannot update because WP %1$s requires MySQL version %2$s or higher. You are running version %3$s.' ), $update->current, $update->mysql_version, $mysql_version );
+    } else {
+        /* translators: 1: WP version number */
+        $message = sprintf( __( 'You can update to WP %1$s automatically:' ), $update->version );
+    }
+
+    if ( ! $mysql_compat || ! $php_compat ) {
+        $show_buttons = false;
+    }
 
 	echo '<p>' . $message . '</p>
     <form method="post" action="' . $form_action . '" name="upgrade" class="upgrade">';
@@ -87,21 +76,15 @@ function list_core_update( $update ) {
 	echo '<p>
     <input name="version" value="' . esc_attr( $update->version ) . '" type="hidden">';
 	if ( $show_buttons ) {
-		if ( $first_pass ) {
-			submit_button( $submit, $current ? '' : 'primary regular', 'upgrade', false );
-			$first_pass = false;
-		} else {
-			submit_button( $submit, '', 'upgrade', false );
-		}
+		submit_button( __( 'Update Now' ), '', 'upgrade', false );
 	}
 
-    if ( ! $current ) {
-	    if ( ! isset( $update->dismissed ) || ! $update->dismissed ) {
-		    submit_button( __( 'Hide this update' ), '', 'dismiss', false );
-	    } else {
-		    submit_button( __( 'Bring back this update' ), '', 'undismiss', false );
-	    }
+    if ( ! isset( $update->dismissed ) || ! $update->dismissed ) {
+        submit_button( __( 'Hide this update' ), '', 'dismiss', false );
+    } else {
+        submit_button( __( 'Bring back this update' ), '', 'undismiss', false );
     }
+
 	echo '</p>
     </form>';
 
@@ -448,24 +431,17 @@ function list_theme_updates() {
 }
 
 /**
- * Upgrade ClassicPress core display.
- *
- * @since WP-2.7.0
- *
+ * Upgrade WP core display.
  * @global WP_Filesystem_Base $wp_filesystem Subclass
- *
- * @param bool $reinstall
  */
-function do_core_upgrade( $reinstall = false ) {
+function do_core_upgrade() {
 	global $wp_filesystem;
 
 	include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
 
-	if ( $reinstall ) {
-		$url = 'update-core.php?action=do-core-reinstall';
-	} else {
-		$url = 'update-core.php?action=do-core-upgrade';
-	}
+
+	$url = 'update-core.php?action=do-core-upgrade';
+
 	$url = wp_nonce_url($url, 'upgrade-core');
 
 	$version = isset( $_POST['version'] )? $_POST['version'] : false;
@@ -476,7 +452,7 @@ function do_core_upgrade( $reinstall = false ) {
 
 	// Allow relaxed file ownership writes for User-initiated upgrades when the API specifies
 	// that it's safe to do so. This only happens when there are no new files to create.
-	$allow_relaxed_file_ownership = ! $reinstall && isset( $update->new_files ) && ! $update->new_files;
+	$allow_relaxed_file_ownership = isset( $update->new_files ) && ! $update->new_files;
 
 ?>
 	<div class="wrap">
@@ -502,8 +478,6 @@ function do_core_upgrade( $reinstall = false ) {
 		return;
 	}
 
-	if ( $reinstall )
-		$update->response = 'reinstall';
 
 	add_filter( 'update_feedback', 'show_message' );
 
@@ -681,7 +655,7 @@ if ( 'upgrade-core' == $action ) {
 
 	include(ABSPATH . 'wp-admin/admin-footer.php');
 
-} elseif ( 'do-core-upgrade' == $action || 'do-core-reinstall' == $action ) {
+} elseif ( 'do-core-upgrade' == $action ) {
 
 	if ( ! current_user_can( 'update_core' ) )
 		wp_die( __( 'Sorry, you are not allowed to update this site.' ) );
@@ -695,13 +669,9 @@ if ( 'upgrade-core' == $action ) {
 		do_undismiss_core_update();
 
 	require_once(ABSPATH . 'wp-admin/admin-header.php');
-	if ( 'do-core-reinstall' == $action )
-		$reinstall = true;
-	else
-		$reinstall = false;
 
 	if ( isset( $_POST['upgrade'] ) )
-		do_core_upgrade($reinstall);
+		do_core_upgrade();
 
 	wp_localize_script( 'updates', '_wpUpdatesItemCounts', array(
 		'totals'  => wp_get_update_data(),

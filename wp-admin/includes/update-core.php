@@ -650,7 +650,7 @@ function _redirect_to_about_wordpress( $new_version ) {
 	if ( 'update-core.php' != $pagenow )
 		return;
 
- 	if ( 'do-core-upgrade' != $action && 'do-core-reinstall' != $action )
+ 	if ( 'do-core-upgrade' != $action )
  		return;
 
 	// Load the updated default text localization domain for new strings.
