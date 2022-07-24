@@ -47,17 +47,21 @@ Since I really like ClassicPress, I will collaborate with plugins in the [CP Plu
 
 ClassicPress directory is under construction. ✍️
 
-## KEY NUMBER 3 - "The media & editor upgrade"
-
-Both the Media Library and the Editor need to be refreshed. Instead of retweaking the currently tewaked tweaks, why not? --> ADD a modern editor and then instead of fixing all the jquery plugins to make them work with OLD oldness, create what needs to be created from scratch or implement existing open source alternatives that fit the case.
-
-## KEY NUMBER 5 - "Constant optimization"
+## KEY NUMBER 3 - "Constant optimization"
 
 Clean and optimize the core as much as possible, iterate over it with PHP 8 as minimum supported PHP version in mind.
 
 # Compatibility with WordPress Plugins & Themes!
 
 I cannot make progress if I keep compatibility with WordPress in mind. But there is something very important you shall know: I am not reinventing the wheel, I'm just decluttering the original WordPress core from things that were deprecated or almost unused. Everything else is still the same, and the nice part of the story is, there are a ton of open source plugins and themes that you can still use. If something breaks it's going to be a very simple thing to fix. Probably a function that doesn't exist anymore or something like that. You can see WP CMS as WordPress before it introduced Blocks and also without old and unused stuff. So 95% of the code you find out there, you can just copy/paste with no harm. That's it!
+
+# Code is not poetry
+
+Code is a tool to talk with machines, and machines don't care about poems.
+
+Machines want clear instructions and developers want clean code.
+
+# Simplicity
 
 > “Simplicity is the ultimate sophistication. It takes a lot of hard
 > work to make something simple, to truly understand the underlying
