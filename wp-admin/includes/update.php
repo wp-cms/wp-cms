@@ -7,129 +7,36 @@
  */
 
 /**
- * Selects the first update version from the update_core option.
- *
- * @return object|array|false The response from the API on success, false on failure.
- */
-function get_preferred_from_update_core() {
-	$updates = get_core_updates();
-	if ( ! is_array( $updates ) )
-		return false;
-	if ( empty( $updates ) )
-		return (object) array( 'response' => 'latest' );
-	return $updates[0];
-}
-
-/**
  * Get available core updates.
  *
  * @param array $options Set $options['dismissed'] to true to show dismissed upgrades too,
- * 	                     set $options['available'] to false to skip not-dismissed updates.
+ *                       set $options['available'] to false to skip not-dismissed updates.
  * @return array|false Array of the update objects on success, false on failure.
  */
 function get_core_updates( $options = array() ) {
-	$options = array_merge( array( 'available' => true, 'dismissed' => false ), $options );
-	$dismissed = get_site_option( 'dismissed_update_core' );
+	$options = array_merge(
+        array(
+        'available' => true,
+        'dismissed' => false,
+        ),
+        $options
+    );
 
-	if ( ! is_array( $dismissed ) ) {
-		$dismissed = array();
-    }
+	$available_updates_information = get_site_transient( 'update_core' );
 
-	$from_api = get_site_transient( 'update_core' );
-
-	if ( ! isset( $from_api->updates ) || ! is_array( $from_api->updates ) ) {
+	if ( ! isset( $available_updates_information->updates ) || ! is_array( $available_updates_information->updates ) ) {
 		return false;
 	}
 
-	$updates = $from_api->updates;
-	$result = array();
+	$updates = $available_updates_information->updates;
+	$result  = array();
 	foreach ( $updates as $update ) {
         if ( $options['available'] ) {
             $update->dismissed = false;
-            $result[] = $update;
+            $result[]          = $update;
         }
 	}
 	return $result;
-}
-
-/**
- * Gets the best available (and enabled) Auto-Update for ClassicPress Core.
- *
- * If there's 1.2.3 and 1.3 on offer, it'll choose 1.3 if the installation allows it, else, 1.2.3
- *
- * @since WP-3.7.0
- *
- * @return array|false False on failure, otherwise the core update offering.
- */
-function find_core_auto_update() {
-	$updates = get_site_transient( 'update_core' );
-	if ( ! $updates || empty( $updates->updates ) )
-		return false;
-
-	include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-
-	$auto_update = false;
-	$upgrader = new WP_Automatic_Updater;
-	foreach ( $updates->updates as $update ) {
-		if ( ! $upgrader->should_update( 'core', $update, ABSPATH ) )
-			continue;
-
-		if ( ! $auto_update || version_compare( $update->current, $auto_update->current, '>' ) )
-			$auto_update = $update;
-	}
-	return $auto_update;
-}
-
-/**
- * Gets the checksums for the given version of ClassicPress.
- *
- * @since WP-3.7.0
- * @since 1.3.0 Correctly returns checksums for the given ClassicPress version,
- * not the WordPress version. The $locale parameter is now ignored.
- *
- * @param string $version Version string to query.
- * @param string $locale  Locale to query.
- * @return bool|array False on failure. An array of checksums on success.
- */
-function get_core_checksums( $version, $locale ) {
-	$url = 'https://api-v1.classicpress.net/checksums/md5/' . $version . '.json';
-
-	$options = array(
-		'timeout' => wp_doing_cron() ? 30 : 3,
-	);
-
-	$response = wp_remote_get( $url, $options );
-
-	if ( is_wp_error( $response ) ) {
-		trigger_error(
-			sprintf(
-				/* translators: %s: support forums URL */
-				__( 'An unexpected error occurred. Something may be wrong with ClassicPress.net or this server&#8217;s configuration. If you continue to have problems, please try the <a href="%s">support forums</a>.' ),
-				__( 'https://forums.classicpress.net/c/support' )
-			) . ' ' . __( '(ClassicPress could not establish a secure connection to ClassicPress.net. Please contact your server administrator.)' ),
-			headers_sent() || WP_DEBUG ? E_USER_WARNING : E_USER_NOTICE
-		);
-
-		// Retry request
-		$response = wp_remote_get( $url, $options );
-	}
-
-	if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
-		return false;
-	}
-
-	$body = trim( wp_remote_retrieve_body( $response ) );
-	$body = json_decode( $body, true );
-
-	if (
-		! is_array( $body ) ||
-		! isset( $body['checksums'] ) ||
-		! is_array( $body['checksums'] )
-	) {
-		return false;
-	}
-
-	return $body['checksums'];
 }
 
 /**
@@ -180,124 +87,6 @@ function find_core_update( $version ) {
 	}
 
 	return false;
-}
-
-/**
- *
- * @param string $msg
- * @return string
- */
-function core_update_footer( $msg = '' ) {
-	if ( !current_user_can('update_core') )
-		return sprintf( __( 'Version %s' ), classicpress_version() );
-
-	$cur = get_preferred_from_update_core();
-	if ( ! is_object( $cur ) )
-		$cur = new stdClass;
-
-	if ( ! isset( $cur->current ) )
-		$cur->current = '';
-
-	if ( ! isset( $cur->url ) )
-		$cur->url = '';
-
-	if ( ! isset( $cur->response ) )
-		$cur->response = '';
-
-	switch ( $cur->response ) {
-	case 'development' :
-		/* translators: 1: ClassicPress version number, 2: ClassicPress updates admin screen URL */
-		return sprintf( __( 'You are using a development version (%1$s). Cool! Please <a href="%2$s">stay updated</a>.' ), classicpress_version(), network_admin_url( 'update-core.php' ) );
-
-	case 'upgrade' :
-		return '<strong><a href="' . network_admin_url( 'update-core.php' ) . '">' . sprintf( __( 'Get Version %s' ), $cur->current ) . '</a></strong>';
-
-	case 'latest' :
-	default :
-		return sprintf( __( 'Version %s' ), classicpress_version() );
-	}
-}
-
-/**
- *
- * @global string $pagenow
- * @return false|void
- */
-function update_nag() {
-	if ( is_multisite() && !current_user_can('update_core') )
-		return false;
-
-	global $pagenow;
-
-	if ( 'update-core.php' == $pagenow )
-		return;
-
-	$cur = get_preferred_from_update_core();
-
-	if ( ! isset( $cur->response ) || $cur->response != 'upgrade' )
-		return false;
-
-	if ( current_user_can( 'update_core' ) ) {
-		$msg = sprintf(
-			/* translators: 1: Codex URL to release notes, 2: new ClassicPress version, 3: URL to network admin, 4: accessibility text */
-			__( '<a href="%1$s">ClassicPress %2$s</a> is available! <a href="%3$s" aria-label="%4$s">Please update now</a>.' ),
-			sprintf(
-				/* translators: %s: ClassicPress version */
-				esc_url( __( 'https://www.classicpress.net/version/%s' ) ),
-				$cur->current
-			),
-			$cur->current,
-			network_admin_url( 'update-core.php' ),
-			esc_attr__( 'Please update ClassicPress now' )
-		);
-	} else {
-		$msg = sprintf(
-			/* translators: 1: Codex URL to release notes, 2: new ClassicPress version */
-			__( '<a href="%1$s">ClassicPress %2$s</a> is available! Please notify the site administrator.' ),
-			sprintf(
-				/* translators: %s: ClassicPress version */
-				esc_url( __( 'https://www.classicpress.net/version/%s' ) ),
-				$cur->current
-			),
-			$cur->current
-		);
-	}
-	echo "<div class='update-nag'>$msg</div>";
-}
-
-// Called directly from dashboard
-function update_right_now_message() {
-	$theme_name = wp_get_theme();
-	if ( current_user_can( 'switch_themes' ) ) {
-		$theme_name = sprintf( '<a href="themes.php">%1$s</a>', $theme_name );
-	}
-
-	$msg = '';
-
-	if ( current_user_can('update_core') ) {
-		$cur = get_preferred_from_update_core();
-
-		if ( isset( $cur->response ) && $cur->response == 'upgrade' )
-			$msg .= '<a href="' . network_admin_url( 'update-core.php' ) . '" class="button" aria-describedby="wp-version">' . sprintf( __( 'Update to %s' ), $cur->current ? $cur->current : __( 'Latest' ) ) . '</a> ';
-	}
-
-	/* translators: 1: version number, 2: theme name */
-	$content = __( 'ClassicPress %1$s running %2$s theme.' );
-
-	/**
-	 * Filters the text displayed in the 'At a Glance' dashboard widget.
-	 *
-	 * Prior to WP-3.8.0, the widget was named 'Right Now'.
-	 *
-	 * @since WP-4.4.0
-	 *
-	 * @param string $content Default text.
-	 */
-	$content = apply_filters( 'update_right_now_text', $content );
-
-	$msg .= sprintf( '<span id="wp-version">' . $content . '</span>', classicpress_version(), $theme_name );
-
-	echo "<p id='wp-version-message'>$msg</p>";
 }
 
 /**

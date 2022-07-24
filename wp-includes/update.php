@@ -17,13 +17,13 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 	$current = get_site_transient( 'update_core' );
 
 	// Invalidate the transient when $wp_version changes
-	if ( is_object( $current ) && $wp_version != $current->version_checked ) {
+	if ( is_object( $current ) && $wp_version !== $current->version_checked ) {
 		$current = false;
 	}
 
-	if ( ! is_object($current) ) {
-		$current = new stdClass;
-		$current->updates = array();
+	if ( ! is_object( $current ) ) {
+		$current                  = new stdClass;
+		$current->updates         = array();
 		$current->version_checked = $wp_version;
 	}
 
@@ -32,7 +32,7 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 	}
 
 	// Wait 60 seconds between multiple version check requests
-	$timeout = 60;
+	$timeout          = 60;
 	$time_not_changed = isset( $current->last_checked ) && $timeout > ( time() - $current->last_checked );
 	if ( ! $force_check && $time_not_changed ) {
 		return;
@@ -48,16 +48,16 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 		$wp_install = home_url( '/' );
 	}
 
-	$url = 'https://raw.githubusercontent.com/wp-cms/update-info/main/update-info.json';
+	$url = 'https://wpcms.dev/update-info.json';
 
 	$doing_cron = wp_doing_cron();
 
 	$options = array(
-		'timeout' => $doing_cron ? 30 : 3,
+		'timeout'    => $doing_cron ? 30 : 3,
 		'user-agent' => classicpress_user_agent( true ),
-		'headers' => array(
+		'headers'    => array(
 			'wp_install' => $wp_install,
-			'wp_blog' => home_url( '/' )
+			'wp_blog'    => home_url( '/' ),
 		),
 	);
 
@@ -74,45 +74,25 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 		return;
 	}
 
-	if ( 200 != wp_remote_retrieve_response_code( $response ) ) {
-		// Most likely 404 due to a change in GitHub raw files URL
+	if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+		// Most likely my cheap server is down
 		return;
 	}
 
-	$body = trim( wp_remote_retrieve_body( $response ) );
-	$body = json_decode( $body, true );
+	$update_info_returned_by_server = trim( wp_remote_retrieve_body( $response ) );
+	$update_info_returned_by_server = json_decode( $update_info_returned_by_server );
 
-	if ( ! is_array( $body ) || ! isset( $body['offers'] ) ) {
+	if ( ! isset( $update_info_returned_by_server->version ) ) {
 		return;
 	}
 
-	$offers = $body['offers'];
-
-	foreach ( $offers as &$offer ) {
-		foreach ( $offer as $offer_key => $value ) {
-			if ( 'packages' == $offer_key )
-				$offer['packages'] = (object) array_intersect_key( array_map( 'esc_url', $offer['packages'] ),
-					array_fill_keys( array( 'full', 'no_content', 'new_bundled', 'partial', 'rollback' ), '' ) );
-			elseif ( 'download' == $offer_key )
-				$offer['download'] = esc_url( $value );
-			else
-				$offer[ $offer_key ] = esc_html( $value );
-		}
-		$offer = (object) array_intersect_key( $offer, array_fill_keys( array( 'response', 'download', 'locale',
-			'packages', 'current', 'version', 'php_version', 'mysql_version', 'new_bundled', 'partial_version', 'notify_email', 'support_email', 'new_files' ), '' ) );
-	}
-
-	$updates = new stdClass();
-	$updates->updates = $offers;
-	$updates->last_checked = time();
+	$updates                  = new stdClass();
+	$updates->updates         = array( $update_info_returned_by_server );
+	$updates->last_checked    = time();
 	$updates->version_checked = $wp_version;
 
 	set_site_transient( 'update_core', $updates );
 
-	// Trigger background updates if running non-interactively, and we weren't called from the update handler.
-	if ( $doing_cron && ! doing_action( 'wp_maybe_auto_update' ) ) {
-		do_action( 'wp_maybe_auto_update' );
-	}
 }
 
 /**
@@ -457,19 +437,6 @@ function wp_update_themes( $extra_stats = array() ) {
 }
 
 /**
- * Performs WordPress automatic background updates.
- *
- * @since WP-3.7.0
- */
-function wp_maybe_auto_update() {
-	include_once( ABSPATH . '/wp-admin/includes/admin.php' );
-	include_once( ABSPATH . '/wp-admin/includes/class-wp-upgrader.php' );
-
-	$upgrader = new WP_Automatic_Updater;
-	$upgrader->run();
-}
-
-/**
  * Retrieves a list of all language updates available.
  *
  * @since WP-3.7.0
@@ -658,7 +625,5 @@ add_action( 'admin_init', '_maybe_update_themes' );
 add_action( 'wp_update_themes', 'wp_update_themes' );
 
 add_action( 'update_option_WPLANG', 'wp_clean_update_cache' , 10, 0 );
-
-add_action( 'wp_maybe_auto_update', 'wp_maybe_auto_update' );
 
 add_action( 'init', 'wp_schedule_update_checks' );

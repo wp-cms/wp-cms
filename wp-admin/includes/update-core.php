@@ -230,33 +230,6 @@ function update_core($from, $to) {
 	$skip = array( 'wp-content', 'wp-includes/version.php' );
 	$check_is_writable = array();
 
-	// Check to see which files don't really need updating.  The
-	// function_exists check is not necessary, but we'll keep it to preserve
-	// the code structure.
-	if ( function_exists( 'cp_get_core_checksums' ) ) {
-		// Find the local version of the working directory
-		$working_dir_local = WP_CONTENT_DIR . '/upgrade/' . basename( $from ) . $distro;
-
-		$checksums = cp_get_core_checksums( $wp_version );
-
-		if ( is_array( $checksums ) ) {
-			foreach ( $checksums as $file => $checksum ) {
-				if ( 'wp-content' == substr( $file, 0, 10 ) )
-					continue;
-				if ( ! file_exists( ABSPATH . $file ) )
-					continue;
-				if ( ! file_exists( $working_dir_local . $file ) )
-					continue;
-				if ( '.' === dirname( $file ) && in_array( pathinfo( $file, PATHINFO_EXTENSION ), array( 'html', 'txt' ) ) )
-					continue;
-				if ( md5_file( ABSPATH . $file ) === $checksum )
-					$skip[] = $file;
-				else
-					$check_is_writable[ $file ] = ABSPATH . $file;
-			}
-		}
-	}
-
 	// If we're using the direct method, we can predict write failures that are due to permissions.
 	if ( $check_is_writable && 'direct' === $wp_filesystem->method ) {
 		$files_writable = array_filter( $check_is_writable, array( $wp_filesystem, 'is_writable' ) );

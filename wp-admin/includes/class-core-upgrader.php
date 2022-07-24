@@ -591,41 +591,4 @@ class Core_Upgrader extends WP_Upgrader {
 		];
 	}
 
-	/**
-	 * Compare the disk file checksums against the expected checksums.
-	 *
-	 * @since WP-3.7.0
-	 * @since 1.3.0 Correctly uses the checksums for the current ClassicPress
-	 * version, not the equivalent WordPress version. This function is no
-	 * longer used during the core update process.
-	 *
-	 * @global string $wp_version
-	 *
-	 * @return bool True if the checksums match, otherwise false.
-	 */
-	public function check_files() {
-		global $wp_version;
-
-		if ( version_compare( $wp_version, '1.3.0-rc1', '<' ) ) {
-			// This version of ClassicPress has a `get_core_checksums()`
-			// function which incorrectly expects a WordPress version, so there
-			// is no point in continuing.
-			return false;
-		}
-
-		$checksums = get_core_checksums( $wp_version, 'en_US' );
-
-		if ( ! is_array( $checksums ) )
-			return false;
-
-		foreach ( $checksums as $file => $checksum ) {
-			// Skip files which get updated
-			if ( 'wp-content' == substr( $file, 0, 10 ) )
-				continue;
-			if ( ! file_exists( ABSPATH . $file ) || md5_file( ABSPATH . $file ) !== $checksum )
-				return false;
-		}
-
-		return true;
-	}
 }

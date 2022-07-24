@@ -307,7 +307,6 @@ function wp_dashboard_right_now() {
 	?>
 	</ul>
 	<?php
-	update_right_now_message();
 
 	// Check if search engines are asked not to index this site.
 	if ( ! is_network_admin() && ! is_user_admin() && current_user_can( 'manage_options' ) && '0' == get_option( 'blog_public' ) ) {

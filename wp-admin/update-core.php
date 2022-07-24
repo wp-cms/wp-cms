@@ -1,12 +1,9 @@
 <?php
 /**
  * Update Core administration panel.
- *
- * @package ClassicPress
- * @subpackage Administration
  */
 
-/** ClassicPress Administration Bootstrap */
+/** WP Administration Bootstrap */
 require_once( dirname( __FILE__ ) . '/admin.php' );
 
 wp_enqueue_style( 'plugin-install' );
@@ -19,8 +16,9 @@ if ( is_multisite() && ! is_network_admin() ) {
 	exit();
 }
 
-if ( ! current_user_can( 'update_core' ) && ! current_user_can( 'update_themes' ) && ! current_user_can( 'update_plugins' ) && ! current_user_can( 'update_languages' ) )
+if ( ! current_user_can( 'update_core' ) && ! current_user_can( 'update_themes' ) && ! current_user_can( 'update_plugins' ) && ! current_user_can( 'update_languages' ) ) {
 	wp_die( __( 'Sorry, you are not allowed to update this site.' ) );
+}
 
 /**
  *
@@ -39,36 +37,37 @@ function list_core_update( $update ) {
 
     // Determine if we are already on the latest available version or not
 	$current = false;
-	if ( $update->version == $current_wp_version ) {
+	if ( $update->version === $current_wp_version ) {
 		$current = true;
 	}
 
-	$submit        = __('Update Now');
+	$submit        = __( 'Update Now' );
 	$form_action   = 'update-core.php?action=do-core-upgrade';
 	$php_version   = phpversion();
 	$mysql_version = $wpdb->db_version();
 	$show_buttons  = true;
 
     if ( $current ) {
-        $message = sprintf( __( 'If you need to re-install version %s, you can do so here:' ), $update->version );
-        $submit = __('Re-install Now');
-        $form_action = 'update-core.php?action=do-core-reinstall';
-    } else {
-        $php_compat     = version_compare( $php_version, $update->php_version, '>=' );
+	    /* translators: 1: WP version number */
+		$message     = sprintf( __( 'If you need to re-install version %s, you can do so here:' ), $update->version );
+		$submit      = __( 'Re-install Now' );
+		$form_action = 'update-core.php?action=do-core-reinstall';
+	} else {
+		$php_compat = version_compare( $php_version, $update->php_version, '>=' );
 
-        if ( file_exists( WP_CONTENT_DIR . '/db.php' ) && empty( $wpdb->is_mysql ) ) {
-	        $mysql_compat = true;
-        } else {
-	        $mysql_compat = version_compare( $mysql_version, $update->mysql_version, '>=' );
-        }
+		if ( file_exists( WP_CONTENT_DIR . '/db.php' ) && empty( $wpdb->is_mysql ) ) {
+			$mysql_compat = true;
+		} else {
+			$mysql_compat = version_compare( $mysql_version, $update->mysql_version, '>=' );
+		}
 
-        if ( !$mysql_compat && !$php_compat ) {
-	        /* translators: 1: WP version number, 2: Minimum required PHP version number, 3: Minimum required MySQL version number, 4: Current PHP version number, 5: Current MySQL version number */
+		if ( ! $mysql_compat && ! $php_compat ) {
+			/* translators: 1: WP version number, 2: Minimum required PHP version number, 3: Minimum required MySQL version number, 4: Current PHP version number, 5: Current MySQL version number */
 	        $message = sprintf( __( 'You cannot update because WP %1$s requires PHP version %2$s or higher and MySQL version %3$s or higher. You are running PHP version %4$s and MySQL version %5$s.' ), $update->current, $update->php_version, $update->mysql_version, $php_version, $mysql_version );
-        } elseif ( !$php_compat ) {
+        } elseif ( ! $php_compat ) {
 	        /* translators: 1: WP version number, 2: Minimum required PHP version number, 3: Current PHP version number */
 	        $message = sprintf( __( 'You cannot update because WP %1$s requires PHP version %2$s or higher. You are running version %3$s.' ), $update->current, $update->php_version, $php_version );
-        } elseif ( !$mysql_compat ) {
+        } elseif ( ! $mysql_compat ) {
 	        /* translators: 1: WP version number, 2: Minimum required MySQL version number, 3: Current MySQL version number */
 	        $message = sprintf( __( 'You cannot update because WP %1$s requires MySQL version %2$s or higher. You are running version %3$s.' ), $update->current, $update->mysql_version, $mysql_version );
         } else {
@@ -76,7 +75,7 @@ function list_core_update( $update ) {
 	        $message = sprintf( __( 'You can update to WP %1$s automatically:' ), $update->version );
         }
 
-        if ( !$mysql_compat || !$php_compat ) {
+        if ( ! $mysql_compat || ! $php_compat ) {
 	        $show_buttons = false;
         }
     }
@@ -84,9 +83,9 @@ function list_core_update( $update ) {
 
 	echo '<p>' . $message . '</p>
     <form method="post" action="' . $form_action . '" name="upgrade" class="upgrade">';
-	wp_nonce_field('upgrade-core');
+	wp_nonce_field( 'upgrade-core' );
 	echo '<p>
-    <input name="version" value="'. esc_attr($update->version) .'" type="hidden">';
+    <input name="version" value="' . esc_attr( $update->version ) . '" type="hidden">';
 	if ( $show_buttons ) {
 		if ( $first_pass ) {
 			submit_button( $submit, $current ? '' : 'primary regular', 'upgrade', false );
@@ -96,10 +95,12 @@ function list_core_update( $update ) {
 		}
 	}
 
-    if ( !isset( $update->dismissed ) || !$update->dismissed ) {
-        submit_button( __( 'Hide this update' ), '', 'dismiss', false );
-    } else {
-        submit_button( __( 'Bring back this update' ), '', 'undismiss', false );
+    if ( ! $current ) {
+	    if ( ! isset( $update->dismissed ) || ! $update->dismissed ) {
+		    submit_button( __( 'Hide this update' ), '', 'dismiss', false );
+	    } else {
+		    submit_button( __( 'Bring back this update' ), '', 'undismiss', false );
+	    }
     }
 	echo '</p>
     </form>';
@@ -137,46 +138,28 @@ function dismissed_updates() {
 
 /**
  * Display upgrade WP for downloading latest
- *
- * @since WP-2.7.0
- *
- * @global string $required_php_version
- * @global string $required_mysql_version
  */
 function core_upgrade_preamble() {
 
 	$wp_version = get_bloginfo( 'version' );
-	$updates = get_core_updates();
+	$updates    = get_core_updates();
 
-	if ( ! isset( $updates[0]->response ) || $wp_version === $updates[0]->version ) {
+	if ( ! isset( $updates[0]->version ) || $wp_version === $updates[0]->version ) {
 
         echo '<h2>';
-        _e( 'You have the latest version of ClassicPress.' );
+        _e( 'You are running the latest available version of WP. Good for you!' );
         echo "</h2>\n";
 
 	} else {
+
 		echo '<div class="notice notice-warning"><p>';
-		/* translators: 1: Link to Backups documentation page, 2: Link to Updating documentation page */
-		printf(
-			__( '<strong>Important:</strong> before updating, please <a href="%1$s">back up your database and files</a>. For help with updates, visit the <a href="%2$s">Updating ClassicPress</a> documentation page.' ),
-			'https://codex.wordpress.org/WordPress_Backups',
-			'https://docs.classicpress.net/updating-classicpress/'
-		);
+		_e( 'You should backup your stuff (all files and DB) before updating.' );
 		echo '</p></div>';
 
 		echo '<h2 class="response">';
 		_e( 'An updated version of WP is available.' );
 		echo '</h2>';
-	}
 
-	if ( isset( $updates[0] ) ) {
-		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-		$upgrader = new WP_Automatic_Updater;
-		if ( $upgrader->should_update( 'core', $updates[0], ABSPATH ) ) {
-			echo '<div class="updated inline"><p>';
-			echo '<strong>' . __( 'BETA TESTERS:' ) . '</strong> ' . __( 'This site is set up to install updates of future beta versions automatically.' );
-			echo '</p></div>';
-		}
 	}
 
 	echo '<ul class="core-updates">';
@@ -186,17 +169,6 @@ function core_upgrade_preamble() {
 		echo '</li>';
 	}
 	echo '</ul>';
-
-	// Don't show the maintenance mode notice when we are only showing a single re-install option.
-	if ( $updates && ( count( $updates ) > 1 || $updates[0]->version != $wp_version) ) {
-		echo '<p>' . __( 'While your site is being updated, it will be in maintenance mode. As soon as your updates are complete, your site will return to normal.' ) . '</p>';
-	} elseif ( ! $updates ) {
-		echo '<p>' . sprintf(
-			__( '<a href="%s">Learn more about ClassicPress %s</a>.' ),
-			esc_url( self_admin_url( 'about.php' ) ),
-			classicpress_version()
-		) . '</p>';
-	}
 
 	dismissed_updates();
 }
