@@ -26,7 +26,7 @@ function get_core_updates( $options = array() ) {
 	$dismissed_updates = get_site_option( 'dismissed_update_core' );
 
 	if ( ! is_array( $dismissed_updates ) ) {
-		$dismissed = array();
+		$dismissed_updates = array();
 	}
 
 	$available_updates_information = get_site_transient( 'update_core' );
