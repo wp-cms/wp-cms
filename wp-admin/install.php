@@ -244,8 +244,12 @@ switch($step) {
 		if ( $error === false ) {
 			$wpdb->show_errors();
 			$result = wp_install( $weblog_title, $user_name, $admin_email, $public, '', wp_slash( $admin_password ), $loaded_language );
-			echo '<h1>' . __( 'Installation Complete' ) . '</h1>' . "\n";
-			echo '<p>' . __( 'Your ClassicPress site is ready to go!' ) . '</p>' . "\n";
+
+            // Activate ACS plugin by default
+            update_option( 'active_plugins', array( 'acs.php' ) );
+
+            echo '<h1>' . __( 'Installation Complete' ) . '</h1>' . "\n";
+			echo '<p>' . __( 'Your WP site is ready to go!' ) . '</p>' . "\n";
 			echo '<table class="form-table install-success">' . "\n";
 			echo '<tr>' . "\n";
 			echo '<th>' . __( 'Username' ) . '</th>' . "\n";

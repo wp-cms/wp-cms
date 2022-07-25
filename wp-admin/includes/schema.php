@@ -408,7 +408,7 @@ function populate_options() {
 	'hack_file' => 0,
 	'blog_charset' => 'UTF-8',
 	'moderation_keys' => '',
-	'active_plugins' => array('acs.php'),
+	'active_plugins' => array(),
 	'category_base' => '',
 	'comment_max_links' => 2,
 	'gmt_offset' => $gmt_offset,
