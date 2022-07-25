@@ -1,0 +1,57 @@
+.awesome-button{
+  background-image: linear-gradient(-45deg, $color-blue, $color-yellow);
+  background-color: $color-blue;
+  color: $color-blue;
+  cursor: pointer;
+  display: inline-block;
+  border: none;
+  padding: 4px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 800;
+  white-space: pre;
+
+  span {
+    padding: 1rem 2rem;
+    display: inline-block;
+    background-color: $color-white;
+    border-radius: 4px;
+    pointer-events: none;
+
+    strong {
+      background-image: linear-gradient(-45deg, $color-blue, $color-yellow);
+      font-size: 1.2rem;
+      background-clip: text;
+      color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -moz-background-clip: text;
+      -moz-text-fill-color: transparent;
+      font-weight: 800;
+      pointer-events: none;
+    }
+
+  }
+
+  &:hover{
+    box-shadow: 0 0 0.4rem rgba(0,0,0,0.5);
+    background-size: 200% 200%;
+    animation: move-background 2s ease infinite;
+  }
+
+  /* Dark variation */
+  &.dark {
+    background-image: linear-gradient(-45deg, $color-black, $color-gray);
+    background-color: $color-black;
+    color: $color-black;
+
+    span strong {
+      background-image: linear-gradient(-45deg, $color-black, $color-gray);
+    }
+  }
+
+}
+
+
+

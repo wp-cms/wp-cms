@@ -1,0 +1,30 @@
+@mixin media-query-size($min,$max) {
+  @media only screen and (min-width:$min) and (max-width:$max) {
+    @content;
+  }
+}
+
+@mixin media-query--phone() {
+  @media only screen and (min-width:0px) and (max-width:550px) {
+    @content;
+  }
+}
+
+@mixin media-query--tablet() {
+  @media only screen and (min-width:551px) and (max-width:767px) {
+    @content;
+  }
+}
+
+
+@mixin circle-background-image-purple-background($background-color) {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  background: $background-color;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-size: 60%;
+}

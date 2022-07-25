@@ -1,0 +1,195 @@
+.site-header {
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $color-black;
+
+  .main-menu {
+    position: relative;
+    z-index: 9;
+
+    ul {
+      list-style: none;
+    }
+
+    a {
+      display: block;
+      position: relative;
+      text-transform: uppercase;
+      font-weight: 100;
+      color: $color-white;
+
+      &:hover {
+        color: $color-yellow;
+      }
+    }
+
+  }
+
+  /* Hidden checkbox to control the open/close state of the mobile menu */
+  #checkbox-main-menu {
+    display: none;
+  }
+
+  /* Clicking this label will toggle the checkbox state and hence open/close the mobile menu */
+  label.toggle-main-menu {
+    display: none;
+    width: 1.4rem;
+    height: 1.4rem;
+    cursor: pointer;
+  }
+
+  label.toggle-main-menu .hamburger-open-menu {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    height: 1.4rem;
+    align-content: space-between;
+  }
+
+  label.toggle-main-menu .hamburger-open-menu span {
+    display: inline-block;
+    height: 0.19rem;
+    width: 100%;
+    border-radius: 5px;
+    background: linear-gradient(-45deg, $color-yellow, $color-blue);
+    transition: all 400ms;
+  }
+
+  label.toggle-main-menu .hamburger-open-menu span.line-1 {
+    width: 90%;
+  }
+
+  label.toggle-main-menu .hamburger-open-menu span.line-2 {
+    width: 75%;
+  }
+
+  label.toggle-main-menu .hamburger-open-menu span.line-3 {
+    width: 100%;
+  }
+
+  label.toggle-main-menu:hover .hamburger-open-menu span {
+    width: 100%;
+    background: linear-gradient(-45deg, $color-yellow, $color-blue);
+  }
+
+  #checkbox-main-menu:checked ~ label.toggle-main-menu .hamburger-open-menu {
+    display: none;
+  }
+
+  #checkbox-main-menu ~ label.toggle-main-menu .x-close-menu {
+    opacity: 0;
+  }
+
+  #checkbox-main-menu:checked ~ label.toggle-main-menu .x-close-menu {
+    opacity: 1;
+  }
+
+  label.toggle-main-menu .x-close-menu {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 1.4rem;
+  }
+
+  label.toggle-main-menu .x-close-menu::before,
+  label.toggle-main-menu .x-close-menu::after {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 0.15rem;
+    border: 0.1rem solid $color-yellow;
+    background-color: $color-yellow;
+    opacity: 0;
+    transition: all 0.4s ease-in-out;
+    transform: rotate(0deg);
+  }
+
+  label.toggle-main-menu:hover .x-close-menu::before,
+  label.toggle-main-menu:hover .x-close-menu::after {
+    box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.3);
+  }
+
+  #checkbox-main-menu:checked ~ label.toggle-main-menu .x-close-menu::before {
+    transform: rotate(45deg);
+    opacity: 1;
+  }
+
+  #checkbox-main-menu:checked ~ label.toggle-main-menu .x-close-menu::after {
+    transform: rotate(-45deg);
+    opacity: 1;
+  }
+
+
+  /* Mobile version */
+  @media (max-width: 860px) {
+
+    padding: 0.75rem;
+
+    .logo {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    label.toggle-main-menu {
+      display: block;
+    }
+
+    .main-menu {
+      position: fixed;
+      display: none;
+      width: 100vw;
+      height: calc( 100vh - 4.5rem );
+      top: 4.5rem;
+      left: 0;
+      background-color: $color-black;
+      padding-right: 2rem;
+      text-align: right;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      a {
+        font-size: 1.3rem;
+        padding: 1rem;
+      }
+
+    }
+
+    #checkbox-main-menu:checked ~ .main-menu {
+      display: block;
+    }
+
+
+  }
+
+  /* Version for tablet and PC */
+  @media (min-width: 860px) {
+
+    padding: 1.5rem;
+
+    .logo {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .main-menu {
+      width: 100vw;
+
+      & > ul {
+        display: flex;
+        flex-direction: row;
+      }
+
+      a {
+        font-size: 1rem;
+        padding: 0 1rem;
+      }
+
+    }
+
+  }
+
+}

@@ -1,0 +1,92 @@
+.hero {
+  width: 100%;
+  position: relative;
+
+  img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .content {
+    color: $color-white;
+
+    p {
+      line-height: 1.8;
+    }
+  }
+
+  /* Up until 770px */
+  @media (max-width: 770px) {
+
+    img {
+      height: calc( 100vh - 4.5rem );
+    }
+
+    .content {
+      background-color: $color-black;
+      padding: 3rem;
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 2rem;
+        font-weight: 400;
+      }
+
+      p{
+        font-size: 2rem;
+      }
+
+    }
+
+  }
+
+  /* From 770px on */
+  @media (min-width: 770px) {
+
+    height: calc( 100vh - 7rem );
+
+    img {
+      height: 100%;
+    }
+
+    .content {
+      position: absolute;
+      width: 37%;
+      top: 50%;
+      right: 5rem;
+      transform: translateY(-50%);
+
+      h1 {
+        font-size: 3.6rem;
+        margin-bottom: 2rem;
+        font-weight: 400;
+      }
+
+      p{
+        font-size: 1.6rem;
+      }
+
+    }
+
+  }
+
+  /* From 1000px on */
+  @media (min-width: 1000px) {
+
+    .content {
+      width: 45%;
+
+      h1 {
+        font-size: 5rem;
+      }
+
+      p{
+        font-size: 2rem;
+      }
+
+    }
+
+  }
+
+}

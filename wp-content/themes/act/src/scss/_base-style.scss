@@ -1,0 +1,38 @@
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  font-size: 16px;
+}
+
+::selection {
+  background: $color-black;
+  color: $color-white;
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: 1.1rem;
+}
+
+body {
+  margin: 0;
+  font-display: swap;
+  min-width: 320px;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}

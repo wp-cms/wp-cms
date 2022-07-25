@@ -1,0 +1,48 @@
+
+.eyecatching-presentation {
+  position: relative;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  h1 {
+    font-size: 5rem;
+  }
+
+  p {
+    font-size: 2.5rem;
+    line-height: 1.6;
+    letter-spacing: 0.3rem;
+  }
+
+  .awesome-button {
+    align-self: flex-end;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    background-image: linear-gradient(45deg, $color-blue 0%, $color-orange 60%);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.3;
+    background: radial-gradient(ellipse at right, $color-blue, transparent),
+    radial-gradient(ellipse at bottom, $color-orange, transparent);
+    pointer-events: none;
+  }
+
+}
