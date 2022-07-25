@@ -6,5 +6,12 @@
 wp-config.php
 wp-content/uploads
 
-# The whole plugins folder
-wp-content/plugins
+# The whole plugins folder except ACS
+wp-content/plugins/*
+!wp-content/plugins/amazing-custom-stuff
+!wp-content/plugins/amazing-custom-stuff/
+!wp-content/plugins/amazing-custom-stuff/*
+
+# The whole themes folder except ACT
+wp-content/themes/*
+!wp-content/themes/amazing-custom-theme
