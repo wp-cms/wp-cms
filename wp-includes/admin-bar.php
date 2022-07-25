@@ -797,6 +797,11 @@ function wp_admin_bar_appearance_menu( $wp_admin_bar ) {
  */
 function wp_admin_bar_updates_menu( $wp_admin_bar ) {
 
+    // Only check this in the admin area
+    if ( ! is_admin() ) {
+        return;
+    }
+
 	$update_data = wp_get_update_data();
 
 	if ( !$update_data['counts']['total'] )
