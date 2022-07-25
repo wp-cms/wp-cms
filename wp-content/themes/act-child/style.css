@@ -1,0 +1,30 @@
+/*
+Theme Name: ACT [Child]
+Description: Child theme to apply whatever changes you like and make sure they don't get overwritten by updates.
+Author: WP CMS
+Author URI: https://github.com/wp-cms
+Version: 1.0.0
+License: GNU General Public License v2 or later
+Template: act
+*/
+
+@font-face {
+    font-family: 'BadScript';
+    src: url('./assets/fonts/BadScript-Regular.ttf');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./assets/fonts/Roboto-Regular.ttf');
+    font-weight: 400;
+}
+
+body,
+.font-primary {
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+.font-secondary {
+    font-family: 'BadScript', Times, serif;
+}

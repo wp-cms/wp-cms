@@ -13,3 +13,4 @@ wp-content/plugins/*
 # The whole themes folder except ACT
 wp-content/themes/*
 !wp-content/themes/act
+!wp-content/themes/act-child
