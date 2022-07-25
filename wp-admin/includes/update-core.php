@@ -300,6 +300,36 @@ function update_core( string $from, string $to ) {
 		} //end foreach
 	}
 
+    // Update bundled Amazing Custom Plugin and Theme (only if the plugin hasn't been deleted by the user before)
+    $acs_destination_folder = $wp_filesystem->wp_plugins_dir() . 'acs';
+	if ( $wp_filesystem->exists( $acs_destination_folder ) ) {
+		$wp_filesystem->delete( $acs_destination_folder, true );
+		$wp_filesystem->mkdir( $acs_destination_folder, FS_CHMOD_DIR );
+		$_result = copy_dir( $from . '/wp-cms/wp-content/plugins/acs', $acs_destination_folder );
+
+		// If an error occurs partway through this step, keep the error flowing through, but keep process going.
+		if ( is_wp_error( $_result ) ) {
+			if ( ! is_wp_error( $result ) ) {
+				$result = new WP_Error;
+			}
+			$result->add( $_result->get_error_code() . '_plugins', $_result->get_error_message(), substr( $_result->get_error_data(), strlen( $wp_filesystem->wp_plugins_dir() ) ) );
+		}
+
+        // Update bundled Amazing Custom Theme
+        $act_destination_folder = $wp_filesystem->wp_themes_dir() . 'act';
+		$wp_filesystem->delete( $act_destination_folder, true );
+		$wp_filesystem->mkdir( $act_destination_folder, FS_CHMOD_DIR );
+		$_result = copy_dir( $from . '/wp-cms/wp-content/themes/act', $act_destination_folder );
+
+		// If an error occurs partway through this step, keep the error flowing through, but keep process going.
+		if ( is_wp_error( $_result ) ) {
+			if ( ! is_wp_error( $result ) ) {
+				$result = new WP_Error;
+			}
+			$result->add( $_result->get_error_code() . '_themes', $_result->get_error_message(), substr( $_result->get_error_data(), strlen( $wp_filesystem->wp_themes_dir() ) ) );
+		}
+	}
+
 	// Handle $result error from the above blocks
 	if ( is_wp_error( $result ) ) {
 		$wp_filesystem->delete( $from, true );
