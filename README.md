@@ -1,6 +1,6 @@
 # What's this?
 
-WP CMS is a PHP based CMS, forked from ClassicPress, a WordPress fork. **Focused towards developers**.
+WP CMS is a PHP based CMS forked from WordPress and **focused towards developers**.
 
 WP does not stand for WordPress, it stands for nothing and at the same time for anything you want. It could be WinniPress, WungaPunga, WebPower, ... you name it.
 
@@ -11,7 +11,7 @@ This is a personal experiment, with which I want to achieve a clean, lean and op
 Developers who know some traditional web development skills: PHP, HTML, CSS, Javascript...
 
 - If you are looking for a tool like [Wix](https://www.wix.com/), but open source, go to [WordPress](https://wordpress.org/).
-- If you are looking for the good old WordPress, without the blocks fuss and with a focus on "please keep things the way they were and don't mess with it", go to [ClassicPress](https://www.classicpress.net/).
+- If you are looking for the good old WordPress, without the blocks fuss and with a focus on "please keep things the way they were and don't mess with them", go to [ClassicPress](https://www.classicpress.net/).
 - If you are an adventurous developer who loves the old WP Way of doing things, but hate bloat... stay here.
 
 # Version 1.0.0 is not released yet
@@ -50,6 +50,12 @@ ClassicPress directory is under construction. ✍️
 ## KEY NUMBER 3 - "Constant optimization"
 
 Clean and optimize the core as much as possible, iterate over it with PHP 8 as minimum supported PHP version in mind.
+
+# ACS: Amazing Custom Stuff - bundled by default
+
+Any serious CMS needs a way to customize fields. That's why WP includes a forked version of the great ACF ([Advanced Custom Fields by Delicious Brains](https://www.advancedcustomfields.com/)) plugin by default. Thanks for this masterpiece, Elliot Condon!. Of course, you can remove that if you want, who am I to bloat your boat?
+
+The only reason I added it by default is that I wanted to provide a practical theme by default too. Something that shows the power of WP CMS as a real generic CMS (not just a simple blogs template).
 
 # Compatibility with WordPress Plugins & Themes!
 
