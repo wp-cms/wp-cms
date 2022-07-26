@@ -103,15 +103,8 @@ class acs_field_wysiwyg extends acs_field {
 		$mce_buttons_2 = array( 'strikethrough', 'hr', 'forecolor', 'pastetext', 'removeformat', 'charmap', 'outdent', 'indent', 'undo', 'redo', 'wp_help' );
 		
 		// mce buttons (Basic)
-		$teeny_mce_buttons = array('bold', 'italic', 'underline', 'blockquote', 'strikethrough', 'bullist', 'numlist', 'alignleft', 'aligncenter', 'alignright', 'undo', 'redo', 'link', 'fullscreen');
-		
-		
-		// WP < 4.7	
-		if( acs_version_compare('wp', '<', '4.7') ) {
-		
-			$mce_buttons = array( 'bold', 'italic', 'strikethrough', 'bullist', 'numlist', 'blockquote', 'hr', 'alignleft', 'aligncenter', 'alignright', 'link', 'unlink', 'wp_more', 'spellchecker', 'fullscreen', 'wp_adv' );
-			$mce_buttons_2 = array( 'formatselect', 'underline', 'alignjustify', 'forecolor', 'pastetext', 'removeformat', 'charmap', 'outdent', 'indent', 'undo', 'redo', 'wp_help' );
-		}
+		$teeny_mce_buttons = array('formatselect', 'bold', 'italic', 'bullist', 'numlist', 'alignleft', 'aligncenter', 'alignright', 'undo', 'redo', 'link', 'fullscreen');
+
 		
 		
 		// Full
@@ -252,27 +245,13 @@ class acs_field_wysiwyg extends acs_field {
 		
 		// filter value for editor
 		remove_filter( 'acs_the_editor_content', 'format_for_editor', 10, 2 );
-		remove_filter( 'acs_the_editor_content', 'wp_htmledit_pre', 10, 1 );
-		remove_filter( 'acs_the_editor_content', 'wp_richedit_pre', 10, 1 );
-		
-		
-		// WP 4.3
-		if( acs_version_compare('wp', '>=', '4.3') ) {
+
 			
-			add_filter( 'acs_the_editor_content', 'format_for_editor', 10, 2 );
+        add_filter( 'acs_the_editor_content', 'format_for_editor', 10, 2 );
+
+        $button = 'data-wp-editor-id="' . $id . '"';
 			
-			$button = 'data-wp-editor-id="' . $id . '"';
-			
-		// WP < 4.3
-		} else {
-			
-			$function = ($default_editor === 'html') ? 'wp_htmledit_pre' : 'wp_richedit_pre';
-			
-			add_filter('acs_the_editor_content', $function, 10, 1);
-			
-			$button = 'onclick="switchEditors.switchto(this);"';
-			
-		}
+
 		
 		
 		// filter
