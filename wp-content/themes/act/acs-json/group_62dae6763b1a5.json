@@ -203,6 +203,59 @@
                     ],
                     "min": "",
                     "max": ""
+                },
+                "layout_62dec3c24b87d": {
+                    "key": "layout_62dec3c24b87d",
+                    "name": "sidebyside_text_image",
+                    "label": "SideBySide [Text + Image]",
+                    "display": "table",
+                    "sub_fields": [
+                        {
+                            "key": "field_62dec62c46024",
+                            "label": "Text",
+                            "name": "text",
+                            "type": "wysiwyg",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "tabs": "all",
+                            "toolbar": "basic",
+                            "media_upload": 0,
+                            "delay": 0
+                        },
+                        {
+                            "key": "field_62dec4904b87f",
+                            "label": "Image",
+                            "name": "image",
+                            "type": "image",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "return_format": "array",
+                            "preview_size": "medium",
+                            "library": "all",
+                            "min_width": "",
+                            "min_height": "",
+                            "min_size": "",
+                            "max_width": "",
+                            "max_height": "",
+                            "max_size": "",
+                            "mime_types": ""
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 }
             },
             "button_label": "Add Section",
@@ -229,5 +282,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1658745849
+    "modified": 1658766938
 }

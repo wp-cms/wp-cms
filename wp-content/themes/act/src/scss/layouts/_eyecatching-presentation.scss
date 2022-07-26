@@ -1,9 +1,9 @@
 
 .eyecatching-presentation {
   position: relative;
-  padding: 3rem;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   gap: 2rem;
 
   h1 {
@@ -39,10 +39,20 @@
     height: 100%;
     top: 0;
     left: 0;
-    opacity: 0.3;
-    background: radial-gradient(ellipse at right, $color-blue, transparent),
-    radial-gradient(ellipse at bottom, $color-orange, transparent);
+    opacity: 0.35;
+    background-image: linear-gradient(45deg, $color-blue 0%, $color-orange 60%);
     pointer-events: none;
+    animation: translate-around 2s ease infinite;
+  }
+
+  /* Up until 770px */
+  @media (max-width: 770px) {
+    padding: 3rem;
+  }
+
+  /* From 770px on */
+  @media (min-width: 770px) {
+    padding: 5rem;
   }
 
 }

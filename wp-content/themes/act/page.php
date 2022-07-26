@@ -23,6 +23,13 @@ if ( have_rows( 'layouts' ) ) {
 		        );
 		        get_template_part( 'layouts/eyecatching-presentation', $args );
 		        break;
+	        case 'sidebyside_text_image':
+		        $args = array(
+			        'text'  => get_sub_field( 'text' ),
+			        'image' => get_sub_field( 'image' ),
+		        );
+		        get_template_part( 'layouts/sidebyside-text-image', $args );
+		        break;
         }
 
     }

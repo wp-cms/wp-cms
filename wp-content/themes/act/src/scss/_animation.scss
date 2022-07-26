@@ -9,3 +9,18 @@
 		background-position: 0% 50%;
 	}
 }
+
+@keyframes translate-around{
+	0%{
+		opacity: 0.35;
+		transform: translateX(0) rotate(0) scale(2);
+	}
+	50%{
+		opacity: 0.45;
+		transform: translateX(-50%) rotate(10deg) scale(3);
+	}
+	100%{
+		opacity: 0.35;
+		transform: translateX(0) rotate(0) scale(2);
+	}
+}
