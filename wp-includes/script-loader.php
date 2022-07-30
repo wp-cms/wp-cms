@@ -3,7 +3,6 @@
  * ClassicPress scripts and styles default loader.
  *
  * Several constants are used to manage the loading, concatenating and compression of scripts and CSS:
- * define('SCRIPT_DEBUG', true); loads the development (non-minified) versions of all scripts and CSS, and disables compression and concatenation,
  * define('CONCATENATE_SCRIPTS', false); disables compression and concatenation of scripts and CSS,
  * define('COMPRESS_SCRIPTS', false); disables compression of scripts,
  * define('COMPRESS_CSS', false); disables compression of CSS,
@@ -85,10 +84,6 @@ function wp_default_scripts( &$scripts ) {
 
 	$develop_src = classicpress_is_dev_install();
 
-	if ( ! defined( 'SCRIPT_DEBUG' ) ) {
-		define( 'SCRIPT_DEBUG', $develop_src );
-	}
-
 	if ( ! $guessurl = site_url() ) {
 		$guessed_url = true;
 		$guessurl = wp_guess_url();
@@ -99,8 +94,8 @@ function wp_default_scripts( &$scripts ) {
 	$scripts->default_version = classicpress_asset_version( 'script' );
 	$scripts->default_dirs = array('/wp-admin/js/', '/wp-includes/js/');
 
-	$suffix = SCRIPT_DEBUG ? '' : '.min';
-	$dev_suffix = $develop_src ? '' : '.min';
+	$suffix     = '';
+	$dev_suffix = '';
 
 	$scripts->add( 'utils', "/wp-includes/js/utils$suffix.js" );
 	did_action( 'init' ) && $scripts->localize( 'utils', 'userSettings', array(
@@ -969,10 +964,6 @@ function wp_default_scripts( &$scripts ) {
 function wp_default_styles( &$styles ) {
 	include( ABSPATH . WPINC . '/version.php' ); // include an unmodified $wp_version
 
-	if ( ! defined( 'SCRIPT_DEBUG' ) ) {
-		define( 'SCRIPT_DEBUG', classicpress_is_dev_install() );
-	}
-
 	if ( ! $guessurl = site_url() ) {
 		$guessurl = wp_guess_url();
 	}
@@ -1012,7 +1003,7 @@ function wp_default_styles( &$styles ) {
 	// Register a stylesheet for the selected admin color scheme.
 	$styles->add( 'colors', true, array( 'wp-admin', 'buttons' ) );
 
-	$suffix = SCRIPT_DEBUG ? '' : '.min';
+	$suffix = '';
 
 	// Admin CSS
 	$styles->add( 'common',              "/wp-admin/css/common$suffix.css" );
@@ -1551,8 +1542,9 @@ function script_concat_settings() {
 
 	if ( ! isset($concatenate_scripts) ) {
 		$concatenate_scripts = defined('CONCATENATE_SCRIPTS') ? CONCATENATE_SCRIPTS : true;
-		if ( ( ! is_admin() && ! did_action( 'login_init' ) ) || ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) )
+		if ( ! is_admin() && ! did_action( 'login_init' ) ) {
 			$concatenate_scripts = false;
+		}
 	}
 
 	if ( ! isset($compress_scripts) ) {

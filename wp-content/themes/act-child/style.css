@@ -9,22 +9,26 @@ Template: act
 */
 
 @font-face {
-    font-family: 'BadScript';
-    src: url('./assets/fonts/BadScript-Regular.ttf');
+    font-family: 'Orbitron';
+    src: url('./assets/fonts/Orbitron-Regular.ttf');
     font-weight: 400;
 }
 
 @font-face {
-    font-family: 'Roboto';
-    src: url('./assets/fonts/Roboto-Regular.ttf');
+    font-family: 'TitilliumWeb';
+    src: url('./assets/fonts/TitilliumWeb-Regular.ttf');
     font-weight: 400;
 }
 
-body,
-.font-primary {
-    font-family: 'Roboto', Arial, Helvetica, sans-serif;
-}
-
-.font-secondary {
-    font-family: 'BadScript', Times, serif;
+:root{
+    --color-primary-a: #040404;
+    --color-primary-b: #111111;
+    --color-primary-contrast-a: #ffffff;
+    --color-primary-contrast-b: #f0f0f0;
+    --color-secondary-a: #3f5efb;
+    --color-secondary-b: #ff003d;
+    --color-secondary-contrast-a: rgba(255, 255, 255, 80%);
+    --color-secondary-contrast-b: rgba(255, 255, 255, 85%);
+    --font-primary: 'TitilliumWeb', Arial, Helvetica, sans-serif;
+    --font-secondary: 'Orbitron', Arial, Helvetica, sans-serif;
 }

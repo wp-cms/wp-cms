@@ -3913,8 +3913,8 @@ function wp_admin_css_color( $key, $name, $url, $colors = array(), $icons = arra
  * @since WP-3.0.0
  */
 function register_admin_color_schemes() {
-	$suffix = is_rtl() ? '-rtl' : '';
-	$suffix .= SCRIPT_DEBUG ? '' : '.min';
+	$suffix  = is_rtl() ? '-rtl' : '';
+	$suffix .= '';
 
 	wp_admin_css_color( 'fresh', _x( 'Default', 'admin color scheme' ),
 		false,

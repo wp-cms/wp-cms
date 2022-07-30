@@ -7,6 +7,7 @@
 </head>
 
 <body <?php body_class(); ?>>
+<div id="full_site_wrapper">
 
 <header class="site-header">
 

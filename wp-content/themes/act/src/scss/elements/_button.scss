@@ -1,7 +1,7 @@
 .awesome-button{
-  background-image: linear-gradient(-45deg, $color-blue, $color-yellow);
-  background-color: $color-blue;
-  color: $color-blue;
+  background-image: linear-gradient(-45deg, var(--color-secondary-a), var(--color-secondary-b));
+  background-color: var(--color-secondary-a);
+  color: var(--color-secondary-a);
   cursor: pointer;
   display: inline-block;
   border: none;
@@ -15,12 +15,12 @@
   span {
     padding: 1rem 2rem;
     display: inline-block;
-    background-color: $color-white;
+    background-color: var(--color-primary-a);
     border-radius: 4px;
     pointer-events: none;
 
     strong {
-      background-image: linear-gradient(-45deg, $color-blue, $color-yellow);
+      background-image: linear-gradient(-45deg, var(--color-secondary-a), var(--color-secondary-b));
       font-size: 1.2rem;
       background-clip: text;
       color: transparent;
@@ -42,12 +42,12 @@
 
   /* Dark variation */
   &.dark {
-    background-image: linear-gradient(-45deg, $color-black, $color-gray);
-    background-color: $color-black;
-    color: $color-black;
+    background-image: linear-gradient(-45deg, var(--color-secondary-contrast-a), var(--color-secondary-contrast-b));
+    background-color: var(--color-secondary-contrast-a);
+    color: var(--color-secondary-contrast-a);
 
     span strong {
-      background-image: linear-gradient(-45deg, $color-black, $color-gray);
+      background-image: linear-gradient(-45deg, var(--color-secondary-contrast-a), var(--color-secondary-contrast-b));
     }
   }
 

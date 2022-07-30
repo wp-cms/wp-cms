@@ -25,10 +25,20 @@ if ( have_rows( 'layouts' ) ) {
 		        break;
 	        case 'sidebyside_text_image':
 		        $args = array(
-			        'text'  => get_sub_field( 'text' ),
-			        'image' => get_sub_field( 'image' ),
+			        'text'          => get_sub_field( 'text' ),
+			        'image'         => get_sub_field( 'image' ),
+			        'display_order' => get_sub_field( 'display_order' ),
 		        );
 		        get_template_part( 'layouts/sidebyside-text-image', $args );
+		        break;
+	        case 'sidebyside_text_video':
+		        $args = array(
+			        'text'          => get_sub_field( 'text' ),
+					// Passing this as an array of data, in case wanna use different providers in future
+			        'video'         => array( 'youtube_video_id' => get_sub_field( 'youtube_video_id' ) ),
+			        'display_order' => get_sub_field( 'display_order' ),
+		        );
+		        get_template_part( 'layouts/sidebyside-text-video', $args );
 		        break;
         }
 

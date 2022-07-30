@@ -1,4 +1,5 @@
 <section class="eyecatching-presentation">
+    <div class="content">
     <?php
 
     // Display header if set
@@ -17,4 +18,5 @@
     }
 
     ?>
+    </div>
 </section>

@@ -9,7 +9,10 @@
   }
 
   .content {
-    color: $color-white;
+
+    h1 {
+      font-family: var(--font-secondary);
+    }
 
     p {
       line-height: 1.8;
@@ -24,7 +27,6 @@
     }
 
     .content {
-      background-color: $color-black;
       padding: 3rem;
 
       h1 {

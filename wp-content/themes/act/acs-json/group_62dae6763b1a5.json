@@ -208,15 +208,15 @@
                     "key": "layout_62dec3c24b87d",
                     "name": "sidebyside_text_image",
                     "label": "SideBySide [Text + Image]",
-                    "display": "table",
+                    "display": "row",
                     "sub_fields": [
                         {
                             "key": "field_62dec62c46024",
                             "label": "Text",
                             "name": "text",
                             "type": "wysiwyg",
-                            "instructions": "",
-                            "required": 0,
+                            "instructions": "Write the text content you want to display on the right side of this section. You can use different headers, lists and text markup.",
+                            "required": 1,
                             "conditional_logic": 0,
                             "wrapper": {
                                 "width": "",
@@ -235,7 +235,7 @@
                             "name": "image",
                             "type": "image",
                             "instructions": "",
-                            "required": 0,
+                            "required": 1,
                             "conditional_logic": 0,
                             "wrapper": {
                                 "width": "",
@@ -252,6 +252,102 @@
                             "max_height": "",
                             "max_size": "",
                             "mime_types": ""
+                        },
+                        {
+                            "key": "field_62dff85dd64bd",
+                            "label": "Display Order",
+                            "name": "display_order",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "text-image": "[TEXT] [IMAGE]",
+                                "image-text": "[IMAGE] [TEXT]"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "default_value": "text-image",
+                            "layout": "vertical",
+                            "return_format": "value",
+                            "save_other_choice": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_62e16e3aaba25": {
+                    "key": "layout_62e16e3aaba25",
+                    "name": "sidebyside_text_video",
+                    "label": "SideBySide [Text + Video]",
+                    "display": "row",
+                    "sub_fields": [
+                        {
+                            "key": "field_62e16e3baba26",
+                            "label": "Text",
+                            "name": "text",
+                            "type": "wysiwyg",
+                            "instructions": "Write the text content you want to display on the right side of this section. You can use different headers, lists and text markup.",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "tabs": "all",
+                            "toolbar": "basic",
+                            "media_upload": 0,
+                            "delay": 0
+                        },
+                        {
+                            "key": "field_62e16e3baba27",
+                            "label": "YouTube video ID",
+                            "name": "youtube_video_id",
+                            "type": "text",
+                            "instructions": "Insert the YouTube video ID",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": 11
+                        },
+                        {
+                            "key": "field_62e16e3baba28",
+                            "label": "Display Order",
+                            "name": "display_order",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "text-video": "[TEXT] [VIDEO]",
+                                "video-text": "[VIDEO] [TEXT]"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "default_value": "text-image",
+                            "layout": "vertical",
+                            "return_format": "value",
+                            "save_other_choice": 0
                         }
                     ],
                     "min": "",
@@ -282,5 +378,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1658766938
+    "modified": 1658941853
 }

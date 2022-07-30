@@ -4,7 +4,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: $color-black;
+  background-color: var(--color-primary-a);
 
   .main-menu {
     position: relative;
@@ -19,10 +19,10 @@
       position: relative;
       text-transform: uppercase;
       font-weight: 100;
-      color: $color-white;
+      color: var(--color-secondary-contrast-a);
 
       &:hover {
-        color: $color-yellow;
+        color: var(--color-secondary-b);
       }
     }
 
@@ -54,7 +54,7 @@
     height: 0.19rem;
     width: 100%;
     border-radius: 5px;
-    background: linear-gradient(-45deg, $color-yellow, $color-blue);
+    background: linear-gradient(-45deg, var(--color-secondary-b), var(--color-secondary-a));
     transition: all 400ms;
   }
 
@@ -72,7 +72,7 @@
 
   label.toggle-main-menu:hover .hamburger-open-menu span {
     width: 100%;
-    background: linear-gradient(-45deg, $color-yellow, $color-blue);
+    background: linear-gradient(-45deg, var(--color-secondary-b), var(--color-secondary-a));
   }
 
   #checkbox-main-menu:checked ~ label.toggle-main-menu .hamburger-open-menu {
@@ -101,8 +101,8 @@
     content: '';
     width: 100%;
     height: 0.15rem;
-    border: 0.1rem solid $color-yellow;
-    background-color: $color-yellow;
+    border: 0.1rem solid var(--color-secondary-b);
+    background-color: var(--color-secondary-b);
     opacity: 0;
     transition: all 0.4s ease-in-out;
     transform: rotate(0deg);
@@ -145,7 +145,7 @@
       height: calc( 100vh - 4.5rem );
       top: 4.5rem;
       left: 0;
-      background-color: $color-black;
+      background-color: var(--color-primary-a);
       padding-right: 2rem;
       text-align: right;
       overflow-x: hidden;
@@ -181,6 +181,7 @@
       & > ul {
         display: flex;
         flex-direction: row;
+        justify-content: flex-end;
       }
 
       a {

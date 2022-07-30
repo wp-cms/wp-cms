@@ -1,24 +1,8 @@
 
 .eyecatching-presentation {
   position: relative;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
-  gap: 2rem;
-
-  h1 {
-    font-size: 5rem;
-  }
-
-  p {
-    font-size: 2.5rem;
-    line-height: 1.6;
-    letter-spacing: 0.3rem;
-  }
-
-  .awesome-button {
-    align-self: flex-end;
-  }
+  background-image: linear-gradient(45deg, var(--color-secondary-b) 0%, #ffffff 50%, var(--color-secondary-a) 100%);
 
   &::before {
     content: '';
@@ -28,7 +12,7 @@
     top: 0;
     left: 0;
     opacity: 0.5;
-    background-image: linear-gradient(45deg, $color-blue 0%, $color-orange 60%);
+
     pointer-events: none;
   }
 
@@ -39,20 +23,50 @@
     height: 100%;
     top: 0;
     left: 0;
-    opacity: 0.35;
-    background-image: linear-gradient(45deg, $color-blue 0%, $color-orange 60%);
+    opacity: 0.2;
+    background-image: linear-gradient(45deg, var(--color-secondary-b) 0%,  #ffffff 20%, var(--color-secondary-a) 95%);
     pointer-events: none;
-    animation: translate-around 2s ease infinite;
+    animation: translate-around 4s ease infinite;
+  }
+
+  .content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 2rem;
+
+    h1 {
+      font-size: 5rem;
+    }
+
+    p {
+      font-size: 2.5rem;
+      line-height: 1.6;
+      letter-spacing: 0.3rem;
+    }
+
+    .awesome-button {
+      align-self: flex-end;
+    }
   }
 
   /* Up until 770px */
   @media (max-width: 770px) {
-    padding: 3rem;
+
+    .content {
+      padding: 3rem;
+    }
+
   }
 
   /* From 770px on */
   @media (min-width: 770px) {
-    padding: 5rem;
+
+    .content {
+      padding: 5rem;
+    }
+
   }
 
 }

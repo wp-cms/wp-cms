@@ -87,18 +87,6 @@ function wp_initial_constants() {
 		define( 'WP_CACHE', false );
 	}
 
-	// Add define('SCRIPT_DEBUG', true); to wp-config.php to enable loading of non-minified,
-	// non-concatenated scripts and stylesheets.
-	if ( ! defined( 'SCRIPT_DEBUG' ) ) {
-		if ( ! empty( $GLOBALS['cp_version'] ) && function_exists( 'classicpress_is_dev_install' ) ) {
-			$develop_src = classicpress_is_dev_install();
-		} else {
-			$develop_src = false;
-		}
-
-		define( 'SCRIPT_DEBUG', $develop_src );
-	}
-
 	/**
 	 * Private
 	 */

@@ -1,10 +1,9 @@
 // Abstract files
 @import "abstracts/variables";
 @import "abstracts/mixins";
-
 @import 'animation.scss';
 @import 'base-style.scss';
-
+@import "helpers";
 @import "elements/button";
 
 // Layouts
@@ -12,3 +11,4 @@
 @import "layouts/site-header";
 @import "layouts/eyecatching-presentation";
 @import "layouts/sidebyside-text-image";
+@import "layouts/sidebyside-text-video";

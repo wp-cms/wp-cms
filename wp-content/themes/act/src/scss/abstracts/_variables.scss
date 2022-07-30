@@ -1,16 +1,12 @@
-// Fonts
-$font-primary: 'ChaletBook', sans-serif;
-$font-primary--medium: 'ChaletBook', sans-serif;
-$font-primary--bold: 'ChaletBook-Bold', sans-serif;
-$font-secondary: 'Alternate Gothic No2 D', 'sans-serif';
-$font-museo: 'Museo Sans 300','sans-serif';
-
-
-// Colors
-$color-blue: #0cb9c0;
-$color-yellow: #ffc840;
-$color-orange: #f48920;
-$color-gray: #525650;
-$color-black: #111110;
-$color-light: #f3f4f0;
-$color-white: #fffff0;
+:root{
+  --color-primary-a: #ffffff;
+  --color-primary-b: #f2f2f2;
+  --color-primary-contrast-a: rgb(30, 15, 10);
+  --color-primary-contrast-b: rgb(10, 5, 10);
+  --color-secondary-a: #0cb9c0;
+  --color-secondary-b: #f48920;
+  --color-secondary-contrast-a: rgb(30, 15, 10);
+  --color-secondary-contrast-b: rgb(10, 5, 10);
+  --font-primary: Verdana, sans-serif;
+  --font-secondary: Garamond, serif;
+}

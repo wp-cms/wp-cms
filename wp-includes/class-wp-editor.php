@@ -876,7 +876,7 @@ final class _WP_Editors {
 		<?php
 
 		if ( $user_can_richedit ) {
-			$suffix = SCRIPT_DEBUG ? '' : '.min';
+			$suffix  = '';
 			$baseurl = self::get_baseurl();
 
 			?>
@@ -986,7 +986,7 @@ final class _WP_Editors {
 			'wp_shortcut_labels' => wp_json_encode( $shortcut_labels ),
 		);
 
-		$suffix = SCRIPT_DEBUG ? '' : '.min';
+		$suffix  = '';
 		$version = 'ver=' . get_bloginfo( 'version' );
 
 		// Default stylesheets
@@ -1396,7 +1396,7 @@ final class _WP_Editors {
 			script_concat_settings();
 		}
 
-		$suffix = SCRIPT_DEBUG ? '' : '.min';
+		$suffix  = '';
 		$version = 'ver=' . $tinymce_version;
 		$baseurl = self::get_baseurl();
 
@@ -1411,8 +1411,7 @@ final class _WP_Editors {
 		$compressed = $compress_scripts && $concatenate_scripts && isset( $_SERVER['HTTP_ACCEPT_ENCODING'] )
 			&& false !== stripos( $_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip' ) && ! $has_custom_theme;
 
-		// Load tinymce.js when running from /src, else load wp-tinymce.js.gz (production) or tinymce.min.js (SCRIPT_DEBUG)
-		$mce_suffix = classicpress_is_dev_install() ? '' : '.min';
+		$mce_suffix = '';
 
 		if ( $compressed ) {
 			echo "<script type='text/javascript' src='{$baseurl}/wp-tinymce.php?c=1&amp;$version'></script>\n";
@@ -1462,7 +1461,7 @@ final class _WP_Editors {
 			'language' => self::$mce_locale
 		);
 
-		$suffix = SCRIPT_DEBUG ? '' : '.min';
+		$suffix  = '';
 		$baseurl = self::get_baseurl();
 		$version = 'ver=' . $tinymce_version;
 

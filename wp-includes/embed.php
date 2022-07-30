@@ -436,23 +436,7 @@ function get_post_embed_html( $width, $height, $post = null ) {
 
 	$output .= "<script type='text/javascript'>\n";
 	$output .= "<!--//--><![CDATA[//><!--\n";
-	if ( SCRIPT_DEBUG ) {
-		$output .= file_get_contents( ABSPATH . WPINC . '/js/wp-embed.js' );
-	} else {
-		/*
-		 * If you're looking at a src version of this file, you'll see an "include"
-		 * statement below. This is used by the `grunt build` process to directly
-		 * include a minified version of wp-embed.js, instead of using the
-		 * file_get_contents() method from above.
-		 *
-		 * If you're looking at a build version of this file, you'll see a string of
-		 * minified JavaScript. If you need to debug it, please turn on SCRIPT_DEBUG
-		 * and edit wp-embed.js directly.
-		 */
-		$output .=<<<JS
-		include "js/wp-embed.min.js"
-JS;
-	}
+    $output .= file_get_contents( ABSPATH . WPINC . '/js/wp-embed.js' );
 	$output .= "\n//--><!]]>";
 	$output .= "\n</script>";
 
@@ -873,23 +857,7 @@ function print_embed_styles() {
 	?>
 	<style type="text/css">
 	<?php
-		if ( SCRIPT_DEBUG ) {
-			readfile( ABSPATH . WPINC . "/css/wp-embed-template.css" );
-		} else {
-			/*
-			 * If you're looking at a src version of this file, you'll see an "include"
-			 * statement below. This is used by the `grunt build` process to directly
-			 * include a minified version of wp-oembed-embed.css, instead of using the
-			 * readfile() method from above.
-			 *
-			 * If you're looking at a build version of this file, you'll see a string of
-			 * minified CSS. If you need to debug it, please turn on SCRIPT_DEBUG
-			 * and edit wp-embed-template.css directly.
-			 */
-			?>
-			include "css/wp-embed-template.min.css"
-			<?php
-		}
+		readfile( ABSPATH . WPINC . '/css/wp-embed-template.css' );
 	?>
 	</style>
 	<?php
@@ -904,23 +872,7 @@ function print_embed_scripts() {
 	?>
 	<script type="text/javascript">
 	<?php
-		if ( SCRIPT_DEBUG ) {
-			readfile( ABSPATH . WPINC . "/js/wp-embed-template.js" );
-		} else {
-			/*
-			 * If you're looking at a src version of this file, you'll see an "include"
-			 * statement below. This is used by the `grunt build` process to directly
-			 * include a minified version of wp-embed-template.js, instead of using the
-			 * readfile() method from above.
-			 *
-			 * If you're looking at a build version of this file, you'll see a string of
-			 * minified JavaScript. If you need to debug it, please turn on SCRIPT_DEBUG
-			 * and edit wp-embed-template.js directly.
-			 */
-			?>
-			include "js/wp-embed-template.min.js"
-			<?php
-		}
+		readfile( ABSPATH . WPINC . '/js/wp-embed-template.js' );
 	?>
 	</script>
 	<?php

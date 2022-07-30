@@ -595,17 +595,17 @@ class acs_field_select extends acs_field {
 		
 		
 		// value
-		if( $field['return_format'] == 'value' ) {
+		if( $field['return_format'] === 'value' ) {
 			
 			// do nothing
 		
 		// label	
-		} elseif( $field['return_format'] == 'label' ) {
+		} elseif( $field['return_format'] === 'label' ) {
 			
 			$value = $label;
 		
 		// array	
-		} elseif( $field['return_format'] == 'array' ) {
+		} elseif( $field['return_format'] === 'array' ) {
 			
 			$value = array(
 				'value'	=> $value,

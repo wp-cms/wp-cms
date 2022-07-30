@@ -1,15 +1,22 @@
-.sidebyside-text-image {
+.sidebyside-text-video {
   position: relative;
   display: grid;
   gap: 2rem;
   padding: 4rem;
 
   .text {
-    border: 1px solid red;
+
+    h1 {
+      font-size: 3rem;
+    }
+
+    p {
+      line-height: 1.8;
+    }
+
   }
 
-  img {
-    border: 1px solid blue;
+  iframe {
     width: 100%;
   }
 
@@ -21,12 +28,12 @@
   /* From 770px on */
   @media (min-width: 770px) {
 
-    &.order-image-text {
-      grid-template-columns: 4fr 6fr;
+    &.order-video-text {
+      grid-template-columns: 5fr 5fr;
     }
 
-    &.order-text-image {
-      grid-template-columns: 6fr 4fr;
+    &.order-text-video {
+      grid-template-columns: 5fr 5fr;
     }
 
   }

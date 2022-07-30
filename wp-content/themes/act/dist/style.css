@@ -1,6 +1,19 @@
 /*!**********************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/src/index.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./src/scss/import.scss ***!
   \**********************************************************************************************************************************************************************************************************************************************/
+:root {
+  --color-primary-a: #ffffff;
+  --color-primary-b: #f2f2f2;
+  --color-primary-contrast-a: rgb(30, 15, 10);
+  --color-primary-contrast-b: rgb(10, 5, 10);
+  --color-secondary-a: #0cb9c0;
+  --color-secondary-b: #f48920;
+  --color-secondary-contrast-a: rgb(30, 15, 10);
+  --color-secondary-contrast-b: rgb(10, 5, 10);
+  --font-primary: Verdana, sans-serif;
+  --font-secondary: Garamond, serif;
+}
+
 @-webkit-keyframes move-background {
   0% {
     background-position: 0% 50%;
@@ -12,6 +25,7 @@
     background-position: 0% 50%;
   }
 }
+
 @keyframes move-background {
   0% {
     background-position: 0% 50%;
@@ -67,13 +81,13 @@ html {
 }
 
 ::-moz-selection {
-  background: #111110;
-  color: #fffff0;
+  color: var(--color-primary-a);
+  background: var(--color-secondary-contrast-a);
 }
 
 ::selection {
-  background: #111110;
-  color: #fffff0;
+  color: var(--color-primary-a);
+  background: var(--color-secondary-contrast-a);
 }
 
 input,
@@ -88,6 +102,9 @@ body {
   margin: 0;
   font-display: swap;
   min-width: 320px;
+  color: var(--color-primary-contrast-a);
+  background: linear-gradient(121deg, #111111 0%, #444444 48%, #111111 100%);
+  font-family: var(--font-primary);
 }
 
 a {
@@ -95,10 +112,49 @@ a {
   text-decoration: none;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-secondary);
+}
+
+/*
+For folks who buy huge monitors
+With other purposes than visiting this site
+(Maybe they use huge monitors for gaminig, video editing, ...)
+For them, we'll just display the whole site inside a narrower viewport
+*/
+#full_site_wrapper {
+  position: relative;
+  max-width: 1600px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  background-color: white;
+}
+@media (min-width: 1600px) {
+  #full_site_wrapper {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media (min-width: 1680px) {
+  #full_site_wrapper {
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+}
+
+.wysiwyg h1 {
+  padding-bottom: 1.5rem;
+}
+.wysiwyg h2, .wysiwyg h3, .wysiwyg h4, .wysiwyg h5, .wysiwyg h6 {
+  padding: 1.5rem 0;
+}
+.wysiwyg p {
+  padding: 1rem 0;
+}
+
 .awesome-button {
-  background-image: linear-gradient(-45deg, #0cb9c0, #ffc840);
-  background-color: #0cb9c0;
-  color: #0cb9c0;
+  background-image: linear-gradient(-45deg, var(--color-secondary-a), var(--color-secondary-b));
+  background-color: var(--color-secondary-a);
+  color: var(--color-secondary-a);
   cursor: pointer;
   display: inline-block;
   border: none;
@@ -113,12 +169,12 @@ a {
 .awesome-button span {
   padding: 1rem 2rem;
   display: inline-block;
-  background-color: #fffff0;
+  background-color: var(--color-primary-a);
   border-radius: 4px;
   pointer-events: none;
 }
 .awesome-button span strong {
-  background-image: linear-gradient(-45deg, #0cb9c0, #ffc840);
+  background-image: linear-gradient(-45deg, var(--color-secondary-a), var(--color-secondary-b));
   font-size: 1.2rem;
   background-clip: text;
   color: transparent;
@@ -136,12 +192,12 @@ a {
           animation: move-background 2s ease infinite;
 }
 .awesome-button.dark {
-  background-image: linear-gradient(-45deg, #111110, #525650);
-  background-color: #111110;
-  color: #111110;
+  background-image: linear-gradient(-45deg, var(--color-secondary-contrast-a), var(--color-secondary-contrast-b));
+  background-color: var(--color-secondary-contrast-a);
+  color: var(--color-secondary-contrast-a);
 }
 .awesome-button.dark span strong {
-  background-image: linear-gradient(-45deg, #111110, #525650);
+  background-image: linear-gradient(-45deg, var(--color-secondary-contrast-a), var(--color-secondary-contrast-b));
 }
 
 .hero {
@@ -157,8 +213,8 @@ a {
   -o-object-fit: cover;
      object-fit: cover;
 }
-.hero .content {
-  color: #fffff0;
+.hero .content h1 {
+  font-family: var(--font-secondary);
 }
 .hero .content p {
   line-height: 1.8;
@@ -168,7 +224,6 @@ a {
     height: calc( 100vh - 4.5rem );
   }
   .hero .content {
-    background-color: #111110;
     padding: 3rem;
   }
   .hero .content h1 {
@@ -220,7 +275,7 @@ a {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #111110;
+  background-color: var(--color-primary-a);
   /* Hidden checkbox to control the open/close state of the mobile menu */
   /* Clicking this label will toggle the checkbox state and hence open/close the mobile menu */
   /* Mobile version */
@@ -238,10 +293,10 @@ a {
   position: relative;
   text-transform: uppercase;
   font-weight: 100;
-  color: #fffff0;
+  color: var(--color-secondary-contrast-a);
 }
 .site-header .main-menu a:hover {
-  color: #ffc840;
+  color: var(--color-secondary-b);
 }
 .site-header #checkbox-main-menu {
   display: none;
@@ -264,7 +319,7 @@ a {
   height: 0.19rem;
   width: 100%;
   border-radius: 5px;
-  background: linear-gradient(-45deg, #ffc840, #0cb9c0);
+  background: linear-gradient(-45deg, var(--color-secondary-b), var(--color-secondary-a));
   transition: all 400ms;
 }
 .site-header label.toggle-main-menu .hamburger-open-menu span.line-1 {
@@ -278,7 +333,7 @@ a {
 }
 .site-header label.toggle-main-menu:hover .hamburger-open-menu span {
   width: 100%;
-  background: linear-gradient(-45deg, #ffc840, #0cb9c0);
+  background: linear-gradient(-45deg, var(--color-secondary-b), var(--color-secondary-a));
 }
 .site-header #checkbox-main-menu:checked ~ label.toggle-main-menu .hamburger-open-menu {
   display: none;
@@ -302,8 +357,8 @@ a {
   content: "";
   width: 100%;
   height: 0.15rem;
-  border: 0.1rem solid #ffc840;
-  background-color: #ffc840;
+  border: 0.1rem solid var(--color-secondary-b);
+  background-color: var(--color-secondary-b);
   opacity: 0;
   transition: all 0.4s ease-in-out;
   transform: rotate(0deg);
@@ -338,7 +393,7 @@ a {
     height: calc( 100vh - 4.5rem );
     top: 4.5rem;
     left: 0;
-    background-color: #111110;
+    background-color: var(--color-primary-a);
     padding-right: 2rem;
     text-align: right;
     overflow-x: hidden;
@@ -366,6 +421,7 @@ a {
   .site-header .main-menu > ul {
     display: flex;
     flex-direction: row;
+    justify-content: flex-end;
   }
   .site-header .main-menu a {
     font-size: 1rem;
@@ -375,23 +431,10 @@ a {
 
 .eyecatching-presentation {
   position: relative;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
-  gap: 2rem;
+  background-image: linear-gradient(45deg, var(--color-secondary-b) 0%, #ffffff 50%, var(--color-secondary-a) 100%);
   /* Up until 770px */
   /* From 770px on */
-}
-.eyecatching-presentation h1 {
-  font-size: 5rem;
-}
-.eyecatching-presentation p {
-  font-size: 2.5rem;
-  line-height: 1.6;
-  letter-spacing: 0.3rem;
-}
-.eyecatching-presentation .awesome-button {
-  align-self: flex-end;
 }
 .eyecatching-presentation::before {
   content: "";
@@ -401,7 +444,6 @@ a {
   top: 0;
   left: 0;
   opacity: 0.5;
-  background-image: linear-gradient(45deg, #0cb9c0 0%, #f48920 60%);
   pointer-events: none;
 }
 .eyecatching-presentation::after {
@@ -411,27 +453,99 @@ a {
   height: 100%;
   top: 0;
   left: 0;
-  opacity: 0.35;
-  background-image: linear-gradient(45deg, #0cb9c0 0%, #f48920 60%);
+  opacity: 0.2;
+  background-image: linear-gradient(45deg, var(--color-secondary-b) 0%, #ffffff 20%, var(--color-secondary-a) 95%);
   pointer-events: none;
-  -webkit-animation: translate-around 2s ease infinite;
-          animation: translate-around 2s ease infinite;
+  -webkit-animation: translate-around 4s ease infinite;
+          animation: translate-around 4s ease infinite;
+}
+.eyecatching-presentation .content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap: 2rem;
+}
+.eyecatching-presentation .content h1 {
+  font-size: 5rem;
+}
+.eyecatching-presentation .content p {
+  font-size: 2.5rem;
+  line-height: 1.6;
+  letter-spacing: 0.3rem;
+}
+.eyecatching-presentation .content .awesome-button {
+  align-self: flex-end;
 }
 @media (max-width: 770px) {
-  .eyecatching-presentation {
+  .eyecatching-presentation .content {
     padding: 3rem;
   }
 }
 @media (min-width: 770px) {
-  .eyecatching-presentation {
+  .eyecatching-presentation .content {
     padding: 5rem;
   }
 }
 
 .sidebyside-text-image {
   position: relative;
-  display: flex;
+  display: grid;
   gap: 2rem;
+  padding: 4rem;
+  /* Up until 770px */
+  /* From 770px on */
+}
+.sidebyside-text-image .text {
+  border: 1px solid red;
+}
+.sidebyside-text-image img {
+  border: 1px solid blue;
+  width: 100%;
+}
+@media (max-width: 770px) {
+  .sidebyside-text-image {
+    grid-template-columns: 1fr;
+  }
+}
+@media (min-width: 770px) {
+  .sidebyside-text-image.order-image-text {
+    grid-template-columns: 4fr 6fr;
+  }
+  .sidebyside-text-image.order-text-image {
+    grid-template-columns: 6fr 4fr;
+  }
+}
+
+.sidebyside-text-video {
+  position: relative;
+  display: grid;
+  gap: 2rem;
+  padding: 4rem;
+  /* Up until 770px */
+  /* From 770px on */
+}
+.sidebyside-text-video .text h1 {
+  font-size: 3rem;
+}
+.sidebyside-text-video .text p {
+  line-height: 1.8;
+}
+.sidebyside-text-video iframe {
+  width: 100%;
+}
+@media (max-width: 770px) {
+  .sidebyside-text-video {
+    grid-template-columns: 1fr;
+  }
+}
+@media (min-width: 770px) {
+  .sidebyside-text-video.order-video-text {
+    grid-template-columns: 5fr 5fr;
+  }
+  .sidebyside-text-video.order-text-video {
+    grid-template-columns: 5fr 5fr;
+  }
 }
 
 /*# sourceMappingURL=style.css.map*/

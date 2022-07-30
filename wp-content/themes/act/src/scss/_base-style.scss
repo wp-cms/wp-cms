@@ -14,8 +14,8 @@ html {
 }
 
 ::selection {
-  background: $color-black;
-  color: $color-white;
+  color: var(--color-primary-a);
+  background: var(--color-secondary-contrast-a);
 }
 
 input,
@@ -30,9 +30,40 @@ body {
   margin: 0;
   font-display: swap;
   min-width: 320px;
+  color: var(--color-primary-contrast-a);
+  background: linear-gradient(121deg, rgba(17,17,17,1) 0%, rgba(68,68,68,1) 48%, rgba(17,17,17,1) 100%);
+  font-family: var(--font-primary);
 }
 
 a {
   cursor: pointer;
   text-decoration: none;
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-secondary);
+}
+
+/*
+For folks who buy huge monitors
+With other purposes than visiting this site
+(Maybe they use huge monitors for gaminig, video editing, ...)
+For them, we'll just display the whole site inside a narrower viewport
+*/
+#full_site_wrapper {
+  position: relative;
+  max-width: 1600px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  background-color: rgb(255,255,255);
+
+  @media (min-width: 1600px) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 1680px) {
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+}
+

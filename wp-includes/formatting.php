@@ -5076,7 +5076,7 @@ function _print_emoji_detection_script() {
 		'svgExt' => apply_filters( 'emoji_svg_ext', '.svg' ),
 	);
 
-	if ( SCRIPT_DEBUG ) {
+
 		$version_wpemoji = 'ver=' . classicpress_asset_version( 'script', 'wpemoji' );
 		$version_twemoji = 'ver=' . classicpress_asset_version( 'script', 'twemoji' );
 
@@ -5093,30 +5093,7 @@ function _print_emoji_detection_script() {
 			<?php readfile( ABSPATH . WPINC . "/js/wp-emoji-loader.js" ); ?>
 		</script>
 		<?php
-	} else {
-		$version = 'ver=' . classicpress_asset_version( 'script', 'concatemoji' );
-		$settings['source'] = array(
-			/** This filter is documented in wp-includes/class.wp-scripts.php */
-			'concatemoji' => apply_filters( 'script_loader_src', includes_url( "js/wp-emoji-release.min.js?$version" ), 'concatemoji' ),
-		);
 
-		/*
-		 * If you're looking at a src version of this file, you'll see an "include"
-		 * statement below. This is used by the `grunt build` process to directly
-		 * include a minified version of wp-emoji-loader.js, instead of using the
-		 * readfile() method from above.
-		 *
-		 * If you're looking at a build version of this file, you'll see a string of
-		 * minified JavaScript. If you need to debug it, please turn on SCRIPT_DEBUG
-		 * and edit wp-emoji-loader.js directly.
-		 */
-		?>
-		<script type="text/javascript">
-			window._wpemojiSettings = <?php echo wp_json_encode( $settings ); ?>;
-			include "js/wp-emoji-loader.min.js"
-		</script>
-		<?php
-	}
 }
 
 /**
