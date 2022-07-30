@@ -21,7 +21,7 @@
 			'click a[href="#"]':			'onClick',
 			'click .submitdelete': 			'onClickTrash',
 		},
-		
+
 		filters: {
 			'find_fields_args':				'filterFindFieldArgs'
 		},

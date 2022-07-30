@@ -11,10 +11,10 @@
 	*  @param	type $var Description. Default.
 	*  @return	type Description.
 	*/
-		
+
 	// The global acs object
 	var acs = {};
-	
+
 	// Set as a browser global
 	window.acs = acs;
 	
