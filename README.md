@@ -23,6 +23,10 @@ I am currently working on a stable version 1.0.0 with:
 * WP Coding Standards applied to the whole core
 * ClassicPress Plugins/Themes directory integrated
 
+But you can use the current 0.0.x version, you will get core updates and it will work fine.
+
+I'm using this version for [wpcms.dev](https://wpcms.dev/)
+
 # Key points of the WP CMS philosophy
 
 ## KEY NUMBER 1 - "Remove Bloat"
@@ -36,8 +40,8 @@ Remove irrelevant/outdated stuff:
 * ~~Link Manager: disabled links gallery plugin hidden inside the core~~ ✅
 * ~~Deprecated: remove deprecated functions, methods, classes and files~~ ✅
 * ~~Post via email: from the old blogging times~~ ✅
+* ~~Quick draft dashboard widget: does anyone use that?~~ ✅
 * Emojis: useless bloat
-* Quick draft dashboard widget: does anyone use that?
 
 ## KEY NUMBER 2 - "Independent Themes & Plugins Directory"
 

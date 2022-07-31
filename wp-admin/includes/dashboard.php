@@ -46,12 +46,6 @@ function wp_dashboard_setup() {
 		wp_add_dashboard_widget( 'dashboard_activity', __( 'Activity' ), 'wp_dashboard_site_activity' );
 	}
 
-	// QuickPress Widget
-	if ( is_blog_admin() && current_user_can( get_post_type_object( 'post' )->cap->create_posts ) ) {
-		$quick_draft_title = sprintf( '<span class="hide-if-no-js">%1$s</span> <span class="hide-if-js">%2$s</span>', __( 'Quick Draft' ), __( 'Your Recent Drafts' ) );
-		wp_add_dashboard_widget( 'dashboard_quick_press', $quick_draft_title, 'wp_dashboard_quick_press' );
-	}
-
 	if ( is_network_admin() ) {
 
 		/**
@@ -165,7 +159,7 @@ function wp_add_dashboard_widget( $widget_id, $widget_name, $callback, $control_
 		}
 	}
 
-	$side_widgets = array( 'dashboard_quick_press', 'dashboard_primary' );
+	$side_widgets = array( 'dashboard_primary' );
 
 	$location = 'normal';
 	if ( in_array($widget_id, $side_widgets) )
@@ -451,79 +445,6 @@ function wp_network_dashboard_right_now() {
 	 * @since WP-MU (3.0.0)
 	 */
 	do_action( 'mu_activity_box_end' );
-}
-
-/**
- * The Quick Draft widget display and creation of drafts.
- *
- * @since WP-3.8.0
- *
- * @global int $post_ID
- *
- * @param string $error_msg Optional. Error message. Default false.
- */
-function wp_dashboard_quick_press( $error_msg = false ) {
-	global $post_ID;
-
-	if ( ! current_user_can( 'edit_posts' ) ) {
-		return;
-	}
-
-	/* Check if a new auto-draft (= no new post_ID) is needed or if the old can be used */
-	$last_post_id = (int) get_user_option( 'dashboard_quick_press_last_post_id' ); // Get the last post_ID
-	if ( $last_post_id ) {
-		$post = get_post( $last_post_id );
-		if ( empty( $post ) || $post->post_status != 'auto-draft' ) { // auto-draft doesn't exists anymore
-			$post = get_default_post_to_edit( 'post', true );
-			update_user_option( get_current_user_id(), 'dashboard_quick_press_last_post_id', (int) $post->ID ); // Save post_ID
-		} else {
-			$post->post_title = ''; // Remove the auto draft title
-		}
-	} else {
-		$post = get_default_post_to_edit( 'post' , true);
-		$user_id = get_current_user_id();
-		// Don't create an option if this is a super admin who does not belong to this site.
-		if ( in_array( get_current_blog_id(), array_keys( get_blogs_of_user( $user_id ) ) ) )
-			update_user_option( $user_id, 'dashboard_quick_press_last_post_id', (int) $post->ID ); // Save post_ID
-	}
-
-	$post_ID = (int) $post->ID;
-?>
-
-	<form name="post" action="<?php echo esc_url( admin_url( 'post.php' ) ); ?>" method="post" id="quick-press" class="initial-form hide-if-no-js">
-
-		<?php if ( $error_msg ) : ?>
-		<div class="error"><?php echo $error_msg; ?></div>
-		<?php endif; ?>
-
-		<div class="input-text-wrap" id="title-wrap">
-			<label class="screen-reader-text prompt" for="title" id="title-prompt-text">
-
-				<?php
-				/** This filter is documented in wp-admin/edit-form-advanced.php */
-				echo apply_filters( 'enter_title_here', __( 'Title' ), $post );
-				?>
-			</label>
-			<input type="text" name="post_title" id="title" autocomplete="off" />
-		</div>
-
-		<div class="textarea-wrap" id="description-wrap">
-			<label class="screen-reader-text prompt" for="content" id="content-prompt-text"><?php _e( 'What&#8217;s on your mind?' ); ?></label>
-			<textarea name="content" id="content" class="mceEditor" rows="3" cols="15" autocomplete="off"></textarea>
-		</div>
-
-		<p class="submit">
-			<input type="hidden" name="action" id="quickpost-action" value="post-quickdraft-save" />
-			<input type="hidden" name="post_ID" value="<?php echo $post_ID; ?>" />
-			<input type="hidden" name="post_type" value="post" />
-			<?php wp_nonce_field( 'add-post' ); ?>
-			<?php submit_button( __( 'Save Draft' ), 'primary', 'save', false, array( 'id' => 'save-post' ) ); ?>
-			<br class="clear" />
-		</p>
-
-	</form>
-	<?php
-	wp_dashboard_recent_drafts();
 }
 
 /**

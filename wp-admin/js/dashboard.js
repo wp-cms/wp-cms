@@ -1,5 +1,5 @@
 /* global pagenow, ajaxurl, postboxes, wpActiveEditor:true */
-var ajaxWidgets, ajaxPopulateWidgets, quickPressLoad;
+var ajaxWidgets, ajaxPopulateWidgets;
 window.wp = window.wp || {};
 
 jQuery(document).ready( function($) {
@@ -61,68 +61,6 @@ jQuery(document).ready( function($) {
 	ajaxPopulateWidgets();
 
 	postboxes.add_postbox_toggles(pagenow, { pbshow: ajaxPopulateWidgets } );
-
-	/* QuickPress */
-	quickPressLoad = function() {
-		var act = $('#quickpost-action'), t;
-
-		$( '#quick-press .submit input[type="submit"], #quick-press .submit input[type="reset"]' ).prop( 'disabled' , false );
-
-		t = $('#quick-press').submit( function( e ) {
-			e.preventDefault();
-			$('#dashboard_quick_press #publishing-action .spinner').show();
-			$('#quick-press .submit input[type="submit"], #quick-press .submit input[type="reset"]').prop('disabled', true);
-
-			$.post( t.attr( 'action' ), t.serializeArray(), function( data ) {
-				// Replace the form, and prepend the published post.
-				$('#dashboard_quick_press .inside').html( data );
-				$('#quick-press').removeClass('initial-form');
-				quickPressLoad();
-				highlightLatestPost();
-				$('#title').focus();
-			});
-
-			function highlightLatestPost () {
-				var latestPost = $('.drafts ul li').first();
-				latestPost.css('background', '#fffbe5');
-				setTimeout(function () {
-					latestPost.css('background', 'none');
-				}, 1000);
-			}
-		} );
-
-		$('#publish').click( function() { act.val( 'post-quickpress-publish' ); } );
-
-		$('#title, #tags-input, #content').each( function() {
-			var input = $(this), prompt = $('#' + this.id + '-prompt-text');
-
-			if ( '' === this.value ) {
-				prompt.removeClass('screen-reader-text');
-			}
-
-			prompt.click( function() {
-				$(this).addClass('screen-reader-text');
-				input.focus();
-			});
-
-			input.blur( function() {
-				if ( '' === this.value ) {
-					prompt.removeClass('screen-reader-text');
-				}
-			});
-
-			input.focus( function() {
-				prompt.addClass('screen-reader-text');
-			});
-		});
-
-		$('#quick-press').on( 'click focusin', function() {
-			wpActiveEditor = 'content';
-		});
-
-		autoResizeTextarea();
-	};
-	quickPressLoad();
 
 	$( '.meta-box-sortables' ).sortable( 'option', 'containment', '#wpwrap' );
 
