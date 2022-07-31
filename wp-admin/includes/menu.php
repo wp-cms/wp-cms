@@ -1,9 +1,6 @@
 <?php
 /**
- * Build Administration Menu.
- *
- * @package ClassicPress
- * @subpackage Administration
+ * Build Administration Menu
  */
 
 if ( is_network_admin() ) {
