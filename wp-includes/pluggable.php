@@ -2309,7 +2309,7 @@ if ( !function_exists('wp_rand') ) :
  * Generates a random number
  *
  * @since WP-2.6.2
- * @since WP-4.4.0 Uses PHP7 random_int() or the random_compat library if available.
+ * @since WP-4.4.0 Uses PHP7 random_int()
  *
  * @global string $rnd_value
  * @staticvar string $seed
