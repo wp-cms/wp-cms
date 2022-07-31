@@ -423,7 +423,6 @@ function export_wp( $args = array() ) {
 <!-- 7. ClassicPress will then import each of the posts, pages, comments, categories, etc. -->
 <!--    contained in this file into your site. -->
 
-<?php the_generator( 'export' ); ?>
 <rss version="2.0"
 	xmlns:excerpt="http://wordpress.org/export/<?php echo WXR_VERSION; ?>/excerpt/"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"
