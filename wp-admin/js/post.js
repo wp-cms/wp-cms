@@ -947,7 +947,7 @@ jQuery(document).ready( function($) {
 			buttonsOrig = buttons.html(),
 			full = $('#editable-post-name-full');
 
-		// Deal with Twemoji in the post-name.
+		// Deal with Emoji in the post-name.
 		full.find( 'img' ).replaceWith( function() { return this.alt; } );
 		full = full.html();
 

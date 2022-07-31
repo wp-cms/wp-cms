@@ -51,9 +51,6 @@ include( ABSPATH . 'wp-admin/admin-header.php' );
 <tr>
 <th scope="row"><?php _e('Formatting') ?></th>
 <td><fieldset><legend class="screen-reader-text"><span><?php _e('Formatting') ?></span></legend>
-<label for="use_smilies">
-<input name="use_smilies" type="checkbox" id="use_smilies" value="1" <?php checked('1', get_option('use_smilies')); ?> />
-<?php _e('Convert emoticons like <code>:-)</code> and <code>:-P</code> to graphics on display') ?></label><br />
 <label for="use_balanceTags"><input name="use_balanceTags" type="checkbox" id="use_balanceTags" value="1" <?php checked('1', get_option('use_balanceTags')); ?> /> <?php _e('ClassicPress should correct invalidly nested XHTML automatically') ?></label>
 </fieldset></td>
 </tr>

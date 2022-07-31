@@ -284,7 +284,7 @@ var inlineEditPost;
 			val = $('.'+fields[f], rowData);
 
 			/**
-			 * @summary Replaces the image for a Twemoji(Twitter emoji) with it's alternate text.
+			 * @summary Replaces the image with it's alternate text.
 			 *
 			 * @returns Alternate text from the image.
 			 */

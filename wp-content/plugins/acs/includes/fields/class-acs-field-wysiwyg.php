@@ -63,7 +63,6 @@ class acs_field_wysiwyg extends acs_field {
 		add_filter( 'acs_the_content', 'capital_P_dangit', 11 );
 		//add_filter( 'acs_the_content', 'do_blocks', 9 ); Not yet supported.
 		add_filter( 'acs_the_content', 'wptexturize' );
-		add_filter( 'acs_the_content', 'convert_smilies', 20 );
 		add_filter( 'acs_the_content', 'wpautop' );
 		add_filter( 'acs_the_content', 'shortcode_unautop' );
 		//add_filter( 'acs_the_content', 'prepend_attachment' ); Causes double image on attachment page.

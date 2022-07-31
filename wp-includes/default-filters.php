@@ -134,28 +134,24 @@ add_filter( 'the_title', 'convert_chars' );
 add_filter( 'the_title', 'trim'          );
 
 add_filter( 'the_content', 'wptexturize'                       );
-add_filter( 'the_content', 'convert_smilies',               20 );
 add_filter( 'the_content', 'wpautop'                           );
 add_filter( 'the_content', 'shortcode_unautop'                 );
 add_filter( 'the_content', 'prepend_attachment'                );
 add_filter( 'the_content', 'wp_make_content_images_responsive' );
 
 add_filter( 'the_excerpt',     'wptexturize'      );
-add_filter( 'the_excerpt',     'convert_smilies'  );
 add_filter( 'the_excerpt',     'convert_chars'    );
 add_filter( 'the_excerpt',     'wpautop'          );
 add_filter( 'the_excerpt',     'shortcode_unautop');
 add_filter( 'get_the_excerpt', 'wp_trim_excerpt'  );
 
 add_filter( 'the_post_thumbnail_caption', 'wptexturize'     );
-add_filter( 'the_post_thumbnail_caption', 'convert_smilies' );
 add_filter( 'the_post_thumbnail_caption', 'convert_chars'   );
 
 add_filter( 'comment_text', 'wptexturize'            );
 add_filter( 'comment_text', 'convert_chars'          );
 add_filter( 'comment_text', 'make_clickable',      9 );
 add_filter( 'comment_text', 'force_balance_tags', 25 );
-add_filter( 'comment_text', 'convert_smilies',    20 );
 add_filter( 'comment_text', 'wpautop',            30 );
 
 add_filter( 'comment_excerpt', 'convert_chars' );
@@ -167,7 +163,6 @@ add_filter( 'wp_sprintf', 'wp_sprintf_l', 10, 2 );
 add_filter( 'widget_text',         'balanceTags'          );
 add_filter( 'widget_text_content', 'capital_P_dangit', 11 );
 add_filter( 'widget_text_content', 'wptexturize'          );
-add_filter( 'widget_text_content', 'convert_smilies',  20 );
 add_filter( 'widget_text_content', 'wpautop'              );
 add_filter( 'widget_text_content', 'shortcode_unautop'    );
 add_filter( 'widget_text_content', 'do_shortcode',     11 ); // Runs after wpautop(); note that $post global will be null when shortcodes run.
@@ -179,20 +174,15 @@ add_filter( 'the_title_rss',      'strip_tags'                    );
 add_filter( 'the_title_rss',      'ent2ncr',                    8 );
 add_filter( 'the_title_rss',      'esc_html'                      );
 add_filter( 'the_content_rss',    'ent2ncr',                    8 );
-add_filter( 'the_content_feed',   'wp_staticize_emoji'            );
 add_filter( 'the_content_feed',   '_oembed_filter_feed_content'   );
 add_filter( 'the_excerpt_rss',    'convert_chars'                 );
 add_filter( 'the_excerpt_rss',    'ent2ncr',                    8 );
 add_filter( 'comment_author_rss', 'ent2ncr',                    8 );
 add_filter( 'comment_text_rss',   'ent2ncr',                    8 );
 add_filter( 'comment_text_rss',   'esc_html'                      );
-add_filter( 'comment_text_rss',   'wp_staticize_emoji'            );
 add_filter( 'bloginfo_rss',       'ent2ncr',                    8 );
 add_filter( 'the_author',         'ent2ncr',                    8 );
 add_filter( 'the_guid',           'esc_url'                       );
-
-// Email filters
-add_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
 
 // Mark site as no longer fresh
 foreach ( array( 'publish_post', 'publish_page', 'wp_ajax_save-widget', 'wp_ajax_widgets-order', 'customize_save_after' ) as $action ) {
@@ -245,7 +235,6 @@ add_action( 'wp_head',             'adjacent_posts_rel_link_wp_head', 10, 0 );
 add_action( 'wp_head',             'locale_stylesheet'                      );
 add_action( 'publish_future_post', 'check_and_publish_future_post',   10, 1 );
 add_action( 'wp_head',             'noindex',                          1    );
-add_action( 'wp_head',             'print_emoji_detection_script',     7    );
 add_action( 'wp_head',             'wp_print_styles',                  8    );
 add_action( 'wp_head',             'wp_print_head_scripts',            9    );
 add_action( 'wp_head',             'wp_generator'                           );
@@ -259,7 +248,6 @@ add_action( 'wp_print_footer_scripts', '_wp_footer_scripts'                 );
 add_action( 'init',                'check_theme_switched',            99    );
 add_action( 'after_switch_theme',  '_wp_menus_changed'                      );
 add_action( 'after_switch_theme',  '_wp_sidebars_changed'                   );
-add_action( 'wp_print_styles',     'print_emoji_styles'                     );
 
 if ( isset( $_GET['replytocom'] ) )
     add_action( 'wp_head', 'wp_no_robots' );
@@ -294,12 +282,9 @@ add_action( 'do_feed_atom',               'do_feed_atom',                       
 add_action( 'do_robots',                  'do_robots'                                      );
 add_action( 'set_comment_cookies',        'wp_set_comment_cookies',                  10, 3 );
 add_action( 'sanitize_comment_cookies',   'sanitize_comment_cookies'                       );
-add_action( 'admin_print_scripts',        'print_emoji_detection_script'                   );
 add_action( 'admin_print_scripts',        'print_head_scripts',                      20    );
 add_action( 'admin_print_footer_scripts', '_wp_footer_scripts'                             );
-add_action( 'admin_print_styles',         'print_emoji_styles'                             );
 add_action( 'admin_print_styles',         'print_admin_styles',                      20    );
-add_action( 'init',                       'smilies_init',                             5    );
 add_action( 'plugins_loaded',             'wp_maybe_load_widgets',                    0    );
 add_action( 'plugins_loaded',             'wp_maybe_load_embeds',                     0    );
 add_action( 'shutdown',                   'wp_ob_end_flush_all',                      1    );
@@ -497,7 +482,6 @@ add_action( 'wp_head',                'wp_oembed_add_discovery_links'         );
 add_action( 'wp_head',                'wp_oembed_add_host_js'                 );
 
 add_action( 'embed_head',             'enqueue_embed_scripts',           1    );
-add_action( 'embed_head',             'print_emoji_detection_script'          );
 add_action( 'embed_head',             'print_embed_styles'                    );
 add_action( 'embed_head',             'wp_print_head_scripts',          20    );
 add_action( 'embed_head',             'wp_print_styles',                20    );

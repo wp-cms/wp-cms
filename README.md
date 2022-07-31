@@ -41,7 +41,7 @@ Remove irrelevant/outdated stuff:
 * ~~Deprecated: remove deprecated functions, methods, classes and files~~ ✅
 * ~~Post via email: from the old blogging times~~ ✅
 * ~~Quick draft dashboard widget: does anyone use that?~~ ✅
-* Emojis: useless bloat
+* ~~Emojis and Smilies converter: useless bloat~~ ✅
 
 ## KEY NUMBER 2 - "Independent Themes & Plugins Directory"
 

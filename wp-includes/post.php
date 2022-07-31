@@ -3083,7 +3083,6 @@ function wp_get_recent_posts( $args = array(), $output = 'associative_array' ) {
  * setting the value for 'comment_status' key.
  *
  * @since WP-1.0.0
- * @since WP-4.2.0 Support was added for encoding emoji in the post title, content, and excerpt.
  * @since WP-4.4.0 A 'meta_input' array can now be passed to `$postarr` to add post meta data.
  *
  * @see sanitize_post()
@@ -3409,21 +3408,10 @@ function wp_insert_post( $postarr, $wp_error = false ) {
 	$post_name = wp_unique_post_slug( $post_name, $post_ID, $post_status, $post_type, $post_parent );
 
 	// Don't unslash.
-	$post_mime_type = isset( $postarr['post_mime_type'] ) ? $postarr['post_mime_type'] : '';
+	$post_mime_type = $postarr['post_mime_type'] ?? '';
 
 	// Expected_slashed (everything!).
 	$data = compact( 'post_author', 'post_date', 'post_date_gmt', 'post_content', 'post_content_filtered', 'post_title', 'post_excerpt', 'post_status', 'post_type', 'comment_status', 'post_password', 'post_name', 'post_modified', 'post_modified_gmt', 'post_parent', 'menu_order', 'post_mime_type', 'guid' );
-
-	$emoji_fields = array( 'post_title', 'post_content', 'post_excerpt' );
-
-	foreach ( $emoji_fields as $emoji_field ) {
-		if ( isset( $data[ $emoji_field ] ) ) {
-			$charset = $wpdb->get_col_charset( $wpdb->posts, $emoji_field );
-			if ( 'utf8' === $charset ) {
-				$data[ $emoji_field ] = wp_encode_emoji( $data[ $emoji_field ] );
-			}
-		}
-	}
 
 	if ( 'attachment' === $post_type ) {
 		/**
