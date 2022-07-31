@@ -612,9 +612,9 @@ class acs_admin_field_group {
 					
 					// rule 0
 					array(
-						'param'		=>	'post_type',
+						'param'		=>	'post_status',
 						'operator'	=>	'==',
-						'value'		=>	'post',
+						'value'		=>	'trash',
 					)
 				)
 				
